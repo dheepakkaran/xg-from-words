@@ -133,12 +133,23 @@ def shots_from_summary(summary, event_id=None, season=None):
 
 
 def parse():
+    # fixtures.json is authoritative for which competition a match belongs to;
+    # the summary payload does not carry it reliably.
+    fx_path = os.path.join(ROOT, "data", "fixtures.json")
+    leagues = {}
+    if os.path.exists(fx_path):
+        leagues = {f["event_id"]: f.get("league", "eng.1")
+                   for f in json.load(open(fx_path))}
     rows = []
     for f in sorted(glob.glob(os.path.join(ROOT, "data", "raw", "*.json.gz"))):
+        eid = os.path.basename(f).split(".")[0]
         d = json.load(gzip.open(f, "rt"))
-        rows += shots_from_summary(
-            d, event_id=os.path.basename(f).split(".")[0],
+        new = shots_from_summary(
+            d, event_id=eid,
             season=(d.get("header", {}).get("season", {}) or {}).get("year"))
+        for r in new:
+            r["league"] = leagues.get(eid, "eng.1")
+        rows += new
     return pd.DataFrame(rows)
 
 
@@ -149,6 +160,11 @@ def main():
     print(f"shots parsed : {len(df):,}")
     print(f"goals        : {df.goal.sum():,}  ({df.goal.mean():.1%})")
     print(f"seasons      : {sorted(df.season.dropna().unique().tolist())}")
+    if "league" in df and df.league.nunique() > 1:
+        print("by competition:")
+        for lg, g in df.groupby("league"):
+            print(f"  {lg:8s} {len(g):7,} shots  {g.goal.mean():5.1%} goals  "
+                  f"{g.event_id.nunique():4d} matches")
     print()
     print("goal rate by parsed field")
     for c in PATTERNS:

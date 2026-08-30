@@ -7,7 +7,15 @@ import gzip, json, os, random, sys, time
 from datetime import date, timedelta
 import requests
 
-BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1"
+BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer"
+
+# ESPN publish the same Opta-style commentary for every one of these, in
+# English, with identical phrasing. That is what makes a transfer test
+# possible: the model reads sentences, and the sentences are built the same way
+# whoever is playing.
+LEAGUES = {"eng.1": "Premier League", "esp.1": "La Liga",
+           "ger.1": "Bundesliga", "ita.1": "Serie A",
+           "fra.1": "Ligue 1", "por.1": "Primeira Liga"}
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 RAW = os.path.join(ROOT, "data", "raw")
 
@@ -60,11 +68,12 @@ def month_chunks(start, end):
         d = nxt + timedelta(days=1)
 
 
-def fixtures(season):
+def fixtures(season, league="eng.1"):
     start, end = SEASONS[season]
     out = {}
     for a, b in month_chunks(start, end):
-        data = get(f"{BASE}/scoreboard", {"dates": f"{a}-{b}", "limit": 400})
+        data = get(f"{BASE}/{league}/scoreboard",
+                   {"dates": f"{a}-{b}", "limit": 400})
         for ev in data.get("events", []):
             st = ev["status"]["type"]
             if not st.get("completed"):
@@ -73,6 +82,7 @@ def fixtures(season):
             teams = {c["homeAway"]: c for c in comp["competitors"]}
             out[ev["id"]] = {
                 "event_id": ev["id"],
+                "league": league,
                 "season": season,
                 "date": ev["date"],
                 "home": teams["home"]["team"]["displayName"],
@@ -89,16 +99,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seasons", default="",
                     help="comma-separated subset; default is all of them")
+    ap.add_argument("--leagues", default="eng.1",
+                    help="comma-separated ESPN league codes, e.g. esp.1,ita.1")
     args = ap.parse_args()
     wanted = ([s.strip() for s in args.seasons.split(",") if s.strip()]
               or list(SEASONS))
+    leagues = [l.strip() for l in args.leagues.split(",") if l.strip()]
 
     os.makedirs(RAW, exist_ok=True)
     all_fx = []
-    for s in wanted:
-        fx = fixtures(s)
-        print(f"{s}: {len(fx)} completed fixtures", flush=True)
-        all_fx += fx
+    for lg in leagues:
+        for s in wanted:
+            fx = fixtures(s, lg)
+            print(f"{LEAGUES.get(lg, lg)} {s}: {len(fx)} completed fixtures",
+                  flush=True)
+            all_fx += fx
     # merge rather than overwrite, so collecting one season keeps the rest
     path = os.path.join(ROOT, "data", "fixtures.json")
     merged = {}
@@ -115,7 +130,8 @@ def main():
         if os.path.exists(path):
             skipped += 1
             continue
-        data = get(f"{BASE}/summary", {"event": fx["event_id"]})
+        data = get(f"{BASE}/{fx.get('league', 'eng.1')}/summary",
+                   {"event": fx["event_id"]})
         with gzip.open(path, "wt") as f:
             json.dump(data, f)
         done += 1

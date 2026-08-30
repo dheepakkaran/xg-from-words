@@ -64,6 +64,32 @@ test asserts the raw text *still* leaks so the ceiling cannot pass vacuously,
 and why the third check asks the data — flagging any phrase that converts above
 80% — instead of trusting a list of words someone thought of in advance. Full working: [reports/AUDIT.md](reports/AUDIT.md).
 
+### One model, six leagues, no retraining
+
+The argument for any of this is that commentary is free where coordinates are
+not. That only matters if a model travels — so the Premier League model was
+pointed, cold, at five other competitions ESPN describe.
+
+| Competition | Shots | AUC |
+|---|---|---|
+| Premier League *(trained on)* | 9,194 | 0.7688 |
+| La Liga | 9,240 | 0.7675 |
+| Ligue 1 | 7,391 | 0.7775 |
+| Bundesliga | 7,853 | 0.7764 |
+| Serie A | 9,065 | 0.7671 |
+| Primeira Liga | 7,000 | **0.7842** |
+
+```
+cost of transfer  -0.0058   (a small gain, not a loss)
+calibration bias  +0.006    predicted minus actual, abroad
+```
+
+Nothing retrained, nothing tuned. It reads Portuguese, German, Italian, Spanish
+and French football having only ever seen English football — because what it
+reads is the sentence, and Opta build the sentence the same way everywhere.
+
+87,980 shots, 3,569 matches, six competitions.
+
 ### Is the extraction the limit, or the words?
 
 The words reach 0.781 against coordinates' 0.812. Before reaching for a bigger
@@ -84,7 +110,8 @@ extraction, and no better reader can recover what the sentence never contained.
 
 An LLM extractor was considered and dropped on this evidence. vLLM likewise:
 its speedup needs CUDA, this machine has none, and installing it downgrades
-torch across the working environment. Both would be stack for its own sake.
+torch across the working environment. Spark too — 87,980 shots is 4 MB of
+parquet that pandas loads in 0.04 s. Each was measured, not waved away.
 
 ### Retrieval: the same number with its evidence attached
 
@@ -162,6 +189,8 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/shots.py            # -> data/proc/shots.parquet, 47k shots
 ./run.sh src/xg.py               # xG from the words, held-out season
 ./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.1%
+./run.sh src/collect.py --leagues esp.1,ger.1,ita.1,fra.1,por.1 --seasons 2025-26
+./run.sh src/transfer.py         # does one model travel? -> yes
 ./run.sh src/extraction_ceiling.py   # is there anything left to read?
 ./run.sh src/retrieve.py         # Qdrant neighbours + second opinion
 ./run.sh src/train_xg.py         # -> models/xg.joblib
@@ -191,6 +220,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/shots.py` | Shots parsed out of commentary; whitelists the safe spans |
 | `src/xg.py` | The xG model, and the size of the leak if the text is left raw |
 | `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
+| `src/transfer.py` | The Premier League model, pointed at five other leagues |
 | `src/extraction_ceiling.py` | Is the extraction the limit, or the words? |
 | `src/retrieve.py` | Qdrant neighbours: the estimate with its evidence |
 | `src/style.py` | Shot-profile fingerprints, and a side against its own season |

@@ -364,6 +364,62 @@ extractor was considered and dropped on this evidence rather than on taste;
 This is the same shape of answer as the momentum ceiling: rather than guessing
 whether the model or the data is the limit, measure which.
 
+## Check 9 — Does one model work in six leagues? Yes, at no cost.
+
+The claim this project rests on is that xG becomes available *wherever
+commentary exists*. Until now that had only been tested on the Premier League,
+which is also where the model was trained — a claim, not a result.
+
+ESPN publish the same Opta-style English commentary for five other
+competitions. 1,677 further matches were collected, and the **Premier League
+model was pointed at them cold — nothing retrained, nothing tuned**.
+
+| Competition | Shots | Goal rate | AUC | Brier | Mean xG |
+|---|---|---|---|---|---|
+| Premier League *(trained on)* | 9,194 | 11.3% | 0.7688 | 0.0846 | 0.127 |
+| La Liga | 9,240 | 11.1% | 0.7675 | 0.0831 | 0.120 |
+| Ligue 1 | 7,391 | 11.7% | 0.7775 | 0.0868 | 0.123 |
+| Bundesliga | 7,853 | 12.6% | 0.7764 | 0.0913 | 0.126 |
+| Serie A | 9,065 | 10.2% | 0.7671 | 0.0775 | 0.115 |
+| **Primeira Liga** | 7,000 | 11.7% | **0.7842** | 0.0858 | 0.122 |
+
+```
+trained-on league   0.7688
+other leagues, mean 0.7745
+cost of transfer    -0.0058     (a small gain, not a loss)
+calibration bias abroad +0.006  (predicted minus actual)
+```
+
+**There is no transfer cost.** The model does marginally *better* abroad than
+at home, and stays calibrated — mean prediction 0.115–0.126 against actual goal
+rates of 10.2–12.6%, with the ordering preserved (Serie A both predicted and
+observed lowest, the Bundesliga highest).
+
+This is what makes the free-data argument real rather than rhetorical. One
+model, fitted once on English football, reads Portuguese, German, Italian,
+Spanish and French football without being told anything about them — because
+what it reads is the sentence, and Opta build the sentence the same way
+everywhere.
+
+**Corpus after this check:** 87,980 shots across 3,569 matches and six
+competitions.
+
+### And Spark is still not justified — measured, not assumed
+
+The obvious reason to expand was that more data would justify the distributed
+tooling in the original proposal. It does not:
+
+```
+87,980 shots -> 4 MB parquet, 64 MB in memory
+pandas load  0.04 s
+full groupby 0.01 s
+```
+
+Raw JSON is 122 MB. Nothing here is close to a limit pandas cannot handle, so
+Spark would be ceremony. It is left out, on the same grounds as vLLM and the
+LLM extractor: the tool is introduced when a measured limit demands it, and no
+limit has appeared.
+
 ## What must happen before building
 
 1. ~~Read arXiv 2402.06820 in full~~ — **done, check 1. Not prior art.**
