@@ -331,6 +331,39 @@ free, keyless, and published for far more competitions than coordinates are.
 The remaining 9.9% is what the words genuinely cannot say: exact distance
 inside a zone, the angle, how many defenders stood in the way.
 
+## Check 8 — Would a better reader close the gap? No.
+
+The words reach 0.781 against StatsBomb's 0.812. Something is missing, and
+there are only two places it can be: the **extraction** (regexes catch only
+phrasings someone thought of — and one of them leaked for exactly that reason),
+or the **words** (a sentence never states distance in metres, the angle, or how
+many defenders were in the way).
+
+This decides which, at no cost, by handing models the *whole* sentence and
+seeing whether they beat the seventeen fields pulled out of it.
+
+| Model | Sees | AUC |
+|---|---|---|
+| **regex fields, boosted trees** | 17 fields | **0.7692** |
+| regex fields, logistic (what ships) | 17 fields | 0.7688 |
+| every 1–4 gram in the sentence | all words | 0.7612 |
+| sentence embedding (MiniLM) | all words | 0.7584 |
+| embedding + regex fields | both | 0.7578 |
+
+**Reading more of the sentence is worth −0.008.** Every model given the full
+text does *worse* than seventeen extracted fields, including a semantic
+embedding and a bag of every 1–4 gram. Adding the embedding to the fields makes
+them worse too — the rest of the sentence is player names, team names and
+filler, and it is noise.
+
+So the extraction is not the bottleneck. **The remaining 9.9% is information
+the sentence never contained**, and no better reader can recover it. An LLM
+extractor was considered and dropped on this evidence rather than on taste;
+`src/extraction_ceiling.py` is the argument, and it reruns in seconds.
+
+This is the same shape of answer as the momentum ceiling: rather than guessing
+whether the model or the data is the limit, measure which.
+
 ## What must happen before building
 
 1. ~~Read arXiv 2402.06820 in full~~ — **done, check 1. Not prior art.**
@@ -344,6 +377,7 @@ inside a zone, the angle, how many defenders stood in the way.
    commentary and currently contributes nothing, silently.
 5. **Measure live latency** during an actual match. Still the only claim in
    this project with no evidence behind it.
-6. **Correct the small over-estimate** seen on 2025-26 (mean xG 1.54 against
+6. ~~Ask whether a better reader would help~~ — **done, check 8. It would not.**
+7. **Correct the small over-estimate** seen on 2025-26 (mean xG 1.54 against
    1.38 goals per team-match). It does not appear in the 2015-16 comparison,
    where the means match exactly — worth understanding why.

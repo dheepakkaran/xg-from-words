@@ -64,6 +64,28 @@ test asserts the raw text *still* leaks so the ceiling cannot pass vacuously,
 and why the third check asks the data — flagging any phrase that converts above
 80% — instead of trusting a list of words someone thought of in advance. Full working: [reports/AUDIT.md](reports/AUDIT.md).
 
+### Is the extraction the limit, or the words?
+
+The words reach 0.781 against coordinates' 0.812. Before reaching for a bigger
+reader to close that gap, `src/extraction_ceiling.py` asks whether there is
+anything left in the sentence to read.
+
+```
+regex fields, boosted trees      17 fields   AUC 0.7692
+every 1-4 gram in the sentence   all words   AUC 0.7612
+sentence embedding (MiniLM)      all words   AUC 0.7584
+embedding + regex fields         both        AUC 0.7578
+```
+
+**Reading more of the sentence is worth −0.008.** Seventeen extracted fields
+beat every model given the whole text. The gap to a coordinate model is
+therefore the words themselves — distance, angle, defenders — not the
+extraction, and no better reader can recover what the sentence never contained.
+
+An LLM extractor was considered and dropped on this evidence. vLLM likewise:
+its speedup needs CUDA, this machine has none, and installing it downgrades
+torch across the working environment. Both would be stack for its own sake.
+
 ### Retrieval: the same number with its evidence attached
 
 `src/retrieve.py` indexes every shot's sentence in Qdrant and answers a new
@@ -140,6 +162,7 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/shots.py            # -> data/proc/shots.parquet, 47k shots
 ./run.sh src/xg.py               # xG from the words, held-out season
 ./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.1%
+./run.sh src/extraction_ceiling.py   # is there anything left to read?
 ./run.sh src/retrieve.py         # Qdrant neighbours + second opinion
 ./run.sh src/train_xg.py         # -> models/xg.joblib
 ./run.sh src/live_xg.py          # live; --date YYYYMMDD --finished to replay
@@ -168,6 +191,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/shots.py` | Shots parsed out of commentary; whitelists the safe spans |
 | `src/xg.py` | The xG model, and the size of the leak if the text is left raw |
 | `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
+| `src/extraction_ceiling.py` | Is the extraction the limit, or the words? |
 | `src/retrieve.py` | Qdrant neighbours: the estimate with its evidence |
 | `src/style.py` | Shot-profile fingerprints, and a side against its own season |
 | `src/train_xg.py` | Ships `models/xg.joblib` with its data window |
