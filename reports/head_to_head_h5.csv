@@ -1,0 +1,2 @@
+numbers,words,auc_ovr_gap,ci_low,ci_high,p_numbers_win
+A. cumulative counts,B-tfidf. last 10 lines,0.009108650132336306,-0.017685720355992047,0.03571183373219301,0.745

@@ -1,0 +1,32 @@
+400 matches sampled
+
+commentary depth by season
+  2022:   88 matches, median  104 lines, min 76, max 143
+  2023:   94 matches, median  108 lines, min 75, max 151
+  2024:  103 matches, median  110 lines, min 76, max 150
+  2025:  115 matches, median  104 lines, min 64, max 145
+
+template variety within each event type
+  event type                     lines  templates  top share
+  Foul                           16864         41     46.18%
+  none                            5271        198     18.12%
+  Shot Off Target                 3499       1045      2.49%
+  Substitution                    3229         16     82.94%
+  Corner Awarded                  3174         16     60.11%
+  Shot Blocked                    2931        185     14.47%
+  Shot On Target                  2079        602      2.93%
+  Yellow Card                     1628         18     64.00%
+  Offside                         1338         11     69.73%
+  Goal                             726        435      3.72%
+  Handball                         249          7     65.86%
+  Kickoff                          247          1    100.00%
+  End Regular Time                 215          3     86.51%
+  Halftime                         209          3     86.12%
+
+most common 'Shot Off Target' templates
+     87  <N> missed. <N> (<N>) right footed shot from outside the box is high and wide to the right. <N> by <
+     64  <N> missed. <N> (<N>) right footed shot from outside the box is too high. <N> by <N>.
+     62  <N> missed. <N> (<N>) header from the centre of the box misses to the right. <N> by <N> with a cross
+     57  <N> missed. <N> (<N>) right footed shot from outside the box misses to the left. <N> by <N>.
+     56  <N> missed. <N> (<N>) header from the centre of the box misses to the left. <N> by <N> with a cross.
+     51  <N> missed. <N> (<N>) left footed shot from outside the box is high and wide to the left. <N> by <N>
