@@ -7,3 +7,4 @@ xgboost
 torch
 sentence-transformers
 pytest
+qdrant-client

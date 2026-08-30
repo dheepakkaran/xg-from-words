@@ -7,7 +7,7 @@ Every claim below was checked against the live source or the collected data on
 
 ## Verdict first
 
-**Words recover 90.7% of a coordinate model's discrimination.** Measured on
+**Words recover 90.1% of a coordinate model's discrimination.** Measured on
 8,825 shots where a commentary sentence and a true StatsBomb shot location
 describe the same event.
 
@@ -157,7 +157,40 @@ the settled ESPN odds — it looks like a triumph and is worthless.
 |---|---|---|
 | 1 | Strip the opening clause | Leaked — `penalty` field showed a 100% goal rate |
 | 2 | Strip opener + a list of outcome verbs | Leaked — inspecting coefficients showed `goal` (+7.99), `own goal`, `converts the penalty`, `hits the post` had survived; AUC 0.8212 was fake |
-| 3 | **Whitelist** — keep only spans matching known descriptive patterns | Clean |
+| 3 | **Whitelist** — keep only spans matching known descriptive patterns | Leaked once more, found later. See below |
+| 4 | Whitelist, minus free kicks | Clean |
+
+### The fourth leak, and why the first test would not have caught it
+
+Attempt 3 passed the leak test, passed inspection, and produced the headline
+number. It was caught days later by looking at a retrieval example: the
+highest-rated chance in the held-out season was *"from a free kick right footed
+shot"*, and all forty of its nearest neighbours were goals.
+
+ESPN word the two outcomes differently:
+
+```
+scored : "Olise (Crystal Palace) from a free kick with a left footed shot to..."
+missed : "...right footed shot from outside the box ... from a direct free kick"
+```
+
+So the phrase surviving the whitelist, `from a free kick`, appeared on 60 shots
+and **every one was a goal**. The event type leaks identically — scored ones are
+typed `Goal - Free-kick`, missed ones `Shot Off Target`. A free kick cannot be
+identified from this feed before its outcome is known, so it is no longer a
+feature.
+
+**The test was the problem, not just the parser.** It checked a hand-written
+list of forbidden words, and `free kick` was not on it — because a free kick is
+a legitimate thing to describe. A list only catches leaks already imagined.
+
+The replacement asks the data instead: every n-gram appearing 25+ times is
+checked, and any that converts above 80% — well clear of the ~76% penalty rate,
+the highest legitimate value — fails the suite. Run against the pre-fix data it
+flags `('free kick', 60, 1.00)` immediately.
+
+Cost of the fix: 0.7727 → 0.7688 AUC. The leak was contributing almost nothing,
+which is exactly why it survived so long.
 
 Attempt 2 is the important one. It *looked* right, the text read correctly by
 eye, and it was only caught by printing the model's top coefficients. **Free
@@ -184,8 +217,8 @@ Time-based split. Train 2022-23 → 2024-25 (28,735 shots), test 2025-26
 | Model | AUC | log loss | Brier |
 |---|---|---|---|
 | base rate | 0.5000 | 0.3539 | 0.1006 |
-| **regex fields from the text** | **0.7727** | **0.2935** | **0.0834** |
-| whitelisted text, tf-idf | 0.7634 | 0.2999 | 0.0856 |
+| **regex fields from the text** | **0.7688** | **0.2965** | **0.0846** |
+| whitelisted text, tf-idf | 0.7628 | 0.3012 | 0.0861 |
 | *raw text (leaking, not a result)* | *1.0000* | *0.0104* | *0.0004* |
 
 That the two clean models land within 0.01 of each other is the sanity check
@@ -271,41 +304,42 @@ not an easier one.
 ### How close are the two numbers?
 
 ```
-correlation (ours vs StatsBomb xG)  : 0.689
+correlation (ours vs StatsBomb xG)  : 0.741
 rank correlation                    : 0.626
-mean   ours 0.098      theirs 0.098
-MAE                                 : 0.054
+mean   ours 0.097      theirs 0.098
+MAE                                 : 0.052
 ```
 
-The means are identical to three decimals. Whatever the words miss, they do
+The means agree to within 0.001. Whatever the words miss, they do
 not miss it in a biased direction.
 
 ### Predicting the same goals, on the same shots
 
 | Model | Input | AUC | log loss | Brier |
 |---|---|---|---|---|
-| **ours** | the commentary sentence | **0.7826** | 0.2676 | 0.0747 |
+| **ours** | the commentary sentence | **0.7810** | 0.2709 | 0.0760 |
 | StatsBomb | shot coordinates, freeze frames, 16 player positions | 0.8118 | 0.2555 | 0.0715 |
 
 ```
-words recover 90.7% of the coordinate model's discrimination above chance
+words recover 90.1% of the coordinate model's discrimination above chance
 ```
 
 That is the number this project exists for. A sentence of English gets nine
 tenths of the way to a model built on tracking data — using a source that is
 free, keyless, and published for far more competitions than coordinates are.
 
-The remaining 9.3% is what the words genuinely cannot say: exact distance
+The remaining 9.9% is what the words genuinely cannot say: exact distance
 inside a zone, the angle, how many defenders stood in the way.
 
 ## What must happen before building
 
 1. ~~Read arXiv 2402.06820 in full~~ — **done, check 1. Not prior art.**
 2. ~~Collect ESPN 2015/16 and join to StatsBomb~~ — **done, check 7. 90.7%.**
-3. ~~Write the leak test~~ — **done.** `tests/test_shot_text_leak.py`, five
-   tests, including a behavioural ceiling that fails if any future phrasing
-   sneaks the outcome back in, and a companion test asserting the *raw* text
-   still leaks so the ceiling check cannot pass vacuously.
+3. ~~Write the leak test~~ — **done, then rewritten.** `tests/test_shot_text_leak.py`,
+   six tests: a behavioural AUC ceiling, a companion test asserting the raw
+   text still leaks so the ceiling cannot pass vacuously, and — after the free
+   kick episode — a data-driven check that flags *any* n-gram converting above
+   80%, rather than a list of words someone thought of in advance.
 4. **Add the empty-commentary guard.** One match in 1,520 arrives with no
    commentary and currently contributes nothing, silently.
 5. **Measure live latency** during an actual match. Still the only claim in

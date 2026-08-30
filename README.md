@@ -33,13 +33,13 @@ coordinates.
 
 | Model | Input | AUC |
 |---|---|---|
-| **ours** | one English sentence | **0.7826** |
+| **ours** | one English sentence | **0.7810** |
 | StatsBomb | shot coordinates, 16 player positions, freeze frames | 0.8118 |
 
 ```
 8,825 shots, both sources describing the same events
-words recover 90.7% of the coordinate model's discrimination above chance
-means match to three decimals: ours 0.098, theirs 0.098
+words recover 90.1% of the coordinate model's discrimination above chance
+means agree to 0.001: ours 0.097, theirs 0.098
 ```
 
 Trained on 2022-25, evaluated on **2015-16** — a decade outside the training
@@ -53,13 +53,40 @@ and published for far more competitions than coordinates are.
 
 Every shot line opens by stating the outcome — `Goal!` is 100% goals,
 `Attempt missed/saved/blocked` is 0%. Raw text scores **1.0000 AUC** and has
-learned nothing. Two rounds of blacklist filtering read correctly by eye and
-**both still leaked**; the second was caught only by printing coefficients and
-finding `goal` weighted at +7.99.
+learned nothing. Three rounds of filtering read correctly by eye and **all three still
+leaked** — the second was caught by printing coefficients and finding `goal`
+weighted at +7.99; the third by noticing that a retrieved shot's forty nearest
+neighbours were all goals, because ESPN word a scored free kick differently
+from a missed one.
 
-That is why the leak test is behavioural rather than cosmetic, and why a
-companion test asserts the raw text *still* leaks — so the ceiling check cannot
-pass vacuously. Full working: [reports/AUDIT.md](reports/AUDIT.md).
+That is why the leak test is behavioural rather than cosmetic, why a companion
+test asserts the raw text *still* leaks so the ceiling cannot pass vacuously,
+and why the third check asks the data — flagging any phrase that converts above
+80% — instead of trusting a list of words someone thought of in advance. Full working: [reports/AUDIT.md](reports/AUDIT.md).
+
+### Retrieval: the same number with its evidence attached
+
+`src/retrieve.py` indexes every shot's sentence in Qdrant and answers a new
+shot with its forty nearest neighbours from *earlier seasons only*.
+
+```
+trained model (regex fields)   AUC 0.7688   brier 0.0846
+neighbour goal rate (Qdrant)   AUC 0.7603   brier 0.0859
+average of the two             AUC 0.7724   brier 0.0832
+agreement between the two      r = 0.810
+```
+
+A faithful second opinion, and a small ensemble gain. It also pays for itself
+in a way a metric does not show: **the fourth leak above was found by reading a
+retrieval example**, not by a test.
+
+```
+shot : "right footed shot from very close range following a fast break"
+model says 84%, 26/40 similar past shots were goals (65%)
+```
+
+Qdrant runs embedded (`QdrantClient(path=...)`) because the Docker daemon here
+belongs to another account. Only the constructor changes for a server.
 
 ---
 
@@ -83,7 +110,8 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 
 ./run.sh src/shots.py            # -> data/proc/shots.parquet, 47k shots
 ./run.sh src/xg.py               # xG from the words, held-out season
-./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.7%
+./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.1%
+./run.sh src/retrieve.py         # Qdrant neighbours + second opinion
 ```
 
 `run.sh` exists because the macOS xgboost wheel hard-codes an rpath to
@@ -108,6 +136,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/shots.py` | Shots parsed out of commentary; whitelists the safe spans |
 | `src/xg.py` | The xG model, and the size of the leak if the text is left raw |
 | `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
+| `src/retrieve.py` | Qdrant neighbours: the estimate with its evidence |
 | `tests/test_leakage.py` | Asserts no feature at minute *M* can see past *M*, and that the diagnostics that *should* see it do |
 | `tests/test_shot_text_leak.py` | Asserts the shot outcome never returns to the text |
 

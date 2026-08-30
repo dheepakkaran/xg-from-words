@@ -116,6 +116,38 @@ def test_raw_text_does_leak(df):
         f"stripping is untested and test_stripped_text... proves nothing")
 
 
+def test_no_extracted_phrase_is_an_outcome_in_disguise(df):
+    """The check that does not rely on me guessing the words.
+
+    A hand-written forbidden list only catches leaks already thought of. It
+    missed one: ESPN word a scored direct free kick differently from a missed
+    one, so the surviving phrase "from a free kick" appeared on 60 shots and
+    every single one was a goal.
+
+    So instead of listing words, this asks the data. Any n-gram that appears
+    often enough to matter and converts far above the penalty rate is not
+    describing a chance, it is naming the outcome.
+    """
+    from sklearn.feature_extraction.text import CountVectorizer
+    import numpy as np
+
+    v = CountVectorizer(ngram_range=(1, 4), min_df=25, binary=True)
+    X = v.fit_transform(df.text)
+    y = df.goal.values
+    n = np.asarray(X.sum(axis=0)).ravel()
+    goals = np.asarray(X.T.dot(y)).ravel()
+    rate = goals / n
+
+    # Penalties convert at ~76% and are a legitimate feature; nothing
+    # descriptive should sit above them.
+    suspects = [(v.get_feature_names_out()[i], int(n[i]), float(rate[i]))
+                for i in np.argsort(-rate)[:40]
+                if rate[i] > 0.80 and "penalt" not in v.get_feature_names_out()[i]]
+    assert not suspects, (
+        "phrases converting above 80% -- these name the outcome rather than "
+        f"describe the chance: {suspects[:5]}")
+
+
 def test_penalties_come_from_the_event_type_not_the_text(df):
     """Penalty is knowable before the kick. It must not be inferred from
     wording that only a converted penalty produces."""

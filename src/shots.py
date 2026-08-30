@@ -27,7 +27,6 @@ PATTERNS = {
     "after_break":   r"following a fast break",
     "after_setpiece": r"following a set piece routine",
     "assisted":      r"assisted by",
-    "free_kick":     r"from a free kick|free kick",
 }
 
 # ---------------------------------------------------------------------------
@@ -55,6 +54,15 @@ PATTERNS = {
 # are kept; everything else in the sentence is discarded. Nothing can leak
 # that is not explicitly listed here, and each listed phrase is knowable
 # before the ball is struck.
+#
+# Free kicks are deliberately absent. ESPN word a scored direct free kick as
+# "X (Team) from a free kick with a right footed shot..." and a missed one as
+# "...shot from outside the box ... from a direct free kick" -- different
+# phrasing for the same situation, so the phrase that survives whitelisting
+# appears only on goals (60 shots, 100% goal rate). The event type leaks the
+# same way: scored ones are typed `Goal - Free-kick`, missed ones
+# `Shot Off Target`. A free kick simply cannot be identified from this feed
+# before its outcome is known, so it is not a feature.
 SAFE_SPANS = [
     r"from (the )?(centre|left side|right side|outside) of the box",
     r"from outside the box",
@@ -68,7 +76,6 @@ SAFE_SPANS = [
     r"an aerial pass)",
     r"assisted by",
     r"following a (corner|fast break|set piece situation)",
-    r"from a free kick",
     r"after a corner",
 ]
 SAFE = re.compile("|".join(f"({p})" for p in SAFE_SPANS), re.I)

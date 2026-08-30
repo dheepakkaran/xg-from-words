@@ -19,7 +19,7 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 FIELDS = ["six_yard", "centre_box", "side_box", "outside_box", "long_range",
           "difficult_ang", "header", "left_foot", "right_foot", "from_cross",
           "from_through", "after_corner", "after_break", "after_setpiece",
-          "assisted", "free_kick", "penalty", "minute"]
+          "assisted", "penalty", "minute"]
 
 
 def report(name, y, p):
