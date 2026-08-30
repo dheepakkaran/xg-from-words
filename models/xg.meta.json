@@ -1,0 +1,33 @@
+{
+ "trained_on": [
+  2022,
+  2023,
+  2024
+ ],
+ "n_train": 28735,
+ "held_out_season": 2025,
+ "n_test": 9194,
+ "auc": 0.7688,
+ "brier": 0.0846,
+ "base_rate": 0.1134,
+ "features": [
+  "six_yard",
+  "centre_box",
+  "side_box",
+  "outside_box",
+  "long_range",
+  "difficult_ang",
+  "header",
+  "left_foot",
+  "right_foot",
+  "from_cross",
+  "from_through",
+  "after_corner",
+  "after_break",
+  "after_setpiece",
+  "assisted",
+  "penalty",
+  "minute"
+ ],
+ "git_sha": "4187f6b84c55726509ce0214c84091d1e8493f6d"
+}

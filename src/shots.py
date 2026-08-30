@@ -95,38 +95,50 @@ SHOT_TYPES = {"Shot On Target", "Shot Off Target", "Shot Blocked",
               "Penalty - Hit Woodwork"} | GOAL_TYPES
 
 
+def shots_from_summary(summary, event_id=None, season=None):
+    """Every shot in one match summary, as feature rows.
+
+    Shared by the offline parser and the live path, for the same reason
+    snapshots.features_at is shared: two copies of this drift, and then
+    training and serving disagree about what a shot is.
+    """
+    head = summary.get("header", {}).get("competitions", [{}])[0]
+    teams = {c["homeAway"]: c["team"]["displayName"]
+             for c in head.get("competitors", [])}
+    if len(teams) != 2:
+        return []
+    rows = []
+    for e in summary.get("commentary", []):
+        play = e.get("play") or {}
+        ty = (play.get("type") or {}).get("text", "")
+        if ty not in SHOT_TYPES:
+            continue
+        team = (play.get("team") or {}).get("displayName")
+        if not team:
+            continue
+        txt = strip_outcome(e.get("text") or "").lower()
+        row = {"event_id": event_id, "season": season, "team": team,
+               "side": "home" if team == teams.get("home") else "away",
+               "minute": (e.get("time") or {}).get("value", 0) / 60.0,
+               "goal": int(ty in GOAL_TYPES),
+               "text_raw": e.get("text", ""),
+               "text": strip_outcome(e.get("text", ""))}
+        for name, pat in PATTERNS.items():
+            row[name] = int(bool(re.search(pat, txt)))
+        # The event type carries this reliably; the text does not once the
+        # outcome clause is gone.
+        row["penalty"] = int("Penalty" in ty or "penalty" in txt)
+        rows.append(row)
+    return rows
+
+
 def parse():
     rows = []
     for f in sorted(glob.glob(os.path.join(ROOT, "data", "raw", "*.json.gz"))):
         d = json.load(gzip.open(f, "rt"))
-        head = d.get("header", {}).get("competitions", [{}])[0]
-        season = (d.get("header", {}).get("season", {}) or {}).get("year")
-        teams = {c["homeAway"]: c["team"]["displayName"]
-                 for c in head.get("competitors", [])}
-        if len(teams) != 2:
-            continue
-        for e in d.get("commentary", []):
-            play = e.get("play") or {}
-            ty = (play.get("type") or {}).get("text", "")
-            if ty not in SHOT_TYPES:
-                continue
-            team = (play.get("team") or {}).get("displayName")
-            if not team:
-                continue
-            txt = strip_outcome(e.get("text") or "").lower()
-            row = {"event_id": os.path.basename(f).split(".")[0],
-                   "season": season, "team": team,
-                   "side": "home" if team == teams.get("home") else "away",
-                   "minute": (e.get("time") or {}).get("value", 0) / 60.0,
-                   "goal": int(ty in GOAL_TYPES),
-                   "text_raw": e.get("text", ""),
-                   "text": strip_outcome(e.get("text", ""))}
-            for name, pat in PATTERNS.items():
-                row[name] = int(bool(re.search(pat, txt)))
-            # The event type carries this reliably; the text does not once the
-            # outcome clause is gone.
-            row["penalty"] = int("Penalty" in ty or "penalty" in txt)
-            rows.append(row)
+        rows += shots_from_summary(
+            d, event_id=os.path.basename(f).split(".")[0],
+            season=(d.get("header", {}).get("season", {}) or {}).get("year"))
     return pd.DataFrame(rows)
 
 

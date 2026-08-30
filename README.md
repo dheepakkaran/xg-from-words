@@ -88,6 +88,35 @@ model says 84%, 26/40 similar past shots were goals (65%)
 Qdrant runs embedded (`QdrantClient(path=...)`) because the Docker daemon here
 belongs to another account. Only the constructor changes for a server.
 
+### What it says during a match
+
+`src/live_xg.py` does not forecast — question 1 established that forecasting
+the next goal is not possible here. It measures what the scoreboard gets wrong.
+
+```
+Tottenham Hotspur v Newcastle United   0-2   90'+4'
+  Tottenham Hotspur      0 goals   chances worth 1.52   (17 shots)
+                         -1.52 vs expected -- wasteful
+  Newcastle United       2 goals   chances worth 0.89   (11 shots)
+                         +1.11 vs expected -- finishing well
+```
+
+Seventeen shots to eleven, and the side that created more lost 2-0. That is
+the reading the scoreline cannot give you.
+
+`src/style.py --team "Manchester City"` compares a run of matches with the
+season, which is the smallest window where a shot profile means anything:
+
+```
+outside_box   35.6% recent   26.7% season   +8.9 pts
+header         8.7% recent   17.1% season   -8.5 pts
+from_cross     6.7% recent   14.6% season   -7.8 pts
+```
+
+Being kept out of the box and settling for range. A single match is ten to
+seventeen shots and cannot support this, which is why the live view does not
+claim it.
+
 ---
 
 The design for question 1 is in [PROPOSAL.md](PROPOSAL.md). Stages 1–4 are
@@ -112,6 +141,9 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/xg.py               # xG from the words, held-out season
 ./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.1%
 ./run.sh src/retrieve.py         # Qdrant neighbours + second opinion
+./run.sh src/train_xg.py         # -> models/xg.joblib
+./run.sh src/live_xg.py          # live; --date YYYYMMDD --finished to replay
+./run.sh src/style.py --team "Manchester City"
 ```
 
 `run.sh` exists because the macOS xgboost wheel hard-codes an rpath to
@@ -137,6 +169,9 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/xg.py` | The xG model, and the size of the leak if the text is left raw |
 | `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
 | `src/retrieve.py` | Qdrant neighbours: the estimate with its evidence |
+| `src/style.py` | Shot-profile fingerprints, and a side against its own season |
+| `src/train_xg.py` | Ships `models/xg.joblib` with its data window |
+| `src/live_xg.py` | Chance quality and finishing form, live |
 | `tests/test_leakage.py` | Asserts no feature at minute *M* can see past *M*, and that the diagnostics that *should* see it do |
 | `tests/test_shot_text_leak.py` | Asserts the shot outcome never returns to the text |
 
