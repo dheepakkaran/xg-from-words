@@ -1,0 +1,7 @@
+# Test-only dependencies. The full stack (torch, sentence-transformers,
+# xgboost) is in requirements.txt and is not needed to run the test suite.
+pandas
+numpy
+scikit-learn
+pyarrow
+pytest

@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements-ci.txt
+      # The collected corpus is not in the repository. These run against the
+      # sample committed under tests/fixtures, which is enough to exercise both
+      # leakage suites -- including the behavioural ceiling that fails if the
+      # shot outcome ever leaks back into the text.
+      - run: pytest tests/ -q
