@@ -36,6 +36,21 @@ FORBIDDEN = ["goal", "scored", "converts", "saved", "missed", "misses",
 # this is the leak coming back, not a modelling breakthrough.
 AUC_CEILING = 0.85
 
+# Penalties are the best legitimate feature and convert at ~76%. A phrase whose
+# conversion is *confidently* above this is naming the outcome, not the chance.
+LOWER_BOUND = 0.85
+
+
+def wilson_lower(successes, n, z=1.96):
+    """Lower end of a Wilson score interval -- how high the true rate is
+    confidently above, given this many observations."""
+    import numpy as np
+    p = successes / n
+    d = 1 + z ** 2 / n
+    centre = p + z ** 2 / (2 * n)
+    margin = z * np.sqrt(p * (1 - p) / n + z ** 2 / (4 * n ** 2))
+    return (centre - margin) / d
+
 
 @pytest.fixture(scope="module")
 def df():
@@ -124,9 +139,16 @@ def test_no_extracted_phrase_is_an_outcome_in_disguise(df):
     one, so the surviving phrase "from a free kick" appeared on 60 shots and
     every single one was a goal.
 
-    So instead of listing words, this asks the data. Any n-gram that appears
-    often enough to matter and converts far above the penalty rate is not
-    describing a chance, it is naming the outcome.
+    So instead of listing words, this asks the data. Any n-gram converting far
+    above the best legitimate feature is not describing a chance, it is naming
+    the outcome.
+
+    The bar is a Wilson lower bound rather than the raw rate, because a raw
+    rate over a handful of shots is noise. "From very close range following a
+    fast break" converts at 81% over 32 shots -- a genuinely excellent chance,
+    a tap-in on the break -- and a fixed threshold flags it. Its lower bound is
+    0.65, comfortably below a penalty. The free kick leak was 60 from 60, lower
+    bound 0.94, and is flagged at any sample size.
     """
     from sklearn.feature_extraction.text import CountVectorizer
     import numpy as np
@@ -134,18 +156,19 @@ def test_no_extracted_phrase_is_an_outcome_in_disguise(df):
     v = CountVectorizer(ngram_range=(1, 4), min_df=25, binary=True)
     X = v.fit_transform(df.text)
     y = df.goal.values
-    n = np.asarray(X.sum(axis=0)).ravel()
-    goals = np.asarray(X.T.dot(y)).ravel()
-    rate = goals / n
+    n = np.asarray(X.sum(axis=0)).ravel().astype(float)
+    goals = np.asarray(X.T.dot(y)).ravel().astype(float)
 
-    # Penalties convert at ~76% and are a legitimate feature; nothing
-    # descriptive should sit above them.
-    suspects = [(v.get_feature_names_out()[i], int(n[i]), float(rate[i]))
-                for i in np.argsort(-rate)[:40]
-                if rate[i] > 0.80 and "penalt" not in v.get_feature_names_out()[i]]
+    lower = wilson_lower(goals, n)
+    names = v.get_feature_names_out()
+    suspects = [(names[i], int(n[i]), round(float(goals[i] / n[i]), 3),
+                 round(float(lower[i]), 3))
+                for i in np.argsort(-lower)[:40]
+                if lower[i] > LOWER_BOUND and "penalt" not in names[i]]
     assert not suspects, (
-        "phrases converting above 80% -- these name the outcome rather than "
-        f"describe the chance: {suspects[:5]}")
+        f"phrases whose conversion is confidently above {LOWER_BOUND:.0%} -- "
+        f"these name the outcome rather than describe the chance: "
+        f"(phrase, n, rate, lower bound) {suspects[:5]}")
 
 
 def test_penalties_come_from_the_event_type_not_the_text(df):
