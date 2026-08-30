@@ -1,0 +1,148 @@
+"""Audit prototype - xG from the words alone.
+
+Parses every shot out of the commentary text, turns the sentence into a
+handful of binary fields with regular expressions, and fits the simplest
+possible model. This exists to answer one question before any real work is
+committed: does the text carry enough to rate a chance at all?
+"""
+import gzip, glob, json, os, re, sys
+import pandas as pd
+
+ROOT = os.path.join(os.path.dirname(__file__), "..")
+
+# Each pattern is a column. Order matters only for readability.
+PATTERNS = {
+    "six_yard":      r"six yard box|very close range",
+    "centre_box":    r"from the centre of the box",
+    "side_box":      r"from the (left|right) side of the box",
+    "outside_box":   r"from outside the box",
+    "long_range":    r"from a difficult angle and long range|from long range",
+    "difficult_ang": r"difficult angle",
+    "header":        r"\bheader\b|\bheaded\b",
+    "left_foot":     r"left footed",
+    "right_foot":    r"right footed",
+    "from_cross":    r"with a cross",
+    "from_through":  r"with a through ball",
+    "after_corner":  r"following a corner|corner kick",
+    "after_break":   r"following a fast break",
+    "after_setpiece": r"following a set piece routine",
+    "assisted":      r"assisted by",
+    "free_kick":     r"from a free kick|free kick",
+}
+
+# ---------------------------------------------------------------------------
+# Removing the outcome from the sentence.
+#
+# Every shot line has the same shape:
+#
+#   "Attempt saved. Rashford (Man Utd) right footed shot from the centre of
+#    the box is saved in the bottom left corner. Assisted by Bruno Fernandes."
+#    ^^^^^^^^^^^^^^ opener states the outcome    ^^^^^^^^ so does the verb
+#
+# Both halves give the label away. The opener separates goals from non-goals
+# perfectly ("Goal!" -> 100%, "Attempt missed/saved/blocked" -> 0%), so a model
+# handed the raw sentence scores a perfect AUC and has learned nothing at all.
+#
+# What is kept is the description that comes *before* the outcome verb, plus
+# the assist clause, which is about how the chance was built rather than how it
+# ended. tests/test_shot_text_leak.py asserts none of this comes back.
+# Blacklisting outcome phrases was tried twice and leaked both times -- the
+# words "goal", "converts the penalty" and "hits the left post" all survived
+# and a tf-idf model scored 0.82 AUC by reading them. Free text has too many
+# ways to say what happened to remove them all.
+#
+# So this whitelists instead. Only spans matching a known descriptive pattern
+# are kept; everything else in the sentence is discarded. Nothing can leak
+# that is not explicitly listed here, and each listed phrase is knowable
+# before the ball is struck.
+SAFE_SPANS = [
+    r"from (the )?(centre|left side|right side|outside) of the box",
+    r"from outside the box",
+    r"from the (six yard box|centre of the box)",
+    r"from a difficult angle( and long range)?",
+    r"from (very )?close range",
+    r"from long range",
+    r"(right|left) footed shot",
+    r"\bheader\b",
+    r"assisted by [a-zà-ÿ' .-]+? with (a cross|a through ball|a headed pass|"
+    r"an aerial pass)",
+    r"assisted by",
+    r"following a (corner|fast break|set piece situation)",
+    r"from a free kick",
+    r"after a corner",
+]
+SAFE = re.compile("|".join(f"({p})" for p in SAFE_SPANS), re.I)
+
+
+def strip_outcome(text):
+    """Keep only whitelisted descriptive spans, in the order they appear."""
+    if not text:
+        return ""
+    return " ".join(m.group(0).lower() for m in SAFE.finditer(text))
+
+
+GOAL_TYPES = {"Goal", "Goal - Header", "Goal - Volley", "Goal - Free-kick",
+              "Penalty - Scored", "Own Goal"}
+SHOT_TYPES = {"Shot On Target", "Shot Off Target", "Shot Blocked",
+              "Shot Hit Woodwork", "Penalty - Saved", "Penalty - Missed",
+              "Penalty - Hit Woodwork"} | GOAL_TYPES
+
+
+def parse():
+    rows = []
+    for f in sorted(glob.glob(os.path.join(ROOT, "data", "raw", "*.json.gz"))):
+        d = json.load(gzip.open(f, "rt"))
+        head = d.get("header", {}).get("competitions", [{}])[0]
+        season = (d.get("header", {}).get("season", {}) or {}).get("year")
+        teams = {c["homeAway"]: c["team"]["displayName"]
+                 for c in head.get("competitors", [])}
+        if len(teams) != 2:
+            continue
+        for e in d.get("commentary", []):
+            play = e.get("play") or {}
+            ty = (play.get("type") or {}).get("text", "")
+            if ty not in SHOT_TYPES:
+                continue
+            team = (play.get("team") or {}).get("displayName")
+            if not team:
+                continue
+            txt = strip_outcome(e.get("text") or "").lower()
+            row = {"event_id": os.path.basename(f).split(".")[0],
+                   "season": season, "team": team,
+                   "side": "home" if team == teams.get("home") else "away",
+                   "minute": (e.get("time") or {}).get("value", 0) / 60.0,
+                   "goal": int(ty in GOAL_TYPES),
+                   "text_raw": e.get("text", ""),
+                   "text": strip_outcome(e.get("text", ""))}
+            for name, pat in PATTERNS.items():
+                row[name] = int(bool(re.search(pat, txt)))
+            # The event type carries this reliably; the text does not once the
+            # outcome clause is gone.
+            row["penalty"] = int("Penalty" in ty or "penalty" in txt)
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def main():
+    df = parse()
+    out = os.path.join(ROOT, "data", "proc", "shots.parquet")
+    df.to_parquet(out, index=False)
+    print(f"shots parsed : {len(df):,}")
+    print(f"goals        : {df.goal.sum():,}  ({df.goal.mean():.1%})")
+    print(f"seasons      : {sorted(df.season.dropna().unique().tolist())}")
+    print()
+    print("goal rate by parsed field")
+    for c in PATTERNS:
+        m = df[df[c] == 1]
+        if len(m) > 100:
+            print(f"  {c:15s} n={len(m):6,}  goal rate {m.goal.mean():6.1%}")
+    print(f"  {'(overall)':15s} n={len(df):6,}  goal rate {df.goal.mean():6.1%}")
+    print()
+    print("outcome stripped from the text -- before and after")
+    for a, b in zip(df.text_raw.head(3), df.text.head(3)):
+        print(f"  raw  : {a[:88]}")
+        print(f"  kept : {b[:88]}\n")
+
+
+if __name__ == "__main__":
+    main()
