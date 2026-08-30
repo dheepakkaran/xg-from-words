@@ -228,6 +228,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/live_xg.py` | Chance quality and finishing form, live |
 | `tests/test_leakage.py` | Asserts no feature at minute *M* can see past *M*, and that the diagnostics that *should* see it do |
 | `tests/test_shot_text_leak.py` | Asserts the shot outcome never returns to the text |
+| `tests/fixtures/` | A 2 MB sample so both suites run in CI. Regenerate it whenever the corpus changes — a stale fixture gives CI a false green, which has happened once |
 
 ## The live worklist
 

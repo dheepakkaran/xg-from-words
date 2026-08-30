@@ -180,3 +180,32 @@ def test_penalties_come_from_the_event_type_not_the_text(df):
     assert 0.6 < rate < 0.9, (
         f"penalty conversion is {rate:.1%}; real is ~76%. A rate near 100% "
         f"means the flag is being set by goal-only wording")
+
+
+def test_committed_fixture_is_not_stale():
+    """CI runs against tests/fixtures, and a stale fixture gives a false green.
+
+    That happened: adding five leagues introduced a phrase that failed the
+    leak test locally, while CI stayed green because the committed sample
+    predated those leagues. A fixture that does not resemble the corpus is not
+    testing the corpus.
+
+    This only runs where the full data exists -- in CI there is nothing to
+    compare against, and the test skips.
+    """
+    import pandas as pd
+    full = os.path.join(HERE, "..", "data", "proc", "shots.parquet")
+    fixture = os.path.join(HERE, "fixtures", "shots_sample.parquet")
+    if not (os.path.exists(full) and os.path.exists(fixture)):
+        pytest.skip("needs both the corpus and the fixture")
+
+    real = pd.read_parquet(full)
+    real = real[real.season >= 2022]
+    sample = pd.read_parquet(fixture)
+
+    assert len(sample) == len(real), (
+        f"fixture has {len(sample):,} rows, the corpus has {len(real):,}. "
+        f"Regenerate it -- see README -- or CI is testing something else.")
+    if "league" in real and "league" in sample:
+        assert set(sample.league) == set(real.league), (
+            "fixture and corpus cover different competitions")
