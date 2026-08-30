@@ -1,27 +1,71 @@
-# MomentumRadar
+# Reading the game
 
-Does the language of live football commentary predict the next goal better than
-the event counts do?
+**Two questions about football commentary, asked in order. The first one
+failed, and the failure is what pointed at the second.**
 
-**No** — and the more interesting part is *how little* anything predicts it.
+---
 
-Over four Premier League seasons and 22,147 snapshots:
+## 1. Does commentary predict the *next goal*? — No.
+
+Four Premier League seasons, 22,147 snapshots, time-based folds:
 
 * the **numbers beat the words** in every fold and at every horizon (5/10/15/30 min);
 * **neither beats simply quoting the base rate**;
-* a model that has already **watched the next fifteen minutes** only reaches
-  0.60 AUC — so the counted events, at 0.54, already capture 40% of everything
-  a crystal ball could;
+* a model already **shown the next fifteen minutes** reaches only 0.60 AUC — so
+  the counted events, at 0.54, capture 40% of everything a crystal ball could;
 * **knowing which two teams are playing** (Elo, 0.559) beats every in-match
   feature combined;
-* and the skill splits: *who* scores is predictable at 0.64 AUC, *whether*
-  anyone scores is not (0.52) — and the live worklist asks the second question.
+* the skill splits — *who* scores is predictable at 0.64, *whether* anyone
+  scores is not (0.52), and the live worklist asks the second question.
 
-Read [reports/FINDINGS.md](reports/FINDINGS.md).
+**The target is nearly noise.** Not a weak model of a rich signal — a good
+model of almost nothing. [reports/FINDINGS.md](reports/FINDINGS.md).
 
-The design is in [PROPOSAL.md](PROPOSAL.md). Stages 1–4 of it are implemented
-here; Stages 5–9 (Spark, Qdrant, vLLM, LangGraph, C++ poller, Kubeflow) are not,
-and the result above is the reason to think hard before building them.
+## 2. Does it say how good a *chance* was? — Yes, to within 9%.
+
+Measuring the first question turned up something else: foul and corner
+commentary is templated (41 templates across 16,864 lines), but shot commentary
+is not (1,045 across 3,499). The words describe body part, zone and build-up —
+which is what an expected-goals model is made of.
+
+So: rate a shot from its sentence, and check it against a model built on real
+coordinates.
+
+| Model | Input | AUC |
+|---|---|---|
+| **ours** | one English sentence | **0.7826** |
+| StatsBomb | shot coordinates, 16 player positions, freeze frames | 0.8118 |
+
+```
+8,825 shots, both sources describing the same events
+words recover 90.7% of the coordinate model's discrimination above chance
+means match to three decimals: ours 0.098, theirs 0.098
+```
+
+Trained on 2022-25, evaluated on **2015-16** — a decade outside the training
+window, a different era and a different commentary team.
+
+**Why it matters:** coordinate data is commercial. StatsBomb's open Premier
+League coverage is two seasons ten years apart. Commentary is free, keyless,
+and published for far more competitions than coordinates are.
+
+### It nearly didn't work
+
+Every shot line opens by stating the outcome — `Goal!` is 100% goals,
+`Attempt missed/saved/blocked` is 0%. Raw text scores **1.0000 AUC** and has
+learned nothing. Two rounds of blacklist filtering read correctly by eye and
+**both still leaked**; the second was caught only by printing coefficients and
+finding `goal` weighted at +7.99.
+
+That is why the leak test is behavioural rather than cosmetic, and why a
+companion test asserts the raw text *still* leaks — so the ceiling check cannot
+pass vacuously. Full working: [reports/AUDIT.md](reports/AUDIT.md).
+
+---
+
+The design for question 1 is in [PROPOSAL.md](PROPOSAL.md). Stages 1–4 are
+implemented; Stages 5–9 (Spark, Qdrant, vLLM, LangGraph, C++ poller, Kubeflow)
+are not, and the result above is the reason to think hard before building them.
 
 ## Run it
 
@@ -36,6 +80,10 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/plots.py            # -> reports/*.png
 ./run.sh src/train_final.py      # -> models/track_a.joblib
 ./run.sh src/live.py             # the live worklist
+
+./run.sh src/shots.py            # -> data/proc/shots.parquet, 47k shots
+./run.sh src/xg.py               # xG from the words, held-out season
+./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.7%
 ```
 
 `run.sh` exists because the macOS xgboost wheel hard-codes an rpath to
@@ -57,7 +105,11 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/run_experiment.py` | The comparison |
 | `src/train_final.py` | Ships `models/track_a.joblib` (counts + Elo) with its data window |
 | `src/live.py` | The ranked worklist, and the commentary-latency probe |
+| `src/shots.py` | Shots parsed out of commentary; whitelists the safe spans |
+| `src/xg.py` | The xG model, and the size of the leak if the text is left raw |
+| `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
 | `tests/test_leakage.py` | Asserts no feature at minute *M* can see past *M*, and that the diagnostics that *should* see it do |
+| `tests/test_shot_text_leak.py` | Asserts the shot outcome never returns to the text |
 
 ## The live worklist
 
