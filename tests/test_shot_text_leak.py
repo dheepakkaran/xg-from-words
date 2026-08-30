@@ -1,0 +1,127 @@
+"""The test that has to exist before any modelling.
+
+Every shot's commentary line opens by stating what happened -- "Goal!",
+"Attempt missed", "Attempt saved", "Attempt blocked" -- and often repeats it in
+the verb ("is saved in the bottom left corner", "hits the left post"). That
+text *is* the label. A model handed the raw sentence scores a perfect AUC and
+has learned nothing.
+
+Two blacklist attempts at removing it both passed inspection by eye and both
+still leaked; the second was only caught by printing model coefficients and
+finding `goal` weighted at +7.99. So the check that matters here is
+behavioural, not cosmetic: train a model on the stripped text and assert it
+*cannot* separate goals too well. That catches a regression no matter which
+new phrasing sneaks the outcome back in.
+"""
+import os, sys
+import numpy as np
+import pytest
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+import shots as S
+
+HERE = os.path.dirname(__file__)
+_full = os.path.join(HERE, "..", "data", "proc", "shots.parquet")
+# Same fallback as test_leakage: the committed sample keeps CI honest without
+# requiring the collected corpus.
+PROC = _full if os.path.exists(_full) else os.path.join(
+    HERE, "fixtures", "shots_sample.parquet")
+
+# Words that only ever appear because of how the shot ended.
+FORBIDDEN = ["goal", "scored", "converts", "saved", "missed", "misses",
+             "blocked", "woodwork", "crossbar", "hits the bar",
+             "hits the post", "top left corner", "bottom right corner"]
+
+# A clean model sits near 0.77. The leaking one sits at 1.00. Anything above
+# this is the leak coming back, not a modelling breakthrough.
+AUC_CEILING = 0.85
+
+
+@pytest.fixture(scope="module")
+def df():
+    if not os.path.exists(PROC):
+        pytest.skip("run src/shots.py first")
+    import pandas as pd
+    d = pd.read_parquet(PROC)
+    return d[d.season >= 2022]
+
+
+def test_openers_are_removed():
+    cases = [
+        ("Attempt missed. Luke Shaw (Manchester United) left footed shot from "
+         "the left side of the box misses to the left.", "missed"),
+        ("Goal!  Crystal Palace 0, Manchester United 1. Bruno Fernandes "
+         "(Manchester United) right footed shot from the centre of the box to "
+         "the top right corner.", "goal"),
+        ("Attempt saved. Marcus Rashford (Manchester United) right footed shot "
+         "from the centre of the box is saved in the bottom left corner.",
+         "saved"),
+    ]
+    for raw, word in cases:
+        out = S.strip_outcome(raw).lower()
+        assert word not in out, f"'{word}' survived in: {out!r}"
+        assert out, "stripping removed everything"
+
+
+def test_no_forbidden_word_survives_anywhere(df):
+    """Not one of 37,000 stripped sentences may contain an outcome word."""
+    text = df.text.str.lower()
+    offenders = {w: int(text.str.contains(w, regex=False).sum())
+                 for w in FORBIDDEN}
+    offenders = {w: n for w, n in offenders.items() if n}
+    assert not offenders, f"outcome words present in stripped text: {offenders}"
+
+
+def test_stripped_text_cannot_separate_goals(df):
+    """The behavioural check. A clean text model lands near 0.77 AUC."""
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import roc_auc_score
+    from sklearn.pipeline import make_pipeline
+
+    tr, te = df[df.season < 2025], df[df.season == 2025]
+    if len(te) < 500:
+        pytest.skip("need a held-out season")
+    m = make_pipeline(TfidfVectorizer(ngram_range=(1, 2), min_df=5,
+                                      sublinear_tf=True),
+                      LogisticRegression(max_iter=1000))
+    m.fit(tr.text, tr.goal)
+    auc = roc_auc_score(te.goal, m.predict_proba(te.text)[:, 1])
+    assert auc < AUC_CEILING, (
+        f"stripped text reaches {auc:.4f} AUC, above the {AUC_CEILING} ceiling "
+        f"-- the outcome has leaked back into the text")
+
+
+def test_raw_text_does_leak(df):
+    """Guards against the test above passing vacuously.
+
+    If the raw sentence stopped leaking, the stripping would be untested and
+    the ceiling check meaningless.
+    """
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import roc_auc_score
+    from sklearn.pipeline import make_pipeline
+
+    tr, te = df[df.season < 2025], df[df.season == 2025]
+    if len(te) < 500:
+        pytest.skip("need a held-out season")
+    m = make_pipeline(TfidfVectorizer(ngram_range=(1, 2), min_df=5,
+                                      sublinear_tf=True),
+                      LogisticRegression(max_iter=1000))
+    m.fit(tr.text_raw, tr.goal)
+    auc = roc_auc_score(te.goal, m.predict_proba(te.text_raw)[:, 1])
+    assert auc > 0.99, (
+        f"raw text only reaches {auc:.4f} -- if it no longer leaks, the "
+        f"stripping is untested and test_stripped_text... proves nothing")
+
+
+def test_penalties_come_from_the_event_type_not_the_text(df):
+    """Penalty is knowable before the kick. It must not be inferred from
+    wording that only a converted penalty produces."""
+    pens = df[df.penalty == 1]
+    assert len(pens) > 100, "too few penalties to check"
+    rate = pens.goal.mean()
+    assert 0.6 < rate < 0.9, (
+        f"penalty conversion is {rate:.1%}; real is ~76%. A rate near 100% "
+        f"means the flag is being set by goal-only wording")
