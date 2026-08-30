@@ -1,0 +1,71 @@
+{
+ "features": [
+  "minute",
+  "score_diff",
+  "goals_home",
+  "goals_away",
+  "cum_home_corner",
+  "cum_away_corner",
+  "cum_diff_corner",
+  "cum_home_foul",
+  "cum_away_foul",
+  "cum_diff_foul",
+  "cum_home_freekick",
+  "cum_away_freekick",
+  "cum_diff_freekick",
+  "cum_home_goal",
+  "cum_away_goal",
+  "cum_diff_goal",
+  "cum_home_offside",
+  "cum_away_offside",
+  "cum_diff_offside",
+  "cum_home_red",
+  "cum_away_red",
+  "cum_diff_red",
+  "cum_home_shot_blocked",
+  "cum_away_shot_blocked",
+  "cum_diff_shot_blocked",
+  "cum_home_shot_off",
+  "cum_away_shot_off",
+  "cum_diff_shot_off",
+  "cum_home_shot_on",
+  "cum_away_shot_on",
+  "cum_diff_shot_on",
+  "cum_home_sub",
+  "cum_away_sub",
+  "cum_diff_sub",
+  "cum_home_woodwork",
+  "cum_away_woodwork",
+  "cum_diff_woodwork",
+  "cum_home_yellow",
+  "cum_away_yellow",
+  "cum_diff_yellow",
+  "elo_home",
+  "elo_away",
+  "elo_diff"
+ ],
+ "classes": [
+  "AWAY",
+  "HOME",
+  "NONE"
+ ],
+ "data_window": [
+  "2022-08-05T19:00Z",
+  "2026-05-24T15:00Z"
+ ],
+ "seasons": [
+  "2022-23",
+  "2023-24",
+  "2024-25",
+  "2025-26"
+ ],
+ "n_matches": 1491,
+ "n_snapshots_fit": 17711,
+ "n_snapshots_calibration": 4436,
+ "base_rates": {
+  "NONE": 0.6092,
+  "HOME": 0.2133,
+  "AWAY": 0.1775
+ },
+ "git_sha": "0f72f9105a6a0a20d8479af047109d98b23a44ae"
+}
