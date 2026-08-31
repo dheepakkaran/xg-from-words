@@ -224,6 +224,13 @@ PAGE = """<!doctype html>
 """
 
 
+def pre_with_breaks(html_body):
+    def fix(m):
+        inner = m.group(1)
+        return "<pre><code>" + inner.replace("\n", "<br>") + "</code></pre>"
+    return re.sub(r"<pre><code>(.*?)</code></pre>", fix, html_body, flags=re.S)
+
+
 IMPORT_PAGE = """<!doctype html>
 <html lang="en">
 <meta charset="utf-8">
@@ -256,7 +263,11 @@ def main():
     open(OUT_MD, "w").write(safe)
     body = to_html(safe)
     open(OUT_HTML, "w").write(PAGE.format(body=body))
-    open(OUT_IMPORT, "w").write(IMPORT_PAGE.format(body=body))
+    # Medium's URL importer discards the newlines inside <pre>, which collapses
+    # every aligned table onto one line. <br> survives it, so the import copy
+    # uses those instead. (Pasting keeps plain newlines, so the copy meant for
+    # a human is left alone.)
+    open(OUT_IMPORT, "w").write(IMPORT_PAGE.format(body=pre_with_breaks(body)))
     remaining = safe.count("\n|")
     print(f"{n} tables rewritten")
     print(f"markdown tables left: {remaining} (should be 0)")

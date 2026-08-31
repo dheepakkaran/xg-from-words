@@ -43,8 +43,7 @@ bugs, and a robot that watches football so I do not have to.">
 <p>Real xG models are built from <strong>cameras</strong>. Companies put tracking cameras in stadiums and record where every player stood at the moment of every shot. That gives them the exact distance, the exact angle, and how many defenders were in the way.</p>
 <p>That data costs money. A lot of money. If you are a student, or a small club, or you follow a league nobody sells data for, you cannot have it.</p>
 <p>But every match also has <strong>someone writing down what happened, in ordinary English, for free.</strong></p>
-<pre><code>"Attempt saved. Marcus Rashford (Manchester United) right footed shot
- from the centre of the box. Assisted by Bruno Fernandes with a cross."</code></pre>
+<pre><code>"Attempt saved. Marcus Rashford (Manchester United) right footed shot<br> from the centre of the box. Assisted by Bruno Fernandes with a cross."</code></pre>
 <p>Read that sentence again. It tells you where he shot from. Which foot. How the chance was made. That is <em>almost</em> what an xG model needs.</p>
 <p>So my real question became:</p>
 <blockquote><p><strong>How much of the expensive thing can you rebuild from the free words?</strong></p></blockquote>
@@ -57,12 +56,7 @@ bugs, and a robot that watches football so I do not have to.">
 <ul><li><strong>The numbers.</strong> Count the events so far — shots, corners, fouls, cards.</li><li><strong>The words.</strong> Just feed it the last ten lines of commentary as text.</li></ul>
 <p>Both come from the <em>same</em> commentary. The only thing that changes is whether I count it or read it. That matters — otherwise I would be comparing two different data sources, not two ways of reading one.</p>
 <h3>The result</h3>
-<pre><code>What the model sees                      AUC
--------------------------------------  -----
-Nothing — just guessing                0.500
-The words                              0.513
-The numbers                            0.540
-Numbers + which two teams are playing  0.565</code></pre>
+<pre><code>What the model sees                      AUC<br>-------------------------------------  -----<br>Nothing — just guessing                0.500<br>The words                              0.513<br>The numbers                            0.540<br>Numbers + which two teams are playing  0.565</code></pre>
 <p>The numbers beat the words. Every time, in every test I ran.</p>
 <p>But look at those numbers again. <strong>0.513 and 0.540.</strong> A coin toss is 0.500. Neither model is doing much of anything.</p>
 <p>So the honest answer was: <em>this does not work.</em> Which is where most projects stop.</p>
@@ -76,12 +70,7 @@ Numbers + which two teams are playing  0.565</code></pre>
 <p>I gave a model the events from <em>inside</em> the fifteen minutes it was supposed to predict. Every shot, every corner, every foul that was about to happen. I removed only the goals themselves. This model has, effectively, <strong>watched the future</strong>, and is only being asked <em>who scored</em>.</p>
 <p>It reached <strong>0.602</strong>.</p>
 <p>Read that again. A model that has already seen the next fifteen minutes can only get to 0.60.</p>
-<pre><code>                              AUC  Share of what is possible
---------------------------  -----  -------------------------
-Guessing                    0.500                          —
-The words                   0.513                        13%
-The numbers                 0.540                        40%
-Cheating — sees the future  0.602                       100%</code></pre>
+<pre><code>                              AUC  Share of what is possible<br>--------------------------  -----  -------------------------<br>Guessing                    0.500                          —<br>The words                   0.513                        13%<br>The numbers                 0.540                        40%<br>Cheating — sees the future  0.602                       100%</code></pre>
 <p>So my model was not bad. <strong>The target was nearly noise.</strong> Whether a goal lands in a particular fifteen minutes comes down mostly to whether a shot goes in — and almost nothing before it tells you that.</p>
 <p>That is a real finding. "It didn't work" is not. The difference is the ceiling.</p>
 <p><strong>And one uncomfortable extra:</strong> a model that knows <em>only which two teams are on the pitch</em> — nothing about the match in progress — scored <strong>0.559</strong>. Better than everything happening inside the match, combined. Arsenal at home are more likely to score in any fifteen minutes than Burnley away, and no amount of commentary changes that.</p>
@@ -99,10 +88,7 @@ Cheating — sees the future  0.602                       100%</code></pre>
 <p>I fed the shot sentences to a model. It scored <strong>1.0000</strong>. Perfect. Every single shot, right.</p>
 <p>I did not celebrate. A perfect score means something is wrong.</p>
 <p>Here is what was wrong. Every shot's commentary <strong>opens by saying what happened</strong>:</p>
-<pre><code>"Goal!  Chelsea 1, Everton 0. Nicolas Jackson..."     → always a goal
-"Attempt missed. Luke Shaw..."                        → never a goal
-"Attempt saved. Marcus Rashford..."                   → never a goal
-"Attempt blocked. Kai Havertz..."                     → never a goal</code></pre>
+<pre><code>"Goal!  Chelsea 1, Everton 0. Nicolas Jackson..."     → always a goal<br>"Attempt missed. Luke Shaw..."                        → never a goal<br>"Attempt saved. Marcus Rashford..."                   → never a goal<br>"Attempt blocked. Kai Havertz..."                     → never a goal</code></pre>
 <p>The model was not learning football. <strong>It was reading the first two words.</strong> Like a student who found the answer key.</p>
 <p>This has a name: <strong>data leakage</strong>. Information about the answer sneaking into the question. It is the single most common way a machine learning project quietly becomes worthless — because it does not look like a bug. It looks like success.</p>
 <h3>Removing it took four attempts. Three of them failed.</h3>
@@ -113,8 +99,7 @@ Cheating — sees the future  0.602                       100%</code></pre>
 <p>That looked right. It gave me my headline number. <strong>It was still wrong.</strong></p>
 <p><strong>Attempt 4</strong> — found days later, by accident, while building a feature that shows similar past shots. The top-rated chance in the season was <em>"from a free kick right footed shot"</em> and <strong>all forty</strong> of its most similar past shots were goals. Forty out of forty is not football.</p>
 <p>ESPN writes the two outcomes differently:</p>
-<pre><code>Scored:  "Olise (Palace) from a free kick with a left footed shot to..."
-Missed:  "...shot from outside the box ... from a direct free kick"</code></pre>
+<pre><code>Scored:  "Olise (Palace) from a free kick with a left footed shot to..."<br>Missed:  "...shot from outside the box ... from a direct free kick"</code></pre>
 <p>The exact phrase that survived my approved list — <em>"from a free kick"</em> — appears <strong>only when the free kick is scored.</strong> 60 shots, all 60 goals.</p>
 <p>So free kicks came out entirely. They cannot be identified from this data before the outcome is known. Even the event type gives it away.</p>
 <p><strong>What I learned, and it is the main lesson of the whole project:</strong></p>
@@ -132,31 +117,19 @@ Missed:  "...shot from outside the box ... from a direct free kick"</code></pre>
 <ol><li>My model was trained on football from <strong>2022 to 2025</strong>. It was tested on <strong>2015-16</strong> — nine years earlier, a different era, different commentary writers. It had never seen anything from that season.</li><li>Their model had the season's own camera data in hand.</li></ol>
 <p>First, a sanity check that the two datasets really describe the same shots: they agree on <strong>99.71%</strong> of outcomes. Good — the join is real.</p>
 <h3>Result 1: how often each picks the goal (AUC)</h3>
-<pre><code>Model                                What it sees     AUC
----------  --------------------------------------  ------
-Mine                         one English sentence  0.7826
-StatsBomb  exact coordinates, 16 player positions  0.8118</code></pre>
+<pre><code>Model                                What it sees     AUC<br>---------  --------------------------------------  ------<br>Mine                         one English sentence  0.7826<br>StatsBomb  exact coordinates, 16 player positions  0.8118</code></pre>
 <p>Both are well above a coin toss. The gap is 0.029.</p>
 <p>To put it in the plainest terms: measuring from 0.50 (guessing) as the floor,</p>
-<pre><code>mine    = 0.7826 - 0.50 = 0.2826
-theirs  = 0.8118 - 0.50 = 0.3118
-
-0.2826 / 0.3118 = 90.6%</code></pre>
+<pre><code>mine    = 0.7826 - 0.50 = 0.2826<br>theirs  = 0.8118 - 0.50 = 0.3118<br><br>0.2826 / 0.3118 = 90.6%</code></pre>
 <blockquote><p><strong>A sentence of English gets 90.6% of the way to a stadium full of cameras.</strong></p></blockquote>
 <h3>Result 2: how far each was from the truth, in goals</h3>
 <p>AUC is about ranking. This is about being <em>right</em>.</p>
 <p>For each team in each match, I compared what the model expected to how many they actually scored, and took the average gap.</p>
-<pre><code>Model                    Average error
------------------------  -------------
-Mine, from words           0.781 goals
-StatsBomb, from cameras    0.740 goals</code></pre>
+<pre><code>Model                    Average error<br>-----------------------  -------------<br>Mine, from words           0.781 goals<br>StatsBomb, from cameras    0.740 goals</code></pre>
 <p>The commercial model is better by <strong>0.041 of a goal</strong> per team per match. That is the entire difference between reading a sentence and installing cameras.</p>
 <h3>Result 3: a point system, because a table nobody reads settles nothing</h3>
 <p>Each side of each match is worth one point, to whichever model landed nearer the real goals. Within a twentieth of a goal, they share it.</p>
-<pre><code>StatsBomb  404 points
-Mine       342 points
-
-They were closer in 54.2% of cases.</code></pre>
+<pre><code>StatsBomb  404 points<br>Mine       342 points<br><br>They were closer in 54.2% of cases.</code></pre>
 <p>They win. Narrowly. On 373 matches they had camera data for and I had a sentence.</p>
 <h3>What this comparison does and does not prove</h3>
 <p><strong>It proves:</strong> words carry most of what matters about shot quality. Not all. Most.</p>
@@ -167,17 +140,8 @@ They were closer in 54.2% of cases.</code></pre>
 <h2>Does it work anywhere else?</h2>
 <p>The whole argument is <em>commentary is free where cameras are not</em>. That only matters if the model travels.</p>
 <p>So I took the model trained on <strong>English</strong> football and pointed it, with no retraining and no adjustment, at five other leagues.</p>
-<pre><code>League                            AUC
------------------------------  ------
-Premier League (trained here)  0.7709
-La Liga (Spain)                0.7730
-Serie A (Italy)                0.7702
-Bundesliga (Germany)           0.7795
-Ligue 1 (France)               0.7807
-Primeira Liga (Portugal)       0.7871</code></pre>
-<pre><code>at home      0.7709
-abroad, mean 0.7781
-cost of moving  -0.0072   ← a small gain, not a loss</code></pre>
+<pre><code>League                            AUC<br>-----------------------------  ------<br>Premier League (trained here)  0.7709<br>La Liga (Spain)                0.7730<br>Serie A (Italy)                0.7702<br>Bundesliga (Germany)           0.7795<br>Ligue 1 (France)               0.7807<br>Primeira Liga (Portugal)       0.7871</code></pre>
+<pre><code>at home      0.7709<br>abroad, mean 0.7781<br>cost of moving  -0.0072   ← a small gain, not a loss</code></pre>
 <p>It does slightly <em>better</em> abroad than at home. It has never been told anything about Portuguese or German football.</p>
 <p>Why does that work? Because it reads <strong>the sentence</strong>, and the company that writes those sentences writes them the same way everywhere. That is the whole argument in one table: camera data exists for a handful of competitions; commentary exists for hundreds.</p>
 <hr>
@@ -185,16 +149,11 @@ cost of moving  -0.0072   ← a small gain, not a loss</code></pre>
 <p>My original plan listed an impressive stack of technology. I measured each one instead of assuming, and dropped all six. Each has a script in the repository that reruns the measurement in seconds.</p>
 <p><strong>Spark</strong> — for data too big for one computer. My entire dataset is <strong>4 megabytes</strong>. It loads in <strong>0.04 seconds</strong>. Even scraping every league ESPN has, for 25 years, would be about 15 GB. Spark is for thousands of gigabytes. It would be like hiring ten lorries to move one bag.</p>
 <p><strong>A large language model, to read the sentences better than my code does.</strong> Worth testing, so I tested it — for free. I gave models the <em>entire</em> sentence instead of the 18 things my code pulls out of it.</p>
-<pre><code>What the model sees                          AUC
-----------------------------------------  ------
-18 extracted fields                       0.7709
-Every 1-to-4 word phrase in the sentence  0.7612
-A sentence-meaning model (MiniLM)         0.7584</code></pre>
+<pre><code>What the model sees                          AUC<br>----------------------------------------  ------<br>18 extracted fields                       0.7709<br>Every 1-to-4 word phrase in the sentence  0.7612<br>A sentence-meaning model (MiniLM)         0.7584</code></pre>
 <p>Reading more of the sentence is worth <strong>minus 0.0097</strong>. Everything that sees the whole text does <em>worse</em>. The rest of the sentence is player names and filler — noise. There is nothing left in there for a better reader to find, so a bigger model cannot help. I dropped it on that evidence, not on taste.</p>
 <p><strong>vLLM</strong> — software for running large language models fast on your own machine. Its speed comes from a specific kind of NVIDIA graphics card. My laptop is a Mac and has none. Installing it would also downgrade libraries the working code depends on. It would run slower <em>and</em> break things.</p>
 <p><strong>C++</strong> — a faster programming language, for when Python cannot keep up live. I measured before rewriting. The busiest window across six leagues has <strong>14 matches at once</strong>. Python takes <strong>2.44 milliseconds</strong> per match. The budget between checks is 15 seconds.</p>
-<pre><code>14 matches × 2.4 ms = 34 ms
-that is 0.23% of the budget</code></pre>
+<pre><code>14 matches × 2.4 ms = 34 ms<br>that is 0.23% of the budget</code></pre>
 <p>And the thing that actually takes time is <strong>waiting for ESPN to answer: 147 milliseconds.</strong> The computing is <strong>60 times cheaper than the wait</strong>. No language change makes a website reply faster.</p>
 <p><strong>Kubeflow</strong> — for retraining a model on a schedule. Only worth it if the model goes stale. I tested: a model trained on <strong>2015-16</strong> and used on <strong>2025-26</strong> — ten years old — loses <strong>0.007 AUC</strong>. One recent season is as good as three. There is nothing to retrain.</p>
 <p><strong>LangGraph</strong> — for orchestrating complicated multi-step AI flows. After dropping the language model, my flow is: score the shot, check a threshold, look up similar shots, format a sentence. Four steps, one branch, no loops. That is an <code>if</code> statement.</p>
@@ -209,34 +168,14 @@ that is 0.23% of the budget</code></pre>
 <p><strong>The script</strong> — <em>smart</em>. "is a match actually on? is one about to start?".</p>
 <p>The fixture awareness lives in the script, not the schedule.</p>
 <h3>What happens every hour</h3>
-<pre><code>Wake up. Ask ESPN: is a match live?
-
-  YES  → score every shot, write the result, look again in 60 seconds
-  NO, but one starts within 45 minutes  → stay awake and wait
-  NO, nothing coming  → go back to sleep (takes about 3 minutes)</code></pre>
+<pre><code>Wake up. Ask ESPN: is a match live?<br><br>  YES  → score every shot, write the result, look again in 60 seconds<br>  NO, but one starts within 45 minutes  → stay awake and wait<br>  NO, nothing coming  → go back to sleep (takes about 3 minutes)</code></pre>
 <h3>Tonight, for example</h3>
-<pre><code>18:50 UTC   alarm rings. No match yet.
-            Checks the calendar: "Aston Villa v Arsenal, in 10 minutes."
-            Stays awake.
-
-19:00       kick-off. Shots start arriving.
-            Every 60 seconds: read the new commentary, score the shots,
-            update the page, and record how old the commentary was.
-
-20:45       full time. Three quiet checks. Goes to sleep.</code></pre>
+<pre><code>18:50 UTC   alarm rings. No match yet.<br>            Checks the calendar: "Aston Villa v Arsenal, in 10 minutes."<br>            Stays awake.<br><br>19:00       kick-off. Shots start arriving.<br>            Every 60 seconds: read the new commentary, score the shots,<br>            update the page, and record how old the commentary was.<br><br>20:45       full time. Three quiet checks. Goes to sleep.</code></pre>
 <p>I will be doing something else. My laptop can be closed. UTC means <em>Coordinated Universal Time</em>, the world clock that does not change for summer time — which becomes important in a moment.</p>
 <h3>The bug that would have killed this silently</h3>
 <p>My first version woke at four fixed times: 11:25, 13:55, 16:25 and 18:55 UTC. It matched every August fixture. I was happy.</p>
 <p>Then I checked properly, against all 361 remaining fixtures of the season.</p>
-<pre><code>Kick-off times across the season, and whether I covered them:
-
-11:30 UTC     5 matches   covered
-13:00 UTC     9 matches   MISSED
-14:00 UTC    98 matches   covered
-15:00 UTC   175 matches   MISSED   ← the biggest slot in the calendar
-20:00 UTC    51 matches   MISSED
-
-Covered: 119.   Missed: 242.   That is 67% of the season.</code></pre>
+<pre><code>Kick-off times across the season, and whether I covered them:<br><br>11:30 UTC     5 matches   covered<br>13:00 UTC     9 matches   MISSED<br>14:00 UTC    98 matches   covered<br>15:00 UTC   175 matches   MISSED   ← the biggest slot in the calendar<br>20:00 UTC    51 matches   MISSED<br><br>Covered: 119.   Missed: 242.   That is 67% of the season.</code></pre>
 <p><strong>Why?</strong> In late October the United Kingdom moves off summer time. A Saturday 3pm kick-off is 14:00 UTC in August and <strong>15:00 UTC in November</strong>. My alarms were in UTC and I had only looked at August.</p>
 <p>Here is the part that should worry you more than the bug. <strong>Nothing would have told me.</strong> The job would wake, find no match, exit successfully, show a green tick — and from October the site would simply stop updating. Forever. Silently.</p>
 <p>The fix: wake every hour through the hours football is played, and let the script decide. I then simulated all 361 fixtures: <strong>every one is caught from kick-off, none mid-match.</strong></p>
