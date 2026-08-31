@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="An expected-goals model that reads">
 <meta property="og:description" content="90% of a tracking-data model, from free commentary text. 87,980 shots, six leagues.">
-<link rel="stylesheet" href="style.css?v=2e2914e">
+<link rel="stylesheet" href="style.css?v=67d5549">
 </head>
 <body data-palette="#2a78d6,#eb6834">
 
@@ -216,25 +216,35 @@
   <section>
     <p class="eyebrow">Match by match, a point to whoever was closer</p>
     <div class="scoreline" id="h2h-score"></div>
-    <p>One point per team per match to whichever model landed nearer the real
-      goals; inside a twentieth of a goal they share it. It is a blunt way to
-      read the same thing the average error says — but it is readable.</p>
+    <p>Each side of each match is worth a point, to whichever model landed
+      nearer the goals actually scored; inside a twentieth of a goal they share
+      it. So a match is worth two, and a level match means one each.</p>
     <figure>
-      <table class="declined" id="table-h2h-matches"></table>
-      <figcaption>The first six matches of the season, both sides of each.</figcaption>
+      <table class="matches" id="table-h2h-matches"></table>
+      <figcaption>Eight matches from that season. Expected goals are written
+        home–away, the way the score is.</figcaption>
     </figure>
   </section>
 
   <section>
-    <p class="eyebrow">And against reality alone</p>
-    <h1>When it rates one side clearly higher, that side usually scores more.</h1>
-    <p>A different test, with no benchmark in it. Across last season, whenever
-      the model put one side clearly ahead on chance quality, did that side
-      actually outscore the other?</p>
+    <p class="eyebrow">This season, as it happens</p>
+    <h1>Every match played so far, marked against the result.</h1>
+    <p>No commercial model publishes expected goals for a season in progress,
+      so there is nothing to compare against here. What there is instead is the
+      harder marker: the model reads the match, and the scoreline answers.</p>
+    <p>When it puts one side clearly ahead on chance quality, did that side
+      outscore the other? Matches it called level are not counted against it —
+      a model saying <em>nothing between them</em> has not made a claim.</p>
     <div class="scoreline" id="scorecard"></div>
     <p id="scorecard-note"></p>
-    <p class="lead">This is the test that keeps running. Every match from here
-      is scored the same way, and the tally moves.</p>
+    <figure>
+      <table class="matches" id="table-scorecard"></table>
+      <figcaption id="scorecard-caption"></figcaption>
+    </figure>
+    <p class="lead">A wrong call is not always the model missing. Spurs
+      outshot Newcastle seventeen to eleven and lost 0–2 — the reading was
+      right about the football and wrong about the result, which is the whole
+      point of the project stated as a defeat.</p>
   </section>
 
   <section id="now">
@@ -267,6 +277,6 @@
      from the results.</p>
 </footer>
 
-<script type="module" src="app.js?v=2e2914e"></script>
+<script type="module" src="app.js?v=67d5549"></script>
 </body>
 </html>

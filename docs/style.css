@@ -142,6 +142,29 @@ details.table th, details.table td {
 .opener[data-goal="1"] b { color: var(--good); }
 .opener[data-goal="0"] b { color: var(--critical); }
 
+/* ---------- match tables ---------- */
+
+table.matches {
+  width: 100%; max-width: 52rem; border-collapse: collapse;
+  font-size: .9rem; font-variant-numeric: tabular-nums;
+}
+table.matches th {
+  text-align: left; color: var(--ink-3); font-weight: 600;
+  font-size: .74rem; letter-spacing: .09em; text-transform: uppercase;
+  padding: 0 .9rem .55rem 0; white-space: nowrap;
+}
+table.matches td {
+  padding: .6rem .9rem .6rem 0; border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+}
+table.matches td.fixture { color: var(--ink-1); font-weight: 560; }
+table.matches td.num { white-space: nowrap; }
+table.matches td.verdict { font-size: .82rem; }
+table.matches td.verdict[data-v="right"],
+table.matches td.verdict[data-v="ours"] { color: var(--good); }
+table.matches td.verdict[data-v="wrong"] { color: var(--critical); }
+table.matches tr:hover td { background: var(--surface-2); }
+
 /* ---------- the declined table ---------- */
 
 .declined { width: 100%; max-width: 52rem; border-collapse: collapse;

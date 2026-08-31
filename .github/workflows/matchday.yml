@@ -58,6 +58,24 @@ jobs:
             --minutes "${{ github.event.inputs.minutes || '165' }}" \
             --quit-after-idle 3
 
+      # Once a match is over its reading is permanent, so it goes on main
+      # rather than the live feed branch. Only new fixtures are fetched.
+      - name: score whatever has finished
+        if: always()
+        run: python src/scorecard.py --since 2026-08-01
+
+      - name: commit the season scorecard
+        if: always()
+        run: |
+          git config user.name  "Dheepak Karan"
+          git config user.email "elusanthi16@gmail.com"
+          git stash push -- docs/live.json reports/latency.jsonl 2>/dev/null || true
+          git pull --rebase --autostash origin main || true
+          git add docs/scorecard.json
+          git diff --cached --quiet || git commit -m "score finished matches"
+          git push origin HEAD:main || true
+          git stash pop 2>/dev/null || true
+
       - name: publish to the live-data branch
         if: always()
         run: |

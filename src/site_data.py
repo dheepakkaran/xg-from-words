@@ -88,37 +88,6 @@ def head_to_head():
     return json.load(open(path)) if os.path.exists(path) else None
 
 
-def scorecard(df):
-    """Marked against reality on the season just gone.
-
-    In each match, did the side our model rated higher actually score more?
-    A different question from the head-to-head -- there is no benchmark here,
-    only the result -- and the one that can keep running as matches arrive.
-    """
-    d = df[(df.league == "eng.1") & (df.season == 2025)].copy()
-    tr = df[(df.league == "eng.1") & (df.season >= 2022) & (df.season < 2025)]
-    m = xg_model().fit(tr[FIELDS], tr.goal)
-    d["xg"] = m.predict_proba(d[FIELDS])[:, 1]
-    g = (d.groupby(["event_id", "side"])
-           .agg(xg=("xg", "sum"), goals=("goal", "sum")).unstack("side"))
-    g.columns = ["_".join(c) for c in g.columns]
-    g = g.dropna()
-    called, right, drawn = 0, 0, 0
-    for _, r in g.iterrows():
-        if abs(r.xg_home - r.xg_away) < 0.15:
-            continue                       # too close to call
-        called += 1
-        favoured_home = r.xg_home > r.xg_away
-        if r.goals_home == r.goals_away:
-            drawn += 1
-        elif (r.goals_home > r.goals_away) == favoured_home:
-            right += 1
-    return {"season": "2025-26", "matches": int(len(g)),
-            "called": called, "right": right, "drawn": drawn,
-            "wrong": called - right - drawn,
-            "hit_rate": round(right / max(called - drawn, 1), 3)}
-
-
 REPLAY_MATCH = "401879312"          # Tottenham 0-2 Newcastle, 2026-08-29
 
 
@@ -192,7 +161,6 @@ def main():
         "validation": validation(),
         "leagues": leagues(df),
         "head_to_head": head_to_head(),
-        "scorecard": scorecard(df),
         "chances": chance_types(df),
         "replay": replay(),
     }

@@ -22,11 +22,13 @@ jobs:
           python-version: "3.11"
       - run: pip install requests
       - run: python src/fixtures.py
+      # A fixture the calendar has just marked complete can be scored now.
+      - run: python src/scorecard.py --since 2026-08-01
       - name: commit if the calendar moved
         run: |
           git config user.name  "Dheepak Karan"
           git config user.email "elusanthi16@gmail.com"
           git pull --rebase --autostash origin main || true
-          git add docs/fixtures.json
-          git diff --cached --quiet || git commit -m "refresh fixtures"
+          git add docs/fixtures.json docs/scorecard.json
+          git diff --cached --quiet || git commit -m "refresh fixtures and scorecard"
           git push origin HEAD:main

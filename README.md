@@ -114,9 +114,23 @@ A point per team per match to whichever landed closer, shared inside 0.05.
 StatsBomb win, on 54% of innings. Four hundredths of a goal is the whole
 distance between a sentence of English and a stadium full of cameras.
 
-And with no benchmark at all — across 2025-26, whenever the model put one side
-clearly ahead on chance quality, that side outscored the other in **75%** of
-the matches that had a winner (187 right, 62 wrong, 93 finished level).
+### This season, marked against the result
+
+No commercial model publishes expected goals for a season in progress, so
+recent matches cannot be put head to head with one. `src/scorecard.py` marks
+them against the harder marker instead: when the model puts one side clearly
+ahead on chance quality, does that side outscore the other?
+
+It runs on `requests` and the standard library, so the matchday job scores
+whatever has just finished and commits `docs/scorecard.json` — the table on the
+site grows on its own. Matches rated inside 0.15 expected goals are recorded as
+*no call* rather than counted wrong; a model saying "nothing between them" has
+not made a claim.
+
+A missed call is not always the model missing. Spurs outshot Newcastle
+seventeen to eleven and lost 0–2: the reading was right about the football and
+wrong about the result, which is this project's whole finding stated as a
+defeat.
 
 ### Is the extraction the limit, or the words?
 
@@ -252,6 +266,7 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/collect.py --leagues esp.1,ger.1,ita.1,fra.1,por.1 --seasons 2025-26
 ./run.sh src/transfer.py         # does one model travel? -> yes
 ./run.sh src/head_to_head.py     # ours vs StatsBomb on goals -> reports/
+./run.sh src/scorecard.py        # this season vs the result -> docs/scorecard.json
 ./run.sh src/bench_live.py       # is Python the live bottleneck? -> no
 ./run.sh src/drift.py            # does the model go stale? -> barely
 ./run.sh src/extraction_ceiling.py   # is there anything left to read?
@@ -266,7 +281,8 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ```
 
 Three jobs run in Actions: the test suite on every push, the season calendar
-daily, and a matchday watcher on the usual kickoff slots. That last one polls
+and scorecard daily, and a matchday watcher through the hours football is
+played. That last one polls
 whatever is in progress, scores the shots as the commentary arrives, and writes
 to a `live-data` branch — a matchday is thirty writes, and main's history is for
 changes to the project rather than a feed. It needs one dependency, because the
@@ -296,6 +312,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
 | `src/transfer.py` | The Premier League model, pointed at five other leagues |
 | `src/head_to_head.py` | Ours against StatsBomb's xG on goals, match by match |
+| `src/scorecard.py` | This season marked against the result; grows as matches finish |
 | `src/bench_live.py` | Concurrency, cpu and network cost of the live path |
 | `src/drift.py` | How much a stale model costs, and so whether to retrain |
 | `src/platform_quirks.py` | One known-false numpy/Accelerate warning, reproduced before silencing |

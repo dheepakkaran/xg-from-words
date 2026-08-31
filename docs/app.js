@@ -78,6 +78,25 @@ function barChart(svg, rows, opts = {}) {
   });
 }
 
+/* One row per match. A table with each fixture twice reads like a mistake even
+   when it is not, and forces the reader to hold the first row in their head to
+   make sense of the second. */
+function matchTable(host, head, rows) {
+  host.innerHTML = "<thead><tr>" +
+    head.map(h => `<th>${h}</th>`).join("") + "</tr></thead>";
+  const tb = host.appendChild(document.createElement("tbody"));
+  rows.forEach(cells => {
+    const tr = tb.insertRow();
+    cells.forEach(c => {
+      const td = tr.insertCell();
+      td.textContent = c.text;
+      if (c.cls) td.className = c.cls;
+      if (c.v) td.dataset.v = c.v;
+    });
+  });
+}
+
+
 /* Every chart ships a table, so nothing is carried by colour alone. */
 function table(host, head, rows) {
   const t = document.createElement("table");
@@ -352,35 +371,58 @@ if (h2h) {
      "of innings they were closer"],
   ]);
 
-  const t = document.getElementById("table-h2h-matches");
-  t.innerHTML =
-    "<thead><tr><th>Match</th><th>Side</th><th>Goals</th>" +
-    "<th>Ours</th><th>StatsBomb</th><th>Point</th></tr></thead>";
-  const tb = t.appendChild(document.createElement("tbody"));
-  h2h.examples.slice(0, 12).forEach(e => {
-    const tr = tb.insertRow();
-    [`${e.home} v ${e.away}`, e.side, e.goals, e.ours.toFixed(2),
-     e.theirs.toFixed(2),
-     e.point === 1 ? "ours" : e.point === 0 ? "StatsBomb" : "shared"]
-      .forEach(v => tr.insertCell().textContent = v);
-  });
+  matchTable(document.getElementById("table-h2h-matches"),
+    ["Match", "Score", "Ours", "StatsBomb", "Closer"],
+    h2h.examples.map(e => [
+      { text: `${e.home} v ${e.away}`, cls: "fixture" },
+      { text: e.score, cls: "num" },
+      { text: `${e.our_home.toFixed(2)}–${e.our_away.toFixed(2)}`, cls: "num" },
+      { text: `${e.sb_home.toFixed(2)}–${e.sb_away.toFixed(2)}`, cls: "num" },
+      { text: e.winner, cls: "verdict", v: e.winner },
+    ]));
 }
 
-const sc = data.scorecard;
-if (sc) {
-  const decisive = sc.called - sc.drawn;
-  tiles(document.getElementById("scorecard"), [
-    [`${(sc.hit_rate * 100).toFixed(0)}%`, "of decisive matches called right", "ours"],
-    [sc.right, "right"],
-    [sc.wrong, "wrong"],
-    [sc.drawn, "ended level"],
-  ]);
-  document.getElementById("scorecard-note").textContent =
-    `Of ${sc.matches} matches last season, the model put one side clearly ` +
-    `ahead in ${sc.called}. ${sc.drawn} of those finished level, which no ` +
-    `chance-quality reading can be blamed for. Of the ${decisive} that had a ` +
-    `winner, it called ${sc.right}.`;
-}
+/* ---------- this season, updated as matches finish ----------
+   scorecard.json is rewritten by the matchday job once a match is over, so
+   this table grows on its own. */
+const VERDICT = { right: "called it", wrong: "missed it",
+                  drawn: "match drawn", "too close to call": "no call" };
+
+fetch(`scorecard.json?t=${Date.now()}`)
+  .then(r => (r.ok ? r.json() : null))
+  .catch(() => null)
+  .then(sc => {
+    if (!sc?.matches?.length) return;
+    const t = sc.tally;
+    tiles(document.getElementById("scorecard"), [
+      [t.hit_rate == null ? "—" : `${(t.hit_rate * 100).toFixed(0)}%`,
+       "of the calls it made, right", "ours"],
+      [t.right, "called right"],
+      [t.wrong, "missed"],
+      [t.matches, "matches read so far"],
+    ]);
+    document.getElementById("scorecard-note").textContent =
+      `${t.matches} matches played. ${t.drawn} finished level and ` +
+      `${t["too close to call"]} were rated too close to call, neither of ` +
+      `which counts either way. Of the ${t.decisive} it committed to, ` +
+      `${t.right} went the way it said.`;
+
+    const recent = sc.matches.slice(-10).reverse();
+    matchTable(document.getElementById("table-scorecard"),
+      ["Match", "Score", "Chances created", "Rated higher", "Result"],
+      recent.map(m => [
+        { text: `${m.home} v ${m.away}`, cls: "fixture" },
+        { text: m.score, cls: "num" },
+        { text: `${m.our_home.toFixed(2)}–${m.our_away.toFixed(2)}`, cls: "num" },
+        { text: m.favoured ?? "level", cls: "" },
+        { text: VERDICT[m.verdict] ?? m.verdict, cls: "verdict", v: m.verdict },
+      ]));
+    const when = new Date(sc.refreshed).toLocaleString("en-GB",
+      { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    document.getElementById("scorecard-caption").textContent =
+      `The ten most recent, newest first. Updated ${when} by the job that ` +
+      `watches each match.`;
+  });
 
 /* ---------- what is happening right now ----------
    live.json is written by the matchday job to the live-data branch, so main's

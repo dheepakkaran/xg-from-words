@@ -1,0 +1,319 @@
+{
+ "refreshed": "2026-08-31T07:05:56+00:00",
+ "close_threshold": 0.15,
+ "tally": {
+  "matches": 19,
+  "right": 10,
+  "wrong": 4,
+  "drawn": 4,
+  "too close to call": 1,
+  "decisive": 14,
+  "hit_rate": 0.714
+ },
+ "matches": [
+  {
+   "event_id": "401879301",
+   "kickoff": "2026-08-21T19:00Z",
+   "home": "Arsenal",
+   "away": "Coventry City",
+   "score": "3-0",
+   "goals": [
+    3,
+    0
+   ],
+   "our_home": 2.07,
+   "our_away": 0.17,
+   "favoured": "Arsenal",
+   "verdict": "right",
+   "shots": 24
+  },
+  {
+   "event_id": "401879322",
+   "kickoff": "2026-08-22T11:30Z",
+   "home": "Hull City",
+   "away": "Manchester United",
+   "score": "2-0",
+   "goals": [
+    2,
+    0
+   ],
+   "our_home": 1.27,
+   "our_away": 1.54,
+   "favoured": "Manchester United",
+   "verdict": "wrong",
+   "shots": 29
+  },
+  {
+   "event_id": "401879300",
+   "kickoff": "2026-08-22T14:00Z",
+   "home": "Everton",
+   "away": "Crystal Palace",
+   "score": "2-0",
+   "goals": [
+    2,
+    0
+   ],
+   "our_home": 1.14,
+   "our_away": 2.13,
+   "favoured": "Crystal Palace",
+   "verdict": "wrong",
+   "shots": 27
+  },
+  {
+   "event_id": "401879299",
+   "kickoff": "2026-08-22T14:00Z",
+   "home": "Ipswich Town",
+   "away": "Sunderland",
+   "score": "2-1",
+   "goals": [
+    2,
+    1
+   ],
+   "our_home": 1.72,
+   "our_away": 1.14,
+   "favoured": "Ipswich Town",
+   "verdict": "right",
+   "shots": 21
+  },
+  {
+   "event_id": "401879298",
+   "kickoff": "2026-08-22T14:00Z",
+   "home": "Nottingham Forest",
+   "away": "Leeds United",
+   "score": "0-1",
+   "goals": [
+    0,
+    1
+   ],
+   "our_home": 0.77,
+   "our_away": 1.0,
+   "favoured": "Leeds United",
+   "verdict": "right",
+   "shots": 23
+  },
+  {
+   "event_id": "401879321",
+   "kickoff": "2026-08-22T16:30Z",
+   "home": "Brentford",
+   "away": "Tottenham Hotspur",
+   "score": "3-0",
+   "goals": [
+    3,
+    0
+   ],
+   "our_home": 4.05,
+   "our_away": 0.49,
+   "favoured": "Brentford",
+   "verdict": "right",
+   "shots": 35
+  },
+  {
+   "event_id": "401879297",
+   "kickoff": "2026-08-23T13:00Z",
+   "home": "Brighton & Hove Albion",
+   "away": "Aston Villa",
+   "score": "4-0",
+   "goals": [
+    4,
+    0
+   ],
+   "our_home": 3.31,
+   "our_away": 0.32,
+   "favoured": "Brighton & Hove Albion",
+   "verdict": "right",
+   "shots": 28
+  },
+  {
+   "event_id": "401879320",
+   "kickoff": "2026-08-23T13:00Z",
+   "home": "Manchester City",
+   "away": "AFC Bournemouth",
+   "score": "2-1",
+   "goals": [
+    2,
+    1
+   ],
+   "our_home": 1.85,
+   "our_away": 0.48,
+   "favoured": "Manchester City",
+   "verdict": "right",
+   "shots": 18
+  },
+  {
+   "event_id": "401879319",
+   "kickoff": "2026-08-23T15:30Z",
+   "home": "Newcastle United",
+   "away": "Liverpool",
+   "score": "2-2",
+   "goals": [
+    2,
+    2
+   ],
+   "our_home": 1.74,
+   "our_away": 3.02,
+   "favoured": "Liverpool",
+   "verdict": "drawn",
+   "shots": 40
+  },
+  {
+   "event_id": "401879318",
+   "kickoff": "2026-08-24T19:00Z",
+   "home": "Fulham",
+   "away": "Chelsea",
+   "score": "2-3",
+   "goals": [
+    2,
+    3
+   ],
+   "our_home": 1.22,
+   "our_away": 2.04,
+   "favoured": "Chelsea",
+   "verdict": "right",
+   "shots": 32
+  },
+  {
+   "event_id": "401879294",
+   "kickoff": "2026-08-28T19:00Z",
+   "home": "Crystal Palace",
+   "away": "Manchester City",
+   "score": "1-4",
+   "goals": [
+    1,
+    4
+   ],
+   "our_home": 1.13,
+   "our_away": 2.07,
+   "favoured": "Manchester City",
+   "verdict": "right",
+   "shots": 28
+  },
+  {
+   "event_id": "401879314",
+   "kickoff": "2026-08-29T11:30Z",
+   "home": "Liverpool",
+   "away": "Nottingham Forest",
+   "score": "2-2",
+   "goals": [
+    2,
+    2
+   ],
+   "our_home": 1.53,
+   "our_away": 2.26,
+   "favoured": "Nottingham Forest",
+   "verdict": "drawn",
+   "shots": 25
+  },
+  {
+   "event_id": "401879296",
+   "kickoff": "2026-08-29T14:00Z",
+   "home": "AFC Bournemouth",
+   "away": "Everton",
+   "score": "1-1",
+   "goals": [
+    1,
+    1
+   ],
+   "our_home": 3.08,
+   "our_away": 1.69,
+   "favoured": "AFC Bournemouth",
+   "verdict": "drawn",
+   "shots": 30
+  },
+  {
+   "event_id": "401879316",
+   "kickoff": "2026-08-29T14:00Z",
+   "home": "Coventry City",
+   "away": "Hull City",
+   "score": "0-1",
+   "goals": [
+    0,
+    1
+   ],
+   "our_home": 1.02,
+   "our_away": 1.16,
+   "favoured": null,
+   "verdict": "too close to call",
+   "shots": 17
+  },
+  {
+   "event_id": "401879312",
+   "kickoff": "2026-08-29T16:30Z",
+   "home": "Tottenham Hotspur",
+   "away": "Newcastle United",
+   "score": "0-2",
+   "goals": [
+    0,
+    2
+   ],
+   "our_home": 1.47,
+   "our_away": 0.97,
+   "favoured": "Tottenham Hotspur",
+   "verdict": "wrong",
+   "shots": 28
+  },
+  {
+   "event_id": "401879317",
+   "kickoff": "2026-08-30T13:00Z",
+   "home": "Chelsea",
+   "away": "Brighton & Hove Albion",
+   "score": "4-3",
+   "goals": [
+    4,
+    3
+   ],
+   "our_home": 2.89,
+   "our_away": 1.92,
+   "favoured": "Chelsea",
+   "verdict": "right",
+   "shots": 33
+  },
+  {
+   "event_id": "401879315",
+   "kickoff": "2026-08-30T13:00Z",
+   "home": "Leeds United",
+   "away": "Brentford",
+   "score": "1-1",
+   "goals": [
+    1,
+    1
+   ],
+   "our_home": 1.15,
+   "our_away": 2.09,
+   "favoured": "Brentford",
+   "verdict": "drawn",
+   "shots": 34
+  },
+  {
+   "event_id": "401879313",
+   "kickoff": "2026-08-30T13:00Z",
+   "home": "Sunderland",
+   "away": "Fulham",
+   "score": "1-0",
+   "goals": [
+    1,
+    0
+   ],
+   "our_home": 1.25,
+   "our_away": 1.42,
+   "favoured": "Fulham",
+   "verdict": "wrong",
+   "shots": 23
+  },
+  {
+   "event_id": "401879293",
+   "kickoff": "2026-08-30T15:30Z",
+   "home": "Manchester United",
+   "away": "Ipswich Town",
+   "score": "5-2",
+   "goals": [
+    5,
+    2
+   ],
+   "our_home": 6.02,
+   "our_away": 0.98,
+   "favoured": "Manchester United",
+   "verdict": "right",
+   "shots": 43
+  }
+ ]
+}
