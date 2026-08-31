@@ -148,7 +148,11 @@ def to_html(md):
         elif re.match(r"\s*[-*]\s+", line):
             buf = []
             while i < len(lines) and re.match(r"\s*[-*]\s+", lines[i]):
-                buf.append("<li>" + inline(re.sub(r"\s*[-*]\s+", "", lines[i]))
+                # Anchored, once. Unanchored it also matched the "* " inside a
+                # closing "**", so "- **The numbers.** Count" rendered as
+                # "**The numbers.*Count".
+                buf.append("<li>"
+                           + inline(re.sub(r"^\s*[-*]\s+", "", lines[i], count=1))
                            + "</li>")
                 i += 1
             out.append("<ul>" + "".join(buf) + "</ul>")
@@ -156,7 +160,8 @@ def to_html(md):
         elif re.match(r"\s*\d+\.\s+", line):
             buf = []
             while i < len(lines) and re.match(r"\s*\d+\.\s+", lines[i]):
-                buf.append("<li>" + inline(re.sub(r"\s*\d+\.\s+", "", lines[i]))
+                buf.append("<li>"
+                           + inline(re.sub(r"^\s*\d+\.\s+", "", lines[i], count=1))
                            + "</li>")
                 i += 1
             out.append("<ol>" + "".join(buf) + "</ol>")

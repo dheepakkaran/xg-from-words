@@ -136,9 +136,9 @@ That is a real finding. "It didn't work" is not. The difference is the ceiling.
 
 While measuring all this, I noticed something.
 
-Commentary about **fouls and corners** is written from a template. The same handful of sentences, over and over. I counted: 42 different sentence shapes for 16,583 foul lines.
+Commentary about **fouls and corners** is written from a template. The same handful of sentences, over and over. Across all 1,900 Premier League matches I have: **61** different sentence shapes for **79,345** foul lines, and 26 for 15,638 corners.
 
-Commentary about **shots** is not. 1,015 different shapes for 3,532 shot lines. Shot lines say body part, position on the pitch, how the chance was built.
+Commentary about **shots** is not. **2,341** different shapes for **16,941** missed shots, and 1,314 for 3,570 goals. Shot lines say body part, position on the pitch, how the chance was built.
 
 Which is exactly what xG is made of.
 

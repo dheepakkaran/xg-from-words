@@ -16,7 +16,7 @@ def skeleton(text):
     return re.sub(r"\d+", "#", NAME.sub("<N>", text)).strip()
 
 
-def main(sample=400, league="eng.1"):
+def main(sample=None, league="eng.1"):
     # Premier League only, like every other script here. data/raw grew to six
     # competitions for the transfer test, and sampling across all of them
     # changes these counts without changing what they are about.
@@ -29,8 +29,12 @@ def main(sample=400, league="eng.1"):
     if keep:
         files = [f for f in files
                  if os.path.basename(f).split(".")[0] in keep]
-    random.seed(0)                      # so the counts are reproducible
-    files = random.sample(files, min(sample, len(files)))
+    # Every collected match, unless a sample is asked for. Sampling was the
+    # default and the counts moved every time the corpus grew -- fine for a
+    # look, useless for a number anyone might quote in a write-up.
+    if sample:
+        random.Random(0).shuffle(files)
+        files = files[:sample]
     by_type = defaultdict(Counter)
     per_season = defaultdict(list)
     for f in files:
@@ -42,7 +46,7 @@ def main(sample=400, league="eng.1"):
             t = ((e.get("play") or {}).get("type") or {}).get("text", "none")
             by_type[t][skeleton(e.get("text", ""))] += 1
 
-    print(f"{len(files)} matches sampled\n")
+    print(f"{len(files)} matches, all of them\n")
     print("commentary depth by season")
     for yr in sorted(per_season):
         v = per_season[yr]
@@ -62,4 +66,11 @@ def main(sample=400, league="eng.1"):
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--sample", type=int, default=None,
+                    help="matches to sample; default is all of them")
+    ap.add_argument("--out", default=os.path.join(ROOT, "reports",
+                                                  "commentary_check.txt"))
+    a = ap.parse_args()
+    main(a.sample)

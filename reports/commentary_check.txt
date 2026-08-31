@@ -1,33 +1,33 @@
-400 matches sampled
+1900 matches, all of them
 
 commentary depth by season
-  2015:   82 matches, median  102 lines, min 65, max 141
-  2022:   72 matches, median  104 lines, min 77, max 135
-  2023:   69 matches, median  109 lines, min 78, max 148
-  2024:   87 matches, median  111 lines, min 80, max 137
-  2025:   90 matches, median  104 lines, min 64, max 143
+  2015:  380 matches, median  101 lines, min 0, max 141
+  2022:  380 matches, median  104 lines, min 68, max 159
+  2023:  380 matches, median  109 lines, min 71, max 151
+  2024:  380 matches, median  110 lines, min 72, max 150
+  2025:  380 matches, median  106 lines, min 0, max 145
 
 template variety within each event type
   event type                     lines  templates  top share
-  Foul                           16583         42     46.79%
-  none                            5093        310     17.04%
-  Shot Off Target                 3532       1015      2.43%
-  Corner Awarded                  3267         19     49.53%
-  Substitution                    3026         19     85.36%
-  Shot Blocked                    2854        179     14.93%
-  Shot On Target                  2071        550      3.52%
-  Yellow Card                     1502         16     66.25%
-  Offside                         1388         13     57.20%
-  Goal                             745        438      2.68%
-  Handball                         297          6     73.74%
-  Kickoff                          242          1    100.00%
-  Halftime                         227          3     90.75%
-  Shot Hit Woodwork                224        144      3.12%
+  Foul                           79345         61     46.88%
+  none                           23543        620     17.73%
+  Shot Off Target                16941       2341      2.70%
+  Corner Awarded                 15638         26     46.34%
+  Substitution                   14412         29     85.09%
+  Shot Blocked                   13666        334     15.71%
+  Shot On Target                 10147       1259      4.09%
+  Yellow Card                     7217         23     65.71%
+  Offside                         6347         18     53.40%
+  Goal                            3570       1314      2.89%
+  Handball                        1319         13     77.03%
+  End Regular Time                1112          3     92.36%
+  Shot Hit Woodwork               1107        449      2.62%
+  Kickoff                         1088          1    100.00%
 
 most common 'Shot Off Target' templates
-     86  <N> missed. <N> (<N>) right footed shot from outside the box is too high. <N> by <N>.
-     80  <N> missed. <N> (<N>) right footed shot from outside the box is high and wide to the right. <N> by <
-     66  <N> missed. <N> (<N>) header from the centre of the box misses to the left. <N> by <N> with a cross 
-     64  <N> missed. <N> (<N>) header from the centre of the box misses to the left. <N> by <N> with a cross.
-     62  <N> missed. <N> (<N>) right footed shot from outside the box misses to the left. <N> by <N>.
-     53  <N> missed. <N> (<N>) header from the centre of the box misses to the right. <N> by <N> with a cross
+    457  <N> missed. <N> (<N>) right footed shot from outside the box is high and wide to the right. <N> by <
+    384  <N> missed. <N> (<N>) right footed shot from outside the box is too high. <N> by <N>.
+    296  <N> missed. <N> (<N>) right footed shot from outside the box misses to the left. <N> by <N>.
+    280  <N> missed. <N> (<N>) header from the centre of the box misses to the left. <N> by <N> with a cross.
+    278  <N> missed. <N> (<N>) header from the centre of the box misses to the left. <N> by <N> with a cross 
+    267  <N> missed. <N> (<N>) left footed shot from outside the box is high and wide to the left. <N> by <N>

@@ -27,6 +27,28 @@ def r(x, places):
         q, rounding=decimal.ROUND_HALF_UP))
 
 
+def templates():
+    """Sentence-shape counts, read out of the report rather than retyped.
+
+    These were quoted from a 400-match random sample and moved every time the
+    corpus grew. src/check_commentary.py now reads every match.
+    """
+    path = os.path.join(ROOT, "reports", "commentary_check.txt")
+    if not os.path.exists(path):
+        return {}
+    want = {"Foul": "foul", "Shot Off Target": "missed shot"}
+    out = {}
+    for line in open(path):
+        m = re.match(r"\s{2}(\S.*?)\s{2,}(\d+)\s+(\d+)\s+([\d.]+)%", line)
+        if m and m.group(1).strip() in want:
+            label = want[m.group(1).strip()]
+            out[f"{label} lines"] = (f"{int(m.group(2)):,}",
+                                     f"{int(m.group(2)):,}")
+            n = f"{int(m.group(3)):,}"
+            out[f"{label} templates"] = (n, n)
+    return out
+
+
 def load():
     j = lambda *p: json.load(open(os.path.join(ROOT, *p)))
     v = pd.read_parquet(os.path.join(ROOT, "data", "proc",
@@ -77,6 +99,7 @@ def load():
         "model fields":        (f"{len(j('models','xg.json')['features'])}", "18"),
         "fixtures upcoming":   (f"{j('docs','fixtures.json')['upcoming']}", "361"),
         "leagues":             (f"{shots.league.nunique()}", "6"),
+        **templates(),
     }
 
 

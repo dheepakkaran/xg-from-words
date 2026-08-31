@@ -42,12 +42,12 @@
 <h2>First, two words you need</h2>
 <p>I will explain every short form as it appears. There are only a few, and none of them are hard.</p>
 <p><strong>xG — expected goals.</strong> A number between 0 and 1 for a single shot. It answers one question: <em>if a hundred shots like this were taken, how many would go in?</em></p>
-<ul><li>A penalty is about **0.75*across this data. Out of 100 penalties, about 75 are scored. (In the Premier League alone it is 0.83 — better takers.)</li><li>A shot from far outside the box is about <strong>0.04</strong>. Out of 100, about 4 go in.</li></ul>
+<ul><li>A penalty is about <strong>0.75</strong> across this data. Out of 100 penalties, about 75 are scored. (In the Premier League alone it is 0.83 — better takers.)</li><li>A shot from far outside the box is about <strong>0.04</strong>. Out of 100, about 4 go in.</li></ul>
 <p>Add up every shot a team takes and you get how much they <em>deserved</em> to score. That is why you sometimes hear "Arsenal won 1–0 but the xG was 0.4 to 2.1" — it means Arsenal won, and did not play better.</p>
 <p><strong>AUC — Area Under the Curve.</strong> This is the score I use to say how good a model is. The full name is <em>area under the ROC curve</em>, and ROC stands for <em>Receiver Operating Characteristic</em>, which is a name from World War Two radar and tells you nothing. Ignore it.</p>
 <p>Here is what AUC actually means, and it is simple:</p>
 <blockquote><p>Take one shot that was a goal and one shot that was not. Show both to the model. <strong>How often does it give the goal the higher number?</strong></p></blockquote>
-<ul><li>**0.50*— it is guessing. A coin toss.</li><li>**1.00*— perfect, every single time.</li><li>**0.78*— it gets the pair the right way round about 78 times in 100.</li></ul>
+<ul><li><strong>0.50</strong> — it is guessing. A coin toss.</li><li><strong>1.00</strong> — perfect, every single time.</li><li><strong>0.78</strong> — it gets the pair the right way round about 78 times in 100.</li></ul>
 <p>That is all. When I say "AUC 0.78", I mean: give it a goal and a miss, and 78% of the time it picks the goal.</p>
 <hr>
 <h2>Where the data comes from, and why it matters</h2>
@@ -65,7 +65,7 @@
 <p>I broke every match into moments. Every five minutes, from minute 10 to minute 80, I asked: <em>does either side score in the next fifteen minutes?</em></p>
 <p>That gave me <strong>22,147 moments</strong> from <strong>1,491 Premier League matches</strong> across four seasons.</p>
 <p>Then I built two models on exactly the same moments:</p>
-<ul><li>**The numbers.*Count the events so far — shots, corners, fouls, cards.</li><li>**The words.*Just feed it the last ten lines of commentary as text.</li></ul>
+<ul><li><strong>The numbers.</strong> Count the events so far — shots, corners, fouls, cards.</li><li><strong>The words.</strong> Just feed it the last ten lines of commentary as text.</li></ul>
 <p>Both come from the <em>same</em> commentary. The only thing that changes is whether I count it or read it. That matters — otherwise I would be comparing two different data sources, not two ways of reading one.</p>
 <h3>The result</h3>
 <pre><code>What the model sees                      AUC
@@ -99,11 +99,11 @@ Cheating — sees the future  0.602                       100%</code></pre>
 <hr>
 <h2>The pivot</h2>
 <p>While measuring all this, I noticed something.</p>
-<p>Commentary about <strong>fouls and corners</strong> is written from a template. The same handful of sentences, over and over. I counted: 42 different sentence shapes for 16,583 foul lines.</p>
-<p>Commentary about <strong>shots</strong> is not. 1,015 different shapes for 3,532 shot lines. Shot lines say body part, position on the pitch, how the chance was built.</p>
+<p>Commentary about <strong>fouls and corners</strong> is written from a template. The same handful of sentences, over and over. Across all 1,900 Premier League matches I have: <strong>61</strong> different sentence shapes for <strong>79,345</strong> foul lines, and 26 for 15,638 corners.</p>
+<p>Commentary about <strong>shots</strong> is not. <strong>2,341</strong> different shapes for <strong>16,941</strong> missed shots, and 1,314 for 3,570 goals. Shot lines say body part, position on the pitch, how the chance was built.</p>
 <p>Which is exactly what xG is made of.</p>
 <p>So I asked a different question — and this is the important switch:</p>
-<ul><li>❌ *When will a goal come?→ depends on whether the shot goes in → <strong>almost random</strong></li><li>✅ *Was that shot a good chance?→ depends on where and how it was struck → <strong>knowable</strong></li></ul>
+<ul><li>❌ <em>When will a goal come?</em> → depends on whether the shot goes in → <strong>almost random</strong></li><li>✅ <em>Was that shot a good chance?</em> → depends on where and how it was struck → <strong>knowable</strong></li></ul>
 <p>The first question is about luck. The second is about position. I had been asking the wrong one.</p>
 <hr>
 <h2>Then the project nearly died</h2>
@@ -275,7 +275,7 @@ Covered: 119.   Missed: 242.   That is 67% of the season.</code></pre>
 <p>Everything about reading a match live assumes the commentary arrives <strong>fast enough to be worth reading</strong>. I have never measured it, because no match was ever running at a moment when I could. A job now runs during kick-offs specifically to record it, and whatever it finds will go in the repository — including if the answer is "too slow to be useful".</p>
 <hr>
 <h2>The short version</h2>
-<ul><li>**Commentary cannot tell you when a goal is coming.<em>I measured how unpredictable it is: even a model that has </em>watched the next fifteen minutesonly reaches 0.60. The problem is the football, not the model.</li><li>**Commentary can tell you how good a chance was.*It reaches **90.6%*of a camera-based commercial model, tested on a season nine years outside anything it had seen.</li><li>**The same model works in six countries*with no retraining, and slightly better abroad than at home.</li><li><strong>It found four separate leaks</strong>, three of which passed my own inspection. Each is now a test.</li><li>**Six impressive tools were measured and dropped.*None of them earned a place.</li><li><strong>It runs on its own</strong>, hourly, through the whole season, and a test proves the schedule catches all 361 remaining matches.</li></ul>
+<ul><li><strong>Commentary cannot tell you when a goal is coming.</strong> I measured how unpredictable it is: even a model that has <em>watched the next fifteen minutes</em> only reaches 0.60. The problem is the football, not the model.</li><li><strong>Commentary can tell you how good a chance was.</strong> It reaches <strong>90.6%</strong> of a camera-based commercial model, tested on a season nine years outside anything it had seen.</li><li><strong>The same model works in six countries</strong> with no retraining, and slightly better abroad than at home.</li><li><strong>It found four separate leaks</strong>, three of which passed my own inspection. Each is now a test.</li><li><strong>Six impressive tools were measured and dropped.</strong> None of them earned a place.</li><li><strong>It runs on its own</strong>, hourly, through the whole season, and a test proves the schedule catches all 361 remaining matches.</li></ul>
 <p><strong>The thing I would actually want you to take away:</strong> when a model fails, measure whether the problem is the model or the target. Almost nobody does. It is the difference between "my project didn't work" and "here is how unpredictable this actually is, with a number."</p>
 <hr>
 <p><em>Code and the full technical write-up:</em> <a href="https://github.com/dheepakkaran/xg-from-words">github.com/dheepakkaran/xg-from-words</a></p>
