@@ -25,6 +25,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "MEDIUM_POST.md")
 OUT_MD = os.path.join(HERE, "MEDIUM_POST_medium-safe.md")
 OUT_HTML = os.path.join(HERE, "medium-paste.html")
+# A second copy without the instruction box, published on GitHub Pages so
+# Medium's URL importer can read it. Pasting needs the clipboard, which the
+# automation surface here is not allowed to touch; importing needs only a URL.
+OUT_IMPORT = os.path.join(HERE, "..", "docs", "post.html")
 
 # A code block wider than this scrolls sideways on a phone.
 MAX_WIDTH = 62
@@ -220,16 +224,45 @@ PAGE = """<!doctype html>
 """
 
 
+IMPORT_PAGE = """<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>I tried to predict football goals from commentary. I failed, and that
+failure led somewhere better.</title>
+<meta name="description" content="A story about expected goals, four hidden
+bugs, and a robot that watches football so I do not have to.">
+<meta name="author" content="Dheepak Karan">
+<style>
+ :root {{ color-scheme: light; }}
+ html, body {{ background: #fff; }}
+ body {{ max-width: 42rem; margin: 3rem auto; padding: 0 1.25rem;
+        font: 18px/1.65 Georgia, "Times New Roman", serif; color: #222; }}
+ pre {{ background: #f6f6f4; padding: .9rem 1rem; overflow-x: auto;
+       font: 13px/1.5 ui-monospace, Menlo, monospace; }}
+ code {{ font: .88em ui-monospace, Menlo, monospace; }}
+ blockquote {{ margin: 1.4rem 0; padding-left: 1.1rem;
+              border-left: 3px solid #ddd; font-style: italic; }}
+</style>
+<article>
+{body}
+</article>
+</html>
+"""
+
+
 def main():
     md = open(SRC).read()
     safe, n = convert_tables(md)
     open(OUT_MD, "w").write(safe)
-    open(OUT_HTML, "w").write(PAGE.format(body=to_html(safe)))
+    body = to_html(safe)
+    open(OUT_HTML, "w").write(PAGE.format(body=body))
+    open(OUT_IMPORT, "w").write(IMPORT_PAGE.format(body=body))
     remaining = safe.count("\n|")
     print(f"{n} tables rewritten")
     print(f"markdown tables left: {remaining} (should be 0)")
     print(f"  {os.path.relpath(OUT_MD)}")
     print(f"  {os.path.relpath(OUT_HTML)}")
+    print(f"  {os.path.relpath(OUT_IMPORT)}   (for Medium's URL importer)")
     if remaining:
         sys.exit("a table survived the conversion")
 
