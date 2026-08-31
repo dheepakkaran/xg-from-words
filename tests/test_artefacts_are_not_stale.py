@@ -42,6 +42,7 @@ GRAPH = {
                        "data/proc/xg_validation.parquet",
                        "reports/head_to_head_xg.json"],
     "docs/scorecard.json": ["src/scorecard.py", "models/xg.json"],
+    "writing/cover.png": ["writing/cover.py", "docs/data.json"],
 }
 
 # Enough slack that a rebuild finishing seconds apart is not flagged, and that
