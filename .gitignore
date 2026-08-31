@@ -19,3 +19,6 @@ reports/*.npz
 # beside it (data window, metrics, git SHA) is what is worth keeping.
 models/*.joblib
 data/qdrant/
+
+# Latency samples are committed by the workflow, not ignored
+!reports/latency.jsonl

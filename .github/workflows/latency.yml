@@ -1,0 +1,62 @@
+name: commentary latency
+
+# The last unanswered question in the project: how stale is ESPN's commentary
+# while a match is actually running? It can only be measured during one, which
+# is why this runs in CI rather than on a laptop that may be closed.
+#
+# The schedule covers the usual Premier League kickoff slots. The probe exits
+# within a couple of minutes when nothing is in progress, so a firing that
+# catches no football costs almost nothing.
+
+on:
+  schedule:
+    - cron: "55 11 * * *"    # 11:30 UTC kickoffs
+    - cron: "55 13 * * *"    # 14:00
+    - cron: "25 16 * * *"    # 16:30
+    - cron: "55 18 * * *"    # 19:00, midweek and Monday
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: how long to poll for
+        default: "150"
+      league:
+        description: ESPN league code
+        default: eng.1
+
+concurrency:
+  group: latency
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests
+
+      - name: poll for commentary lag
+        run: |
+          python src/probe_latency.py \
+            --league "${{ github.event.inputs.league || 'eng.1' }}" \
+            --minutes "${{ github.event.inputs.minutes || '150' }}" \
+            --every 60 --quit-after-idle 3
+
+      - name: commit any samples
+        run: |
+          if [ -s reports/latency.jsonl ]; then
+            git config user.name  "Dheepak Karan"
+            git config user.email "elusanthi16@gmail.com"
+            git pull --rebase --autostash origin main || true
+            git add reports/latency.jsonl
+            git diff --cached --quiet || git commit -m "latency samples $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push origin HEAD:main
+          else
+            echo "no samples -- nothing was in progress"
+          fi
