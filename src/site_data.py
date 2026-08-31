@@ -82,6 +82,31 @@ def chance_types(df):
              "n": int(d[c].sum())} for lab, c in rows if d[c].sum() > 200]
 
 
+def schedule():
+    """The matchday cron, read from the workflow rather than retyped.
+
+    The page tells a visitor when the job next wakes up. Typing the hours in
+    twice is how they end up disagreeing.
+    """
+    import re
+    path = os.path.join(ROOT, ".github", "workflows", "matchday.yml")
+    if not os.path.exists(path):
+        return None
+    crons = re.findall(r'- cron:\s*"([^"]+)"', open(path).read())
+    if not crons:
+        return None
+    minute, hour = crons[0].split()[0], crons[0].split()[1]
+    hours = []
+    for part in hour.split(","):
+        if "-" in part:
+            a, b = part.split("-")
+            hours += list(range(int(a), int(b) + 1))
+        else:
+            hours.append(int(part))
+    return {"cron": crons[0], "minute": int(minute), "hours": sorted(hours),
+            "poll_seconds": 60, "checkpoint_minutes": 15}
+
+
 def head_to_head():
     """Our model against StatsBomb's, per match, with the points tally."""
     path = os.path.join(ROOT, "reports", "head_to_head_xg.json")
@@ -160,6 +185,7 @@ def main():
                              {"phrase": "Attempt blocked", "rate": 0.0}]},
         "validation": validation(),
         "leagues": leagues(df),
+        "schedule": schedule(),
         "head_to_head": head_to_head(),
         "chances": chance_types(df),
         "replay": replay(),

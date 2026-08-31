@@ -196,6 +196,15 @@ belongs to another account. Only the constructor changes for a server.
 
 ### What it says during a match
 
+While a match is on, the live panel moves to the top of the page with a pulsing
+green dot, and carries a quarter-hour timeline of chances created alongside the
+running totals — a single pair of numbers says who is on top, the sequence says
+when it turned. Each checkpoint uses only the shots up to it, the same rule the
+model is held to everywhere else.
+
+Between matches the panel says when the job next wakes, read from the cron in
+the workflow rather than typed in twice.
+
 `src/live_xg.py` does not forecast — question 1 established that forecasting
 the next goal is not possible here. It measures what the scoreboard gets wrong.
 

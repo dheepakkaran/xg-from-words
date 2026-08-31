@@ -433,6 +433,77 @@ fetch(`scorecard.json?t=${Date.now()}`)
 const LIVE_URL =
   "https://raw.githubusercontent.com/dheepakkaran/xg-from-words/live-data/docs/live.json";
 
+/* When the football is on, the live panel belongs at the top of the page --
+   nobody scrolls past nine sections to find out what is happening now. */
+function promoteNow() {
+  const now = document.getElementById("now");
+  const main = document.querySelector("main");
+  if (now && main.firstElementChild !== now) main.prepend(now);
+}
+
+/* The next time the matchday job wakes, from the cron in the workflow. */
+function nextFiring(sched) {
+  if (!sched) return null;
+  const d = new Date();
+  for (let ahead = 0; ahead < 48; ahead++) {
+    const t = new Date(d.getTime() + ahead * 3600e3);
+    t.setUTCMinutes(sched.minute, 0, 0);
+    if (t > d && sched.hours.includes(t.getUTCHours())) return t;
+  }
+  return null;
+}
+
+const clockLine = (live, sched) => {
+  const bits = [];
+  if (live?.generated) {
+    const age = Math.round((Date.now() - new Date(live.generated)) / 1000);
+    bits.push(age < 90 ? `read ${age} seconds ago`
+      : `read ${Math.round(age / 60)} minutes ago`);
+  }
+  if (live?.live) {
+    bits.push(`re-read every ${live.poll_seconds ?? 60} seconds`);
+  } else {
+    const t = nextFiring(sched);
+    if (t) bits.push("next check " + t.toLocaleTimeString("en-GB",
+      { hour: "2-digit", minute: "2-digit", timeZoneName: "short" }));
+  }
+  return bits.join(" · ");
+};
+
+/* A quarter-hour timeline, drawn small enough to sit inside the card. */
+function miniTimeline(host, m) {
+  const f = m.timeline || [];
+  if (f.length < 2) return;
+  const W = 560, H = 92, pad = { t: 14, r: 8, b: 18, l: 8 };
+  const hi = Math.max(0.6, ...f.flatMap(d => [d.home_xg, d.away_xg])) * 1.1;
+  const x = i => pad.l + (i / (f.length - 1)) * (W - pad.l - pad.r);
+  const y = v => H - pad.b - (v / hi) * (H - pad.t - pad.b);
+  const svg = el("svg", { class: "mini", viewBox: `0 0 ${W} ${H}`,
+                          role: "img",
+                          "aria-label": "Chances created at each quarter hour" });
+  ["home", "away"].forEach(side => {
+    const d = f.map((p, i) =>
+      `${i ? "L" : "M"}${x(i)} ${y(p[side + "_xg"])}`).join(" ");
+    svg.append(el("path", { d, fill: "none", class: side, "stroke-width": 2,
+                            "stroke-linejoin": "round" }));
+  });
+  f.forEach((p, i) => {
+    const t = el("text", { x: x(i), y: H - 5, "text-anchor":
+                           i === 0 ? "start" : i === f.length - 1 ? "end" : "middle" });
+    t.textContent = p.minute + "'";
+    svg.append(t);
+  });
+  host.append(svg);
+  /* The totals above are current; these are the quarter-hour marks the match
+     has passed. Repeating the numbers here invites the reader to wonder why
+     they differ when a goal has landed since the last mark. */
+  const cap = document.createElement("div");
+  cap.className = "tl-head";
+  cap.textContent = `chances created at each quarter hour, to ` +
+    `${f[f.length - 1].minute}'`;
+  host.append(cap);
+}
+
 const verdict = form =>
   form > 0.7 ? "finishing above what the chances deserved"
   : form < -0.7 ? "wasteful — created more than they have scored"
@@ -464,7 +535,13 @@ async function renderNow() {
       .then(r => r.ok ? r.json() : null);
   } catch { /* the branch does not exist until the first matchday */ }
 
+  document.getElementById("now-clock").textContent =
+    clockLine(live, data.schedule);
+
   if (live?.matches?.length) {
+    promoteNow();
+    document.getElementById("now-dot").hidden = false;
+    document.getElementById("now-label").textContent = "Live";
     head.textContent = live.matches.length === 1
       ? "One match is under way." : `${live.matches.length} matches are under way.`;
     body.replaceChildren(...live.matches.map(m => {
@@ -489,6 +566,7 @@ async function renderNow() {
       v.textContent = `${lead.team} have created the most. ` +
         `${lead.team} are ${verdict(lead.form)}.`;
       card.append(v);
+      miniTimeline(card, m);
       return card;
     }));
     const lag = live.matches.map(m => m.commentary_lag_seconds)
@@ -499,6 +577,8 @@ async function renderNow() {
     return;
   }
 
+  document.getElementById("now-dot").hidden = true;
+  document.getElementById("now-label").textContent = "Right now";
   const fx = await fetch("fixtures.json").then(r => r.json()).catch(() => null);
   const next = fx?.next?.find(f => !f.completed);
   if (!next) {
@@ -518,3 +598,5 @@ async function renderNow() {
 }
 
 renderNow();
+/* While a match is on, keep the panel current without a reload. */
+setInterval(renderNow, 60000);

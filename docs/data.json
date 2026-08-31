@@ -1,5 +1,5 @@
 {
- "generated": "67d5549",
+ "generated": "a0b6260",
  "corpus": {
   "shots": 87980,
   "matches": 3569,
@@ -110,6 +110,26 @@
    "home": false
   }
  ],
+ "schedule": {
+  "cron": "50 10-21 * * *",
+  "minute": 50,
+  "hours": [
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  "poll_seconds": 60,
+  "checkpoint_minutes": 15
+ },
  "head_to_head": {
   "season": "2015-16",
   "matches": 373,

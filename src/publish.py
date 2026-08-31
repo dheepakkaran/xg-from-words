@@ -19,11 +19,34 @@ from score import Scorer
 LIVE = {"STATUS_FIRST_HALF", "STATUS_SECOND_HALF", "STATUS_IN_PROGRESS",
         "STATUS_HALFTIME", "STATUS_END_PERIOD"}
 RECENT = 20                       # minutes, for the "where is the action" sort
+CHECKPOINT = 15                   # minutes between timeline entries
 KICKOFF_WINDOW = 45               # minutes ahead worth waiting for
 # 45 rather than 30 because kickoffs sit on :00 and :30 while the schedule
 # fires on :50 -- a 15:30 kickoff is 40 minutes after the 14:50 firing, and a
 # 30-minute window would let that job go back to sleep 40 minutes early.
+POLL_SECONDS = 60                 # written out so the page can say it
 session = requests.Session()      # no custom User-Agent; see collect.py
+
+
+def timeline(rows, minute, step=CHECKPOINT):
+    """Running totals at each quarter hour reached so far.
+
+    A single pair of numbers says who is on top; the sequence says when it
+    turned. Only checkpoints the match has actually passed are included, and
+    each one uses only the shots up to it -- the same rule the model is held to
+    everywhere else.
+    """
+    out = []
+    for m in range(step, int(minute) + 1, step):
+        seen = [r for r in rows if r["minute"] <= m]
+        out.append({
+            "minute": m,
+            "home_xg": round(sum(r["xg"] for r in seen if r["side"] == "home"), 2),
+            "away_xg": round(sum(r["xg"] for r in seen if r["side"] == "away"), 2),
+            "home_goals": sum(r["goal"] for r in seen if r["side"] == "home"),
+            "away_goals": sum(r["goal"] for r in seen if r["side"] == "away"),
+        })
+    return out
 
 
 def kickoff_soon(now, minutes=KICKOFF_WINDOW):
@@ -95,6 +118,8 @@ def describe(score, ev, now):
             "best_text": " ".join(best["text"].split()) if best else None,
         })
     out["recent_xg"] = round(sum(x["recent_xg"] for x in out["sides"]), 2)
+    out["timeline"] = timeline(rows, minute)
+    out["minute"] = round(minute, 1)
     return out
 
 
@@ -106,6 +131,7 @@ def one_cycle(score, out_path, latency_path):
                      key=lambda m: -m.get("recent_xg", 0))
 
     payload = {"generated": now.isoformat(timespec="seconds"),
+               "poll_seconds": POLL_SECONDS,
                "live": len(matches), "matches": matches}
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     json.dump(payload, open(out_path, "w"), indent=1)

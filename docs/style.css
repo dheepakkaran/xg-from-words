@@ -298,3 +298,32 @@ footer a { color: var(--ink-2); }
 .scoreline span { font-size: .84rem; color: var(--ink-3); }
 .scoreline div[data-tone="ours"] b { color: var(--series-1); }
 .scoreline div[data-tone="theirs"] b { color: var(--series-2); }
+
+/* ---------- the live indicator ---------- */
+
+#now-eyebrow { display: flex; align-items: center; gap: .55rem; }
+
+.dot {
+  width: .6rem; height: .6rem; border-radius: 50%;
+  background: var(--good); flex: none;
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--good) 60%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dot { animation: pulse 1.8s ease-out infinite; }
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--good) 65%, transparent); }
+  70%  { box-shadow: 0 0 0 .55rem color-mix(in oklab, var(--good) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--good) 0%, transparent); }
+}
+
+.clockline {
+  font-size: .82rem; color: var(--ink-3); font-variant-numeric: tabular-nums;
+}
+
+/* the timeline strip under a live match */
+.mini { width: 100%; margin-top: .35rem; overflow: visible; }
+.mini text { fill: var(--ink-3); font-size: 11px; }
+.mini .home { stroke: var(--series-1); }
+.mini .away { stroke: var(--series-2); }
+.tl-head { font-size: .78rem; color: var(--ink-3); margin-top: .5rem; }
