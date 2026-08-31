@@ -103,6 +103,23 @@ def replay(step=15):
     return {"home": teams["home"], "away": teams["away"], "frames": frames}
 
 
+def stamp_assets(version):
+    """Point index.html at versioned asset URLs.
+
+    GitHub Pages serves with `cache-control: max-age=600`, so a returning
+    visitor can otherwise get new HTML against a ten-minute-old script -- which
+    is exactly what happened once, and left the live panel stuck on its loading
+    text. The commit SHA in the query string makes each deploy a new URL.
+    """
+    import re
+    p = os.path.join(ROOT, "docs", "index.html")
+    html = open(p).read()
+    html = re.sub(r'(href="style\.css)(\?v=[^"]*)?"', rf'\1?v={version}"', html)
+    html = re.sub(r'(src="app\.js)(\?v=[^"]*)?"', rf'\1?v={version}"', html)
+    open(p, "w").write(html)
+    print(f"stamped docs/index.html assets with v={version}")
+
+
 def main():
     df = pd.read_parquet(os.path.join(ROOT, "data", "proc", "shots.parquet"))
     site = {
@@ -126,6 +143,7 @@ def main():
     }
     out = os.path.join(ROOT, "docs", "data.json")
     json.dump(site, open(out, "w"), indent=1)
+    stamp_assets(site["generated"])
     print(json.dumps({k: (v if not isinstance(v, list) else f"{len(v)} rows")
                       for k, v in site.items()}, indent=1)[:900])
     print(f"\nwrote {out}")
