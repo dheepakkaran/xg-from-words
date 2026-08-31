@@ -14,6 +14,14 @@ name: matchday
 # kickoff is inside the next half hour, and otherwise exits after three quiet
 # polls. A firing that catches nothing costs about three minutes.
 #
+# GitHub delays scheduled runs under load -- the first firing here was 52
+# minutes late. That costs nothing but freshness: publish.py recomputes every
+# total from the whole commentary on each poll rather than accumulating, and
+# rebuilds the quarter-hour timeline the same way, so a job that joins at
+# minute 40 still writes a complete and correct reading. Only the live updates
+# during those 40 minutes are lost, and the hourly cadence means the next
+# firing is never far behind.
+#
 # Live data goes to the `live-data` branch, not main: a matchday is thirty
 # writes and main's history is for changes to the project, not for a feed.
 
