@@ -1,5 +1,9 @@
 # Reading the game
 
+**[dheepakkaran.github.io/xg-from-words](https://dheepakkaran.github.io/xg-from-words/)** —
+the findings, told to someone who does not read AUC, with whichever Premier
+League match is under way read live at the bottom.
+
 **Two questions about football commentary, asked in order. The first one
 failed, and the failure is what pointed at the second.**
 
@@ -230,7 +234,18 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/train_xg.py         # -> models/xg.joblib
 ./run.sh src/live_xg.py          # live; --date YYYYMMDD --finished to replay
 ./run.sh src/style.py --team "Manchester City"
+
+./run.sh src/fixtures.py         # -> docs/fixtures.json
+./run.sh src/publish.py          # one live poll -> docs/live.json
+./run.sh src/site_data.py        # -> docs/data.json, and stamps asset versions
 ```
+
+Three jobs run in Actions: the test suite on every push, the season calendar
+daily, and a matchday watcher on the usual kickoff slots. That last one polls
+whatever is in progress, scores the shots as the commentary arrives, and writes
+to a `live-data` branch — a matchday is thirty writes, and main's history is for
+changes to the project rather than a feed. It needs one dependency, because the
+model ships as plain numbers in `models/xg.json` and is scored in pure Python.
 
 `run.sh` exists because the macOS xgboost wheel hard-codes an rpath to
 Homebrew's `libomp`, which is not installed on this machine; the wrapper puts a
@@ -262,7 +277,12 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/retrieve.py` | Qdrant neighbours: the estimate with its evidence |
 | `src/style.py` | Shot-profile fingerprints, and a side against its own season |
 | `src/train_xg.py` | Ships `models/xg.joblib` with its data window |
-| `src/live_xg.py` | Chance quality and finishing form, live |
+| `src/live_xg.py` | Chance quality and finishing form, live, in the terminal |
+| `src/publish.py` | One poll, scored, written to `docs/live.json` for the page |
+| `src/score.py` | The shipped model as a dot product — no sklearn, no pickle |
+| `src/fixtures.py` | The season's calendar, so the schedule knows when to wake |
+| `src/site_data.py` | Regenerates `docs/data.json` from the results |
+| `docs/` | The site. Three files and a generated `data.json`; no build step |
 | `tests/test_leakage.py` | Asserts no feature at minute *M* can see past *M*, and that the diagnostics that *should* see it do |
 | `tests/test_shot_text_leak.py` | Asserts the shot outcome never returns to the text |
 | `tests/fixtures/` | A 2 MB sample so both suites run in CI. Regenerate it whenever the corpus changes — a stale fixture gives CI a false green, which has happened once |
