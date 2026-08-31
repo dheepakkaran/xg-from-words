@@ -108,6 +108,19 @@ beat every model given the whole text. The gap to a coordinate model is
 therefore the words themselves — distance, angle, defenders — not the
 extraction, and no better reader can recover what the sentence never contained.
 
+### Four tools proposed, measured, and declined
+
+| Tool | The claim | What the measurement said |
+|---|---|---|
+| **Spark** | 3+ seasons needs distributed processing | 87,980 shots is 4 MB; pandas loads it in 0.04 s. All of ESPN's football would be ~15 GB |
+| **LLM extractor** | A better reader closes the gap to coordinates | Every model given the whole sentence loses to 17 extracted fields, by up to 0.010 AUC |
+| **vLLM** | Self-hosted explanation at scale | Needs CUDA; this machine has none, and installing it downgrades torch across a working environment |
+| **C++ poller** | Python drops messages at multi-match concurrency | Peak is 14 concurrent matches at 2.4 ms each — 0.23% of a 15 s budget, and 60× cheaper than the network round trip it waits on |
+
+Each is in [reports/AUDIT.md](reports/AUDIT.md) with the numbers, and each has
+a script that reruns in seconds. The proposal asked that every tool be
+"introduced only when a measured limit demands it"; no limit has appeared.
+
 An LLM extractor was considered and dropped on this evidence. vLLM likewise:
 its speedup needs CUDA, this machine has none, and installing it downgrades
 torch across the working environment. Spark too — 87,980 shots is 4 MB of
@@ -191,6 +204,7 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.1%
 ./run.sh src/collect.py --leagues esp.1,ger.1,ita.1,fra.1,por.1 --seasons 2025-26
 ./run.sh src/transfer.py         # does one model travel? -> yes
+./run.sh src/bench_live.py       # is Python the live bottleneck? -> no
 ./run.sh src/extraction_ceiling.py   # is there anything left to read?
 ./run.sh src/retrieve.py         # Qdrant neighbours + second opinion
 ./run.sh src/train_xg.py         # -> models/xg.joblib
@@ -221,6 +235,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/xg.py` | The xG model, and the size of the leak if the text is left raw |
 | `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
 | `src/transfer.py` | The Premier League model, pointed at five other leagues |
+| `src/bench_live.py` | Concurrency, cpu and network cost of the live path |
 | `src/extraction_ceiling.py` | Is the extraction the limit, or the words? |
 | `src/retrieve.py` | Qdrant neighbours: the estimate with its evidence |
 | `src/style.py` | Shot-profile fingerprints, and a side against its own season |

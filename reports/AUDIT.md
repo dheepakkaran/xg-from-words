@@ -420,6 +420,56 @@ Spark would be ceremony. It is left out, on the same grounds as vLLM and the
 LLM extractor: the tool is introduced when a measured limit demands it, and no
 limit has appeared.
 
+## Check 10 — Does the live path need C++? No, and the reason is not close.
+
+The proposal justified a C++ poller "at multi-match concurrency", with the
+rewrite to be "motivated by a measured Python bottleneck, with before/after
+benchmarks". `src/bench_live.py` is that measurement, taken before anything was
+rewritten.
+
+**How many matches actually run at once?** Across all six competitions, the
+busiest 105-minute window in the collected fixtures holds **14**:
+
+```
+2025-09-13 14:30 UTC -- ger.1 5, eng.1 5, ita.1 2, por.1 2, esp.1 1, fra.1 1
+```
+
+**What does Python cost per match?**
+
+```
+json parse      1.40 ms
+shot extract    0.72 ms
+score           0.32 ms
+total           2.44 ms      (p95 parse 1.2 ms)
+```
+
+**Against the proposal's own 15-second cadence:**
+
+```
+14 matches x 2.4 ms = 34 ms of cpu
+0.23% of the budget
+headroom before cpu is the limit: 438x  (6,136 concurrent matches)
+```
+
+And the part that settles it:
+
+```
+one summary fetch   147 ms
+cpu is 60x cheaper than the round trip it waits on
+```
+
+**The bottleneck is the network, and no language changes that.** Even fetching
+all fourteen matches one after another takes 2.1 s, comfortably inside fifteen.
+If concurrency ever did become the constraint, the lever is asynchronous I/O —
+overlapping those 147 ms waits — not a faster parser for the 2.4 ms that
+follows them.
+
+To be generous to the C++ case: a European Saturday with every league running
+might reach a hundred concurrent matches. That is 244 ms of CPU, 1.6% of the
+budget. The margin is not close at any plausible scale.
+
+C++ joins vLLM, the LLM extractor and Spark: proposed, measured, declined.
+
 ## What must happen before building
 
 1. ~~Read arXiv 2402.06820 in full~~ — **done, check 1. Not prior art.**
