@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An expected-goals model that reads</title>
+<meta name="description" content="Football's tracking data costs money. Its commentary is free. A model built on the words recovers 90% of what a coordinate model can see.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="An expected-goals model that reads">
+<meta property="og:description" content="90% of a tracking-data model, from free commentary text. 87,980 shots, six leagues.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-palette="#2a78d6,#eb6834">
+
+<progress class="scrollbar" value="0" max="1" aria-hidden="true"></progress>
+
+<header class="topbar">
+  <span class="name">xg-from-words</span>
+  <span class="spacer"></span>
+  <button type="button" id="theme" aria-label="Switch between light and dark">theme</button>
+  <a href="https://github.com/dheepakkaran/xg-from-words">code</a>
+</header>
+
+<main>
+
+  <section>
+    <p class="eyebrow">A football data experiment</p>
+    <h1>Football's best data costs money. Its commentary is free.</h1>
+    <p class="lead">The numbers behind “expected goals” are built from cameras
+      that track every player. Almost nobody can afford them. But every match
+      also has someone writing down what happened, in ordinary English, for
+      free.</p>
+    <p>So: how much of the expensive thing can you rebuild from the words?</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">The answer, first</p>
+    <div class="hero-figure" data-count="0.901" data-format="percent">0%</div>
+    <h2>of what a camera-based model can tell apart, recovered from one English
+      sentence per shot.</h2>
+    <p>Measured on <b data-fill="validation.shots">8,825</b> shots where both
+      sources describe the same moment. Everything below is how that number was
+      arrived at — including the part where it nearly wasn't.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Question one</p>
+    <h1>Can commentary tell you a goal is coming?</h1>
+    <p class="lead">Pundits say it constantly: <em>they've got all the momentum
+      now</em>. If that is real, the words should show it before the score
+      does.</p>
+    <p>Four seasons, 22,147 moments, each asking: does either side score in the
+      next fifteen minutes? A model that guesses randomly scores 0.50. A perfect
+      one scores 1.00.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">It cannot</p>
+    <figure>
+      <div class="legend" id="legend-momentum"></div>
+      <svg class="chart" id="chart-momentum" role="img"
+           aria-label="Model skill at predicting the next goal, all close to chance"></svg>
+      <figcaption>Bars measure skill above a coin toss, so the model that
+        guesses draws nothing. The grey bar has already <em>watched</em> the
+        next fifteen minutes and is merely asked who scored — it is the
+        ceiling, not a competitor.</figcaption>
+      <details class="table"><summary>See the numbers</summary>
+        <div id="table-momentum"></div></details>
+    </figure>
+    <p class="lead">Even the model that sees the future only reaches
+      <strong>0.60</strong>.</p>
+    <p>That is the useful finding. The words are not failing to read a signal
+      that is there — the signal is barely there at all. Which side scores in
+      the next quarter of an hour is mostly down to whether a shot goes in, and
+      nothing before it says much about that.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">But something turned up</p>
+    <h1>The words describing shots are far richer than the rest.</h1>
+    <p>Fouls and corners are written from a template — the same handful of
+      sentences, over and over. Shots are not. They say where it was struck
+      from, with which foot, and how the chance was made.</p>
+    <p class="lead">Which is exactly what an expected-goals model is made of.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Read straight off the sentence</p>
+    <figure>
+      <svg class="chart" id="chart-chances" role="img"
+           aria-label="How often each kind of chance is scored"></svg>
+      <figcaption>How often each kind of chance ends in a goal, across
+        <b data-fill="corpus.shots">87,980</b> shots. Nothing here comes from a
+        camera — every one of these was read out of an English sentence.</figcaption>
+      <details class="table"><summary>See the numbers</summary>
+        <div id="table-chances"></div></details>
+    </figure>
+  </section>
+
+  <section>
+    <p class="eyebrow">First, a trap</p>
+    <h1>The sentence tells you the answer.</h1>
+    <p>Every shot's commentary opens by saying what happened. Feed a model the
+      whole line and it does not learn football — it learns to read the first
+      two words.</p>
+    <div class="openers" id="openers"></div>
+    <p class="lead">A model given the raw text scores <strong>1.0000</strong>.
+      Flawless, and worthless.</p>
+    <p>Removing that took four attempts. Two of them looked clean and were not —
+      the second was only caught by printing what the model had learned and
+      finding the word “goal” weighted above everything else. The fix that
+      worked keeps only phrases known to describe the chance, and a test now
+      fails the build if the outcome ever creeps back in.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Question two</p>
+    <h1>How good was that chance?</h1>
+    <p>A different question, and an answerable one. Not <em>when will a goal
+      come</em> — but <em>was the shot just taken a good one?</em></p>
+    <p>To check the answer, both sources had to describe the same shots. There
+      is exactly one season where that is possible: 2015-16, the last Premier
+      League season with camera data published openly. The model was trained on
+      recent football and tested there — a decade outside anything it had
+      seen.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Words against cameras, same shots</p>
+    <figure>
+      <div class="legend" id="legend-validation"></div>
+      <svg class="chart" id="chart-validation" role="img"
+           aria-label="The words reach 0.781 against the camera model's 0.812"></svg>
+      <figcaption>Both models scoring the same
+        <b data-fill="validation.shots">8,825</b> shots, measured above a coin
+        toss. The camera model sees exact coordinates and the position of all
+        sixteen nearby players. The other sees a sentence.</figcaption>
+      <details class="table"><summary>See the numbers</summary>
+        <div id="table-validation"></div></details>
+    </figure>
+    <p class="lead">The gap is real, and small. What the words genuinely cannot
+      say is distance in metres, the angle, and how many defenders were in the
+      way — and that is all the gap turns out to be.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Does it travel?</p>
+    <h1>Trained on English football. Never told about anywhere else.</h1>
+    <figure>
+      <svg class="chart" id="chart-leagues" role="img"
+           aria-label="The same model scores equally well in six leagues"></svg>
+      <figcaption>The Premier League model, pointed at five other competitions
+        cold — nothing retrained, nothing tuned. Measured above a coin toss;
+        the bar it was trained on is in orange.</figcaption>
+      <details class="table"><summary>See the numbers</summary>
+        <div id="table-leagues"></div></details>
+    </figure>
+    <p class="lead">It does slightly better abroad than at home.</p>
+    <p>Which is the whole argument in one chart. Camera data exists for a
+      handful of competitions. Commentary exists for hundreds — and it reads the
+      same everywhere, so one model covers all of them.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">What it looks like during a match</p>
+    <h1>The scoreline is not always the game.</h1>
+    <figure class="replay">
+      <div class="legend" id="legend-replay"></div>
+      <svg class="chart" id="chart-replay" role="img"
+           aria-label="Chances created over the course of one match against the score"></svg>
+      <figcaption id="replay-caption"></figcaption>
+      <details class="table"><summary>See the numbers</summary>
+        <div id="table-replay"></div></details>
+    </figure>
+    <p>Goalless at the hour, with one side having created two and a half times
+      as much. Then two goals from half a chance, the other way.</p>
+    <p class="lead">It does not predict the goal. It tells you who deserved
+      one.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">What was deliberately left out</p>
+    <h1>Six tools were proposed. All six were measured, and declined.</h1>
+    <table class="declined">
+      <thead><tr><th>Tool</th><th>Why it was proposed</th><th>What the measurement said</th></tr></thead>
+      <tbody>
+        <tr><td>Spark</td><td>Too much data for one machine</td>
+            <td>The whole corpus is 4 MB. It loads in 0.04 seconds.</td></tr>
+        <tr><td>An LLM</td><td>A better reader would close the gap</td>
+            <td>Every model given the whole sentence did worse than seventeen fields pulled out of it.</td></tr>
+        <tr><td>vLLM</td><td>Serve explanations at scale</td>
+            <td>Needs a kind of graphics card this machine does not have.</td></tr>
+        <tr><td>C++</td><td>Python is too slow live</td>
+            <td>2.4 ms per match, against a 15-second budget — and 60× cheaper than waiting for the network.</td></tr>
+        <tr><td>Kubeflow</td><td>Weekly retraining</td>
+            <td>A model ten years stale loses 0.009. There is nothing to retrain.</td></tr>
+        <tr><td>LangGraph</td><td>Orchestrate the steps</td>
+            <td>Four steps, one branch. That is an <code>if</code>.</td></tr>
+      </tbody>
+    </table>
+    <p>Each has a script in the repository that reruns the measurement in
+      seconds. Adding a tool that earns nothing is not a neutral act — it is a
+      claim you cannot defend.</p>
+  </section>
+
+  <section data-tight>
+    <p class="eyebrow">Still open</p>
+    <h2>One question has no evidence behind it yet.</h2>
+    <p>Everything about reading a match live assumes the words arrive quickly
+      enough to be worth reading. No match has been running at a moment when
+      that could be checked. A job now runs during Premier League kickoffs to
+      measure it, and the answer will appear in the repository rather than
+      here.</p>
+  </section>
+
+</main>
+
+<footer>
+  <p><b data-fill="corpus.shots">87,980</b> shots ·
+     <b data-fill="corpus.matches">3,569</b> matches ·
+     <b data-fill="corpus.leagues">6</b> competitions ·
+     data from ESPN's public commentary feed and StatsBomb's open data.</p>
+  <p style="margin-top:.6rem">Built by Dheepak Karan ·
+     <a href="https://github.com/dheepakkaran/xg-from-words">source and full write-up</a> ·
+     figures generated from <a href="data.json">data.json</a>, itself generated
+     from the results.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

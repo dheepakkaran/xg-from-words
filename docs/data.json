@@ -1,0 +1,201 @@
+{
+ "generated": "60ee4e2",
+ "corpus": {
+  "shots": 87980,
+  "matches": 3569,
+  "leagues": 6,
+  "goals": 10109
+ },
+ "momentum": [
+  {
+   "label": "majority class",
+   "auc": 0.5,
+   "ceiling": false
+  },
+  {
+   "label": "the words",
+   "auc": 0.5132,
+   "ceiling": false
+  },
+  {
+   "label": "the numbers",
+   "auc": 0.5405,
+   "ceiling": false
+  },
+  {
+   "label": "+ who is playing",
+   "auc": 0.5647,
+   "ceiling": false
+  },
+  {
+   "label": "seeing the future",
+   "auc": 0.6016,
+   "ceiling": true
+  }
+ ],
+ "leak": {
+  "raw_auc": 1.0,
+  "clean_auc": 0.7688,
+  "openers": [
+   {
+    "phrase": "Goal!",
+    "rate": 1.0
+   },
+   {
+    "phrase": "Attempt missed",
+    "rate": 0.0
+   },
+   {
+    "phrase": "Attempt saved",
+    "rate": 0.0
+   },
+   {
+    "phrase": "Attempt blocked",
+    "rate": 0.0
+   }
+  ]
+ },
+ "validation": {
+  "shots": 8825,
+  "ours": 0.781,
+  "theirs": 0.8118,
+  "recovered": 0.901,
+  "corr": 0.741,
+  "mean_ours": 0.097,
+  "mean_theirs": 0.098
+ },
+ "leagues": [
+  {
+   "code": "por.1",
+   "name": "Primeira Liga",
+   "shots": 7000,
+   "auc": 0.7848,
+   "home": false
+  },
+  {
+   "code": "fra.1",
+   "name": "Ligue 1",
+   "shots": 7391,
+   "auc": 0.7783,
+   "home": false
+  },
+  {
+   "code": "ger.1",
+   "name": "Bundesliga",
+   "shots": 7853,
+   "auc": 0.7767,
+   "home": false
+  },
+  {
+   "code": "eng.1",
+   "name": "Premier League",
+   "shots": 9194,
+   "auc": 0.7693,
+   "home": true
+  },
+  {
+   "code": "esp.1",
+   "name": "La Liga",
+   "shots": 9240,
+   "auc": 0.7682,
+   "home": false
+  },
+  {
+   "code": "ita.1",
+   "name": "Serie A",
+   "shots": 9065,
+   "auc": 0.767,
+   "home": false
+  }
+ ],
+ "chances": [
+  {
+   "label": "A penalty",
+   "rate": 0.7547,
+   "n": 1019
+  },
+  {
+   "label": "On the break",
+   "rate": 0.3203,
+   "n": 2523
+  },
+  {
+   "label": "Six yards out",
+   "rate": 0.4045,
+   "n": 3525
+  },
+  {
+   "label": "A through ball",
+   "rate": 0.2558,
+   "n": 2537
+  },
+  {
+   "label": "Off a corner",
+   "rate": 0.1586,
+   "n": 7523
+  },
+  {
+   "label": "A header",
+   "rate": 0.1043,
+   "n": 15975
+  },
+  {
+   "label": "A cross",
+   "rate": 0.1045,
+   "n": 15199
+  },
+  {
+   "label": "From outside the box",
+   "rate": 0.0397,
+   "n": 25058
+  }
+ ],
+ "replay": {
+  "home": "Tottenham Hotspur",
+  "away": "Newcastle United",
+  "frames": [
+   {
+    "minute": 15,
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_xg": 0.05,
+    "away_xg": 0.06
+   },
+   {
+    "minute": 30,
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_xg": 0.43,
+    "away_xg": 0.1
+   },
+   {
+    "minute": 45,
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_xg": 0.71,
+    "away_xg": 0.31
+   },
+   {
+    "minute": 60,
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_xg": 1.01,
+    "away_xg": 0.4
+   },
+   {
+    "minute": 75,
+    "home_goals": 0,
+    "away_goals": 2,
+    "home_xg": 1.15,
+    "away_xg": 0.89
+   },
+   {
+    "minute": 90,
+    "home_goals": 0,
+    "away_goals": 2,
+    "home_xg": 1.35,
+    "away_xg": 0.89
+   }
+  ]
+ }
+}
