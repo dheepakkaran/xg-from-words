@@ -87,11 +87,15 @@ function matchTable(host, head, rows) {
   const tb = host.appendChild(document.createElement("tbody"));
   rows.forEach(cells => {
     const tr = tb.insertRow();
-    cells.forEach(c => {
+    cells.forEach((c, i) => {
       const td = tr.insertCell();
       td.textContent = c.text;
       if (c.cls) td.className = c.cls;
       if (c.v) td.dataset.v = c.v;
+      /* Carried so a phone can restack the row as a block and still say what
+         each number is -- a column heading is no use once the columns are
+         gone. */
+      td.dataset.label = head[i];
     });
   });
 }

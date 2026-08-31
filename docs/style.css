@@ -1,5 +1,11 @@
 /* xg-from-words — a scrollytelling read of the results.
-   One idea per screen; nothing moves that does not carry meaning. */
+   One idea per screen; nothing moves that does not carry meaning.
+
+   Checked for horizontal overflow at 320, 375, 768, 1440 and 1920 CSS pixels.
+   Two things caused it and both are fixed below: section used an auto grid
+   track, which sizes to its widest child's max-content and let one table
+   stretch the page and the fixed header with it; and the stat tiles used a
+   fixed minmax floor, which forced four columns onto a phone. */
 
 @property --n { syntax: "<number>"; initial-value: 0; inherits: false; }
 
@@ -65,6 +71,10 @@ main { display: block; }
 section {
   min-height: 100svh;
   display: grid;
+  /* minmax(0, 1fr) rather than the default auto track: an auto track sizes to
+     its widest child's max-content, so one wide table was stretching the
+     section, the page, and the header with it. */
+  grid-template-columns: minmax(0, 1fr);
   align-content: center;
   justify-items: start;
   gap: 1.25rem;
@@ -103,7 +113,7 @@ strong { color: var(--ink-1); font-weight: 620; }
 
 /* ---------- charts ---------- */
 
-figure { margin: 0; width: 100%; max-width: 46rem; }
+figure { margin: 0; width: 100%; max-width: 46rem; min-width: 0; }
 figcaption { color: var(--ink-3); font-size: .85rem; margin-top: .75rem;
              max-width: var(--measure); }
 .chart { width: 100%; overflow: visible; }
@@ -124,6 +134,7 @@ figcaption { color: var(--ink-3); font-size: .85rem; margin-top: .75rem;
 
 details.table { margin-top: 1rem; font-size: .85rem; color: var(--ink-2); }
 details.table summary { cursor: pointer; color: var(--ink-3); }
+details.table > div { overflow-x: auto; }
 details.table table { border-collapse: collapse; margin-top: .6rem; }
 details.table th, details.table td {
   text-align: left; padding: .3rem .9rem .3rem 0;
@@ -144,8 +155,19 @@ details.table th, details.table td {
 
 /* ---------- match tables ---------- */
 
+/* Six columns of match data will not fit a phone, and squeezing them makes
+   both the numbers and the names unreadable. The table keeps its shape and
+   scrolls inside its own box, so the page never widens. */
+.table-wrap {
+  width: 100%; max-width: 52rem; min-width: 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.table-wrap::after {
+  content: ""; display: block; height: 1px;
+}
 table.matches {
-  width: 100%; max-width: 52rem; border-collapse: collapse;
+  width: 100%; min-width: 30rem; border-collapse: collapse;
   font-size: .9rem; font-variant-numeric: tabular-nums;
 }
 table.matches th {
@@ -168,7 +190,7 @@ table.matches tr:hover td { background: var(--surface-2); }
 /* ---------- the declined table ---------- */
 
 .declined { width: 100%; max-width: 52rem; border-collapse: collapse;
-            font-size: .93rem; }
+            font-size: .93rem; min-width: 26rem; }
 .declined th { text-align: left; color: var(--ink-3); font-weight: 600;
                font-size: .78rem; letter-spacing: .09em; text-transform: uppercase;
                padding-bottom: .6rem; }
@@ -248,6 +270,27 @@ footer a { color: var(--ink-2); }
 
 @container (max-width: 34rem) {
   .opener { grid-template-columns: 1fr; gap: .25rem; }
+  /* Six columns do not belong on a phone, and a sideways scrollbar nobody can
+     see is worse than no table. Each row becomes a block: the fixture as its
+     heading, the rest labelled from the column it came from. */
+  .table-wrap { overflow-x: visible; }
+  table.matches { min-width: 0; display: block; font-size: .88rem; }
+  table.matches thead { display: none; }
+  table.matches tbody, table.matches tr { display: block; }
+  table.matches tr { padding: .8rem 0; border-top: 1px solid var(--rule); }
+  table.matches tr:hover td { background: none; }
+  table.matches td { display: flex; justify-content: space-between; gap: 1rem;
+                     border: 0; padding: .12rem 0; }
+  table.matches td::before {
+    content: attr(data-label); color: var(--ink-3); font-size: .78rem;
+    letter-spacing: .04em; text-transform: uppercase; flex: none;
+  }
+  table.matches td.fixture {
+    display: block; color: var(--ink-1); font-weight: 620;
+    font-size: 1rem; margin-bottom: .35rem;
+  }
+  table.matches td.fixture::before { content: none; }
+  .now-side { grid-template-columns: 1fr auto auto; gap: .5rem; }
   /* The SVG scales its viewBox down to the container, which shrinks 13px type
      to about 6px on a phone. These sizes are in viewBox units, so raising them
      here restores roughly the same rendered size. */
@@ -283,8 +326,9 @@ footer a { color: var(--ink-2); }
 
 .scoreline {
   width: 100%; max-width: 46rem;
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: .6rem;
+  display: grid; gap: .6rem;
+  /* min() so a narrow screen collapses to one column instead of overflowing */
+  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
 }
 .scoreline div {
   padding: 1rem 1.1rem; border: 1px solid var(--rule); border-radius: 14px;
