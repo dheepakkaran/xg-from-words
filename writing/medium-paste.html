@@ -1,0 +1,304 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Medium paste — xg-from-words</title>
+<style>
+ /* Forced light, not inherited. This page exists to be read and copied, and a
+    dark system theme was rendering #222 text on a dark background. */
+ :root { color-scheme: light; }
+ html, body { background: #ffffff; }
+ body { max-width: 42rem; margin: 3rem auto; padding: 0 1.25rem;
+        font: 18px/1.65 Georgia, "Times New Roman", serif; color: #222; }
+ h1 { font-size: 2.1rem; line-height: 1.2; }
+ h2 { font-size: 1.5rem; margin-top: 2.4rem; }
+ h3 { font-size: 1.2rem; margin-top: 1.8rem; }
+ pre { background: #f6f6f4; padding: .9rem 1rem; overflow-x: auto;
+       font: 13px/1.5 ui-monospace, Menlo, monospace; border-radius: 6px; }
+ code { font: .88em ui-monospace, Menlo, monospace; background: #f2f2f0;
+        padding: .08em .3em; border-radius: 3px; }
+ pre code { background: none; padding: 0; }
+ blockquote { margin: 1.4rem 0; padding-left: 1.1rem;
+              border-left: 3px solid #ddd; color: #444; font-style: italic; }
+ hr { border: 0; border-top: 1px solid #e5e5e2; margin: 2.4rem 0; }
+ .how { background: #fffbe6; border: 1px solid #f0e3a0; padding: 1rem 1.2rem;
+        font-family: system-ui, sans-serif; font-size: .9rem; border-radius: 8px; }
+</style>
+<div class="how">
+ <strong>To publish:</strong> select everything below this box (click just under
+ it, then <em>Cmd&nbsp;+&nbsp;A</em> is fine — the box is ignored by Medium),
+ copy, and paste into a new Medium story. Headings, bold, lists, quotes and code
+ blocks all survive. Tables were rewritten as code blocks and lists, because
+ Medium does not have tables. Add your own cover image at the top.
+</div>
+<h1>I tried to predict football goals from commentary. I failed, and that failure led somewhere better.</h1>
+<p><em>A story about expected goals, four hidden bugs, and a robot that watches football so I don't have to.</em></p>
+<hr>
+<h2>The thing that annoyed me</h2>
+<p>If you watch football, you have heard a commentator say this:</p>
+<blockquote><p>"Liverpool have all the momentum now."</p></blockquote>
+<p>I wanted to know if that sentence means anything. Not as an opinion — as a number. If a team really has momentum, then a computer reading the commentary should be able to say <em>a goal is coming</em>, before the goal comes.</p>
+<p>So I built it. And it did not work.</p>
+<p>This post is about what happened next, because the failure turned out to be the useful part.</p>
+<hr>
+<h2>First, two words you need</h2>
+<p>I will explain every short form as it appears. There are only a few, and none of them are hard.</p>
+<p><strong>xG — expected goals.</strong> A number between 0 and 1 for a single shot. It answers one question: <em>if a hundred shots like this were taken, how many would go in?</em></p>
+<ul><li>A penalty is about <strong>0.76</strong>. Out of 100 penalties, about 76 are scored.</li><li>A shot from far outside the box is about <strong>0.04</strong>. Out of 100, about 4 go in.</li></ul>
+<p>Add up every shot a team takes and you get how much they <em>deserved</em> to score. That is why you sometimes hear "Arsenal won 1–0 but the xG was 0.4 to 2.1" — it means Arsenal won, and did not play better.</p>
+<p><strong>AUC — Area Under the Curve.</strong> This is the score I use to say how good a model is. The full name is <em>area under the ROC curve</em>, and ROC stands for <em>Receiver Operating Characteristic</em>, which is a name from World War Two radar and tells you nothing. Ignore it.</p>
+<p>Here is what AUC actually means, and it is simple:</p>
+<blockquote><p>Take one shot that was a goal and one shot that was not. Show both to the model. <strong>How often does it give the goal the higher number?</strong></p></blockquote>
+<ul><li>**0.50*— it is guessing. A coin toss.</li><li>**1.00*— perfect, every single time.</li><li>**0.78*— it gets the pair the right way round about 78 times in 100.</li></ul>
+<p>That is all. When I say "AUC 0.78", I mean: give it a goal and a miss, and 78% of the time it picks the goal.</p>
+<hr>
+<h2>Where the data comes from, and why it matters</h2>
+<p>Real xG models are built from <strong>cameras</strong>. Companies put tracking cameras in stadiums and record where every player stood at the moment of every shot. That gives them the exact distance, the exact angle, and how many defenders were in the way.</p>
+<p>That data costs money. A lot of money. If you are a student, or a small club, or you follow a league nobody sells data for, you cannot have it.</p>
+<p>But every match also has <strong>someone writing down what happened, in ordinary English, for free.</strong></p>
+<pre><code>"Attempt saved. Marcus Rashford (Manchester United) right footed shot
+ from the centre of the box. Assisted by Bruno Fernandes with a cross."</code></pre>
+<p>Read that sentence again. It tells you where he shot from. Which foot. How the chance was made. That is <em>almost</em> what an xG model needs.</p>
+<p>So my real question became:</p>
+<blockquote><p><strong>How much of the expensive thing can you rebuild from the free words?</strong></p></blockquote>
+<p>I got the commentary from <strong>ESPN's public API</strong>. API means <em>Application Programming Interface</em> — a web address you can ask for data instead of a web page for humans. No key, no signup, no payment. I collected <strong>87,980 shots</strong> across <strong>3,569 matches</strong> and <strong>six leagues</strong>.</p>
+<hr>
+<h2>Question one: can words predict the next goal?</h2>
+<p>I broke every match into moments. Every five minutes, from minute 10 to minute 80, I asked: <em>does either side score in the next fifteen minutes?</em></p>
+<p>That gave me <strong>22,147 moments</strong> from <strong>1,491 Premier League matches</strong> across four seasons.</p>
+<p>Then I built two models on exactly the same moments:</p>
+<ul><li>**The numbers.*Count the events so far — shots, corners, fouls, cards.</li><li>**The words.*Just feed it the last ten lines of commentary as text.</li></ul>
+<p>Both come from the <em>same</em> commentary. The only thing that changes is whether I count it or read it. That matters — otherwise I would be comparing two different data sources, not two ways of reading one.</p>
+<h3>The result</h3>
+<pre><code>What the model sees                      AUC
+-------------------------------------  -----
+Nothing — just guessing                0.500
+The words                              0.513
+The numbers                            0.540
+Numbers + which two teams are playing  0.565</code></pre>
+<p>The numbers beat the words. Every time, in every test I ran.</p>
+<p>But look at those numbers again. <strong>0.513 and 0.540.</strong> A coin toss is 0.500. Neither model is doing much of anything.</p>
+<p>So the honest answer was: <em>this does not work.</em> Which is where most projects stop.</p>
+<hr>
+<h2>The trick that saved the project: measuring the ceiling</h2>
+<p>Here is the question that bothered me. When a model fails, there are two possible reasons:</p>
+<ol><li><strong>My model is bad.</strong></li><li><strong>The thing I am trying to predict is unpredictable.</strong></li></ol>
+<p>Those are completely different problems, and everyone assumes it is the first one. So they buy a bigger model, or more data, and get nowhere.</p>
+<p>I decided to measure which one it was. And there is a clean way to do it:</p>
+<blockquote><p><strong>Build a model that cheats.</strong></p></blockquote>
+<p>I gave a model the events from <em>inside</em> the fifteen minutes it was supposed to predict. Every shot, every corner, every foul that was about to happen. I removed only the goals themselves. This model has, effectively, <strong>watched the future</strong>, and is only being asked <em>who scored</em>.</p>
+<p>It reached <strong>0.602</strong>.</p>
+<p>Read that again. A model that has already seen the next fifteen minutes can only get to 0.60.</p>
+<pre><code>                              AUC  Share of what is possible
+--------------------------  -----  -------------------------
+Guessing                    0.500                          —
+The words                   0.513                        13%
+The numbers                 0.540                        40%
+Cheating — sees the future  0.602                       100%</code></pre>
+<p>So my model was not bad. <strong>The target was nearly noise.</strong> Whether a goal lands in a particular fifteen minutes comes down mostly to whether a shot goes in — and almost nothing before it tells you that.</p>
+<p>That is a real finding. "It didn't work" is not. The difference is the ceiling.</p>
+<p><strong>And one uncomfortable extra:</strong> a model that knows <em>only which two teams are on the pitch</em> — nothing about the match in progress — scored <strong>0.559</strong>. Better than everything happening inside the match, combined. Arsenal at home are more likely to score in any fifteen minutes than Burnley away, and no amount of commentary changes that.</p>
+<hr>
+<h2>The pivot</h2>
+<p>While measuring all this, I noticed something.</p>
+<p>Commentary about <strong>fouls and corners</strong> is written from a template. The same handful of sentences, over and over. I counted: 42 different sentence shapes for 16,583 foul lines.</p>
+<p>Commentary about <strong>shots</strong> is not. 1,015 different shapes for 3,532 shot lines. Shot lines say body part, position on the pitch, how the chance was built.</p>
+<p>Which is exactly what xG is made of.</p>
+<p>So I asked a different question — and this is the important switch:</p>
+<ul><li>❌ *When will a goal come?→ depends on whether the shot goes in → <strong>almost random</strong></li><li>✅ *Was that shot a good chance?→ depends on where and how it was struck → <strong>knowable</strong></li></ul>
+<p>The first question is about luck. The second is about position. I had been asking the wrong one.</p>
+<hr>
+<h2>Then the project nearly died</h2>
+<p>I fed the shot sentences to a model. It scored <strong>1.0000</strong>. Perfect. Every single shot, right.</p>
+<p>I did not celebrate. A perfect score means something is wrong.</p>
+<p>Here is what was wrong. Every shot's commentary <strong>opens by saying what happened</strong>:</p>
+<pre><code>"Goal!  Chelsea 1, Everton 0. Nicolas Jackson..."     → always a goal
+"Attempt missed. Luke Shaw..."                        → never a goal
+"Attempt saved. Marcus Rashford..."                   → never a goal
+"Attempt blocked. Kai Havertz..."                     → never a goal</code></pre>
+<p>The model was not learning football. <strong>It was reading the first two words.</strong> Like a student who found the answer key.</p>
+<p>This has a name: <strong>data leakage</strong>. Information about the answer sneaking into the question. It is the single most common way a machine learning project quietly becomes worthless — because it does not look like a bug. It looks like success.</p>
+<h3>Removing it took four attempts. Three of them failed.</h3>
+<p><strong>Attempt 1.</strong> Cut the opening sentence. Still leaked — the penalty flag showed a 100% scoring rate, which is impossible.</p>
+<p><strong>Attempt 2.</strong> Cut the opener plus a list of words like "saved" and "missed". The text now <em>looked</em> completely clean. I read it myself and was satisfied.</p>
+<p>It was still leaking. I only found out by printing what the model had learned — and the word <strong>"goal"</strong> was weighted higher than everything else combined. It had survived somewhere I had not looked. The 0.82 I got from that attempt was fake.</p>
+<p><strong>Attempt 3.</strong> Stop deleting; start keeping. Instead of removing bad phrases, I kept <em>only</em> phrases I had approved — the position, the foot, the assist. Nothing else gets through.</p>
+<p>That looked right. It gave me my headline number. <strong>It was still wrong.</strong></p>
+<p><strong>Attempt 4</strong> — found days later, by accident, while building a feature that shows similar past shots. The top-rated chance in the season was <em>"from a free kick right footed shot"</em> and <strong>all forty</strong> of its most similar past shots were goals. Forty out of forty is not football.</p>
+<p>ESPN writes the two outcomes differently:</p>
+<pre><code>Scored:  "Olise (Palace) from a free kick with a left footed shot to..."
+Missed:  "...shot from outside the box ... from a direct free kick"</code></pre>
+<p>The exact phrase that survived my approved list — <em>"from a free kick"</em> — appears <strong>only when the free kick is scored.</strong> 60 shots, all 60 goals.</p>
+<p>So free kicks came out entirely. They cannot be identified from this data before the outcome is known. Even the event type gives it away.</p>
+<p><strong>What I learned, and it is the main lesson of the whole project:</strong></p>
+<blockquote><p>A list of forbidden words only catches the leaks you already thought of.</p></blockquote>
+<p>My test had a hand-written list. "Free kick" was never going to be on it, because a free kick is a perfectly normal thing to describe. So I replaced the list with a rule that asks the data instead:</p>
+<blockquote><p><em>Any phrase appearing 25 times or more that scores far above the penalty rate is not describing a chance. It is naming the outcome.</em></p></blockquote>
+<p>That catches leaks I have not imagined. Run it against my old data and it flags the free kick immediately.</p>
+<p><em>(A fifth bug turned up the same way, from the same habit of tracing one real example end to end: my code was reading "headed" out of "assisted by X with a <strong>headed</strong> pass" and labelling 1,636 <strong>footed</strong> shots as headers. Those convert at 13.8%; real headers at 10.0%. One label was carrying two different things.)</em></p>
+<hr>
+<h2>The comparison — and what it actually means</h2>
+<p>Now the real test. Is my model any good compared to a <strong>professional</strong> one?</p>
+<p><strong>StatsBomb</strong> is a company that builds xG for real clubs from real tracking cameras. They publish one Premier League season openly, for free: <strong>2015-16</strong>.</p>
+<p>So I pointed both models at the same <strong>8,825 shots</strong> and asked the same question.</p>
+<p>Two things make this a hard test for me, not an easy one:</p>
+<ol><li>My model was trained on football from <strong>2022 to 2025</strong>. It was tested on <strong>2015-16</strong> — nine years earlier, a different era, different commentary writers. It had never seen anything from that season.</li><li>Their model had the season's own camera data in hand.</li></ol>
+<p>First, a sanity check that the two datasets really describe the same shots: they agree on <strong>99.71%</strong> of outcomes. Good — the join is real.</p>
+<h3>Result 1: how often each picks the goal (AUC)</h3>
+<pre><code>Model                                What it sees     AUC
+---------  --------------------------------------  ------
+Mine                         one English sentence  0.7826
+StatsBomb  exact coordinates, 16 player positions  0.8118</code></pre>
+<p>Both are well above a coin toss. The gap is 0.029.</p>
+<p>To put it in the plainest terms: measuring from 0.50 (guessing) as the floor,</p>
+<pre><code>mine    = 0.7826 - 0.50 = 0.2826
+theirs  = 0.8118 - 0.50 = 0.3118
+
+0.2826 / 0.3118 = 90.6%</code></pre>
+<blockquote><p><strong>A sentence of English gets 90.6% of the way to a stadium full of cameras.</strong></p></blockquote>
+<h3>Result 2: how far each was from the truth, in goals</h3>
+<p>AUC is about ranking. This is about being <em>right</em>.</p>
+<p>For each team in each match, I compared what the model expected to how many they actually scored, and took the average gap.</p>
+<pre><code>Model                    Average error
+-----------------------  -------------
+Mine, from words           0.781 goals
+StatsBomb, from cameras    0.740 goals</code></pre>
+<p>The commercial model is better by <strong>0.041 of a goal</strong> per team per match. That is the entire difference between reading a sentence and installing cameras.</p>
+<h3>Result 3: a point system, because a table nobody reads settles nothing</h3>
+<p>Each side of each match is worth one point, to whichever model landed nearer the real goals. Within a twentieth of a goal, they share it.</p>
+<pre><code>StatsBomb  404 points
+Mine       342 points
+
+They were closer in 54.2% of cases.</code></pre>
+<p>They win. Narrowly. On 373 matches they had camera data for and I had a sentence.</p>
+<h3>What this comparison does and does not prove</h3>
+<p><strong>It proves:</strong> words carry most of what matters about shot quality. Not all. Most.</p>
+<p><strong>It does not prove</strong> my model is better, or as good. It is not. It loses on every measure. The point is <em>by how little</em> — and that the thing it loses to costs money while mine does not.</p>
+<p><strong>And what the gap is made of:</strong> the 9.4% I cannot recover is exactly what a sentence never says. Distance in metres. The angle. How many defenders were in the way. No cleverer model can read information that was never written down.</p>
+<p>I checked that last claim rather than assuming it — see below.</p>
+<hr>
+<h2>Does it work anywhere else?</h2>
+<p>The whole argument is <em>commentary is free where cameras are not</em>. That only matters if the model travels.</p>
+<p>So I took the model trained on <strong>English</strong> football and pointed it, with no retraining and no adjustment, at five other leagues.</p>
+<pre><code>League                            AUC
+-----------------------------  ------
+Premier League (trained here)  0.7709
+La Liga (Spain)                0.7730
+Serie A (Italy)                0.7702
+Bundesliga (Germany)           0.7795
+Ligue 1 (France)               0.7807
+Primeira Liga (Portugal)       0.7871</code></pre>
+<pre><code>at home      0.7709
+abroad, mean 0.7781
+cost of moving  -0.0072   ← a small gain, not a loss</code></pre>
+<p>It does slightly <em>better</em> abroad than at home. It has never been told anything about Portuguese or German football.</p>
+<p>Why does that work? Because it reads <strong>the sentence</strong>, and the company that writes those sentences writes them the same way everywhere. That is the whole argument in one table: camera data exists for a handful of competitions; commentary exists for hundreds.</p>
+<hr>
+<h2>Six tools I was supposed to use, and did not</h2>
+<p>My original plan listed an impressive stack of technology. I measured each one instead of assuming, and dropped all six. Each has a script in the repository that reruns the measurement in seconds.</p>
+<p><strong>Spark</strong> — for data too big for one computer. My entire dataset is <strong>4 megabytes</strong>. It loads in <strong>0.04 seconds</strong>. Even scraping every league ESPN has, for 25 years, would be about 15 GB. Spark is for thousands of gigabytes. It would be like hiring ten lorries to move one bag.</p>
+<p><strong>A large language model, to read the sentences better than my code does.</strong> Worth testing, so I tested it — for free. I gave models the <em>entire</em> sentence instead of the 18 things my code pulls out of it.</p>
+<pre><code>What the model sees                          AUC
+----------------------------------------  ------
+18 extracted fields                       0.7709
+Every 1-to-4 word phrase in the sentence  0.7612
+A sentence-meaning model (MiniLM)         0.7584</code></pre>
+<p>Reading more of the sentence is worth <strong>minus 0.0097</strong>. Everything that sees the whole text does <em>worse</em>. The rest of the sentence is player names and filler — noise. There is nothing left in there for a better reader to find, so a bigger model cannot help. I dropped it on that evidence, not on taste.</p>
+<p><strong>vLLM</strong> — software for running large language models fast on your own machine. Its speed comes from a specific kind of NVIDIA graphics card. My laptop is a Mac and has none. Installing it would also downgrade libraries the working code depends on. It would run slower <em>and</em> break things.</p>
+<p><strong>C++</strong> — a faster programming language, for when Python cannot keep up live. I measured before rewriting. The busiest window across six leagues has <strong>14 matches at once</strong>. Python takes <strong>2.44 milliseconds</strong> per match. The budget between checks is 15 seconds.</p>
+<pre><code>14 matches × 2.4 ms = 34 ms
+that is 0.23% of the budget</code></pre>
+<p>And the thing that actually takes time is <strong>waiting for ESPN to answer: 147 milliseconds.</strong> The computing is <strong>60 times cheaper than the wait</strong>. No language change makes a website reply faster.</p>
+<p><strong>Kubeflow</strong> — for retraining a model on a schedule. Only worth it if the model goes stale. I tested: a model trained on <strong>2015-16</strong> and used on <strong>2025-26</strong> — ten years old — loses <strong>0.007 AUC</strong>. One recent season is as good as three. There is nothing to retrain.</p>
+<p><strong>LangGraph</strong> — for orchestrating complicated multi-step AI flows. After dropping the language model, my flow is: score the shot, check a threshold, look up similar shots, format a sentence. Four steps, one branch, no loops. That is an <code>if</code> statement.</p>
+<p><strong>Why I am telling you what I did not build.</strong> Adding a tool that earns nothing is not neutral. In an interview, "why did you use Spark?" has exactly one good answer, and "the job description mentioned it" is not it.</p>
+<hr>
+<h2>How it runs itself</h2>
+<p>The project now watches football without me. Here is the whole design, and the one constraint that shapes it.</p>
+<h3>The constraint</h3>
+<p><strong>The scheduler cannot read the fixture list.</strong> GitHub lets me write fixed times into a file. I cannot say "wake up five minutes before the next match", because at the time I write the file, nobody knows when the next match is.</p>
+<p>So I split it in two:</p>
+<p><strong>The alarm</strong> — <em>dumb</em>. "wake up every hour".</p>
+<p><strong>The script</strong> — <em>smart</em>. "is a match actually on? is one about to start?".</p>
+<p>The fixture awareness lives in the script, not the schedule.</p>
+<h3>What happens every hour</h3>
+<pre><code>Wake up. Ask ESPN: is a match live?
+
+  YES  → score every shot, write the result, look again in 60 seconds
+  NO, but one starts within 45 minutes  → stay awake and wait
+  NO, nothing coming  → go back to sleep (takes about 3 minutes)</code></pre>
+<h3>Tonight, for example</h3>
+<pre><code>18:50 UTC   alarm rings. No match yet.
+            Checks the calendar: "Aston Villa v Arsenal, in 10 minutes."
+            Stays awake.
+
+19:00       kick-off. Shots start arriving.
+            Every 60 seconds: read the new commentary, score the shots,
+            update the page, and record how old the commentary was.
+
+20:45       full time. Three quiet checks. Goes to sleep.</code></pre>
+<p>I will be doing something else. My laptop can be closed. UTC means <em>Coordinated Universal Time</em>, the world clock that does not change for summer time — which becomes important in a moment.</p>
+<h3>The bug that would have killed this silently</h3>
+<p>My first version woke at four fixed times: 11:25, 13:55, 16:25 and 18:55 UTC. It matched every August fixture. I was happy.</p>
+<p>Then I checked properly, against all 361 remaining fixtures of the season.</p>
+<pre><code>Kick-off times across the season, and whether I covered them:
+
+11:30 UTC     5 matches   covered
+13:00 UTC     9 matches   MISSED
+14:00 UTC    98 matches   covered
+15:00 UTC   175 matches   MISSED   ← the biggest slot in the calendar
+20:00 UTC    51 matches   MISSED
+
+Covered: 119.   Missed: 242.   That is 67% of the season.</code></pre>
+<p><strong>Why?</strong> In late October the United Kingdom moves off summer time. A Saturday 3pm kick-off is 14:00 UTC in August and <strong>15:00 UTC in November</strong>. My alarms were in UTC and I had only looked at August.</p>
+<p>Here is the part that should worry you more than the bug. <strong>Nothing would have told me.</strong> The job would wake, find no match, exit successfully, show a green tick — and from October the site would simply stop updating. Forever. Silently.</p>
+<p>The fix: wake every hour through the hours football is played, and let the script decide. I then simulated all 361 fixtures: <strong>every one is caught from kick-off, none mid-match.</strong></p>
+<p>And that simulation is now a test, so it cannot rot.</p>
+<hr>
+<h2>The tests, and what each one is actually guarding</h2>
+<p><strong>CI</strong> stands for <strong>Continuous Integration</strong>. Strip away the jargon and it is this:</p>
+<blockquote><p>A computer somewhere runs all my checks, automatically, every time I change the code.</p></blockquote>
+<p>The important part is that it uses a <strong>fresh, empty computer every single time</strong>. So "it works on my machine" cannot hide anything. Forget to list a library and it fails immediately.</p>
+<p>I have <strong>39 tests</strong>. Here are the ones that exist because something actually went wrong.</p>
+<p><strong>1. Can any feature see the future?</strong> Takes a real match, deletes everything after minute <em>M</em>, rebuilds the numbers, and demands they be <strong>identical</strong> to the ones built from the full match. Anything that can peek forward fails here.</p>
+<p><strong>2. Does the label still change?</strong> Because test 1 could pass by doing nothing at all. If the answer never moves when I delete the future, the test is meaningless. This makes sure the test is testing something.</p>
+<p><strong>3. Does the shot's outcome stay out of the text?</strong> Not by checking words — I tried that and it missed the free kick. It trains a model and demands it <em>cannot</em> score too well. If any new phrasing sneaks the answer back in, the score jumps and the build fails.</p>
+<p><strong>4. Does the raw text still leak?</strong> The companion to test 3. If the unedited sentence stopped leaking, test 3 would be proving nothing.</p>
+<p><strong>5. Is any phrase secretly the answer?</strong> The rule that replaced my hand-written list. Every phrase that appears 25+ times is checked, and anything scoring confidently above the penalty rate fails. This is the one that would have caught the free kick.</p>
+<p><strong>6. Does the schedule actually catch the football?</strong> Reads the alarm times out of the workflow file and the kick-off times out of the calendar, and simulates all 361 remaining fixtures. The 67% bug cannot come back.</p>
+<p><strong>7. Is anything stale?</strong> This one exists because I broke the same thing three times in a day, and never noticed:</p>
+<ul><li>a committed test sample was older than the leagues I had added — so <strong>CI passed while the tests failed on my own machine</strong></li><li>a cache was older than a code change — so a feature ran on old numbers</li><li>the website's data file was older than a rerun — so <strong>the headline read 90.1% for two days after the real answer moved to 90.6%</strong></li></ul>
+<p>None of them raised an error. Each one quietly served an old number. So now there is a declared list of what is built from what, and a test that fails when the timestamps are out of order.</p>
+<p><strong>8. Can the live path run on almost nothing?</strong> The match-watching job installs exactly one library. That is only true because the model ships as <strong>plain numbers in a small text file</strong> and is scored in about ten lines of arithmetic — no heavy machine learning libraries, no binary file I have to trust. The test hides all the heavy libraries and checks the live code still runs. An accidental import would break nothing else — it would break the job, at kick-off, in three weeks.</p>
+<p><strong>9. Is any number on the website typed in by hand?</strong> This is the test that came from the 90.1% embarrassment. Every figure on the page must come from the generated data file. If a number is sitting loose in the text where it can go out of date, the build fails.</p>
+<hr>
+<h2>What I am still not sure about</h2>
+<p>One claim in this project has <strong>no evidence behind it at all</strong>, and I would rather say so than let you assume otherwise.</p>
+<p>Everything about reading a match live assumes the commentary arrives <strong>fast enough to be worth reading</strong>. I have never measured it, because no match was ever running at a moment when I could. A job now runs during kick-offs specifically to record it, and whatever it finds will go in the repository — including if the answer is "too slow to be useful".</p>
+<hr>
+<h2>The short version</h2>
+<ul><li>**Commentary cannot tell you when a goal is coming.<em>I measured how unpredictable it is: even a model that has </em>watched the next fifteen minutesonly reaches 0.60. The problem is the football, not the model.</li><li>**Commentary can tell you how good a chance was.*It reaches **90.6%*of a camera-based commercial model, tested on a season nine years outside anything it had seen.</li><li>**The same model works in six countries*with no retraining, and slightly better abroad than at home.</li><li><strong>It found four separate leaks</strong>, three of which passed my own inspection. Each is now a test.</li><li>**Six impressive tools were measured and dropped.*None of them earned a place.</li><li><strong>It runs on its own</strong>, hourly, through the whole season, and a test proves the schedule catches all 361 remaining matches.</li></ul>
+<p><strong>The thing I would actually want you to take away:</strong> when a model fails, measure whether the problem is the model or the target. Almost nobody does. It is the difference between "my project didn't work" and "here is how unpredictable this actually is, with a number."</p>
+<hr>
+<p><em>Code, full write-up and the live page:</em> <strong>https://github.com/dheepakkaran/xg-from-words</strong> <strong>https://dheepakkaran.github.io/xg-from-words/</strong></p>
+<p><em>Data: ESPN's public commentary feed, and StatsBomb's open data.</em></p>
+<hr>
+<h2>Every short form used, in one place</h2>
+<p><strong>xG</strong> — <em>expected goals</em>. Chance of a shot being scored, 0 to 1. Add them up for a team and you get how much they deserved to score.</p>
+<p><strong>AUC</strong> — <em>Area Under the Curve</em>. Show the model one goal and one miss — how often does it pick the goal? 0.50 is guessing, 1.00 is perfect.</p>
+<p><strong>ROC</strong> — <em>Receiver Operating Characteristic</em>. The curve AUC is the area under. A radar term from the 1940s. Safe to ignore.</p>
+<p><strong>CI</strong> — <em>Continuous Integration</em>. A computer runs all your checks automatically, on a fresh machine, every time you change the code.</p>
+<p><strong>API</strong> — <em>Application Programming Interface</em>. A web address that returns data instead of a web page.</p>
+<p><strong>JSON</strong> — <em>JavaScript Object Notation</em>. The text format the data arrives in. Readable if you open it.</p>
+<p><strong>UTC</strong> — <em>Coordinated Universal Time</em>. The world clock, with no summer-time changes. My schedule bug came from forgetting that the UK's clock does change.</p>
+<p><strong>BST / GMT</strong> — <em>British Summer Time / Greenwich Mean Time</em>. The UK's two clocks. It switches between them in late October, which moved every kick-off by an hour.</p>
+<p><strong>cron</strong> — <em>(from chronos, Greek for time)</em>. A list of fixed times at which a computer should run something.</p>
+<p><strong>Elo</strong> — <em>(named after Arpad Elo)</em>. A rating for how strong a team is, from its past results. Chess uses it too.</p>
+<p><strong>TF-IDF</strong> — <em>Term Frequency – Inverse Document Frequency</em>. A basic way to turn text into numbers: count the words, and weight down ones that appear everywhere.</p>
+<p><strong>MiniLM</strong> — <em>a small language model</em>. Turns a sentence into a list of numbers that captures its meaning. Used here to test whether "understanding" the sentence beat extracting from it. It did not.</p>
+<p><strong>LLM</strong> — <em>Large Language Model</em>. The kind of model behind ChatGPT. Tested, measured, dropped.</p>
+<p><strong>vLLM</strong> — <em>(v for virtual)</em>. Software for running an LLM fast on your own hardware. Needs an NVIDIA graphics card, which I do not have.</p>
+<p><strong>GPU / CUDA</strong> — <em>Graphics Processing Unit / NVIDIA's toolkit for it</em>. The hardware that makes large models fast, and the software that talks to it.</p>
+<p><strong>MAE</strong> — <em>Mean Absolute Error</em>. The average gap between what you predicted and what happened. Mine: 0.781 goals. StatsBomb's: 0.740.</p>
+<p><strong>Brier score</strong> — <em>(named after Glenn Brier)</em>. Like MAE, but it punishes confident wrong answers harder.</p>
+<p><strong>log loss</strong> — <em>logarithmic loss</em>. Punishes confident wrong answers very hard. Useful because I need honest percentages, not just correct rankings.</p>
+<p><strong>data leakage</strong> — When information about the answer sneaks into the question. Makes a broken model look perfect. I found four</p>
+<p><strong>HTTP 403 / 404</strong> — <em>Forbidden / Not Found</em>. Website error codes. FBref returned 403 — blocked. This is why I could not use their xG.</p>

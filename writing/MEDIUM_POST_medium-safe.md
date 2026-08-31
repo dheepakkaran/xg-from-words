@@ -83,12 +83,14 @@ Both come from the *same* commentary. The only thing that changes is whether I c
 
 ### The result
 
-| What the model sees | AUC |
-|---|---|
-| Nothing — just guessing | 0.500 |
-| **The words** | 0.513 |
-| **The numbers** | 0.540 |
-| Numbers + which two teams are playing | 0.565 |
+```
+What the model sees                      AUC
+-------------------------------------  -----
+Nothing — just guessing                0.500
+The words                              0.513
+The numbers                            0.540
+Numbers + which two teams are playing  0.565
+```
 
 The numbers beat the words. Every time, in every test I ran.
 
@@ -117,12 +119,14 @@ It reached **0.602**.
 
 Read that again. A model that has already seen the next fifteen minutes can only get to 0.60.
 
-| | AUC | Share of what is possible |
-|---|---|---|
-| Guessing | 0.500 | — |
-| The words | 0.513 | 13% |
-| The numbers | 0.540 | 40% |
-| **Cheating — sees the future** | **0.602** | **100%** |
+```
+                              AUC  Share of what is possible
+--------------------------  -----  -------------------------
+Guessing                    0.500                          —
+The words                   0.513                        13%
+The numbers                 0.540                        40%
+Cheating — sees the future  0.602                       100%
+```
 
 So my model was not bad. **The target was nearly noise.** Whether a goal lands in a particular fifteen minutes comes down mostly to whether a shot goes in — and almost nothing before it tells you that.
 
@@ -226,10 +230,12 @@ First, a sanity check that the two datasets really describe the same shots: they
 
 ### Result 1: how often each picks the goal (AUC)
 
-| Model | What it sees | AUC |
-|---|---|---|
-| **Mine** | one English sentence | **0.7826** |
-| StatsBomb | exact coordinates, 16 player positions | 0.8118 |
+```
+Model                                What it sees     AUC
+---------  --------------------------------------  ------
+Mine                         one English sentence  0.7826
+StatsBomb  exact coordinates, 16 player positions  0.8118
+```
 
 Both are well above a coin toss. The gap is 0.029.
 
@@ -250,10 +256,12 @@ AUC is about ranking. This is about being *right*.
 
 For each team in each match, I compared what the model expected to how many they actually scored, and took the average gap.
 
-| Model | Average error |
-|---|---|
-| Mine, from words | **0.781 goals** |
-| StatsBomb, from cameras | **0.740 goals** |
+```
+Model                    Average error
+-----------------------  -------------
+Mine, from words           0.781 goals
+StatsBomb, from cameras    0.740 goals
+```
 
 The commercial model is better by **0.041 of a goal** per team per match. That is the entire difference between reading a sentence and installing cameras.
 
@@ -288,14 +296,16 @@ The whole argument is *commentary is free where cameras are not*. That only matt
 
 So I took the model trained on **English** football and pointed it, with no retraining and no adjustment, at five other leagues.
 
-| League | AUC |
-|---|---|
-| Premier League *(trained here)* | 0.7709 |
-| La Liga (Spain) | 0.7730 |
-| Serie A (Italy) | 0.7702 |
-| Bundesliga (Germany) | 0.7795 |
-| Ligue 1 (France) | 0.7807 |
-| **Primeira Liga (Portugal)** | **0.7871** |
+```
+League                            AUC
+-----------------------------  ------
+Premier League (trained here)  0.7709
+La Liga (Spain)                0.7730
+Serie A (Italy)                0.7702
+Bundesliga (Germany)           0.7795
+Ligue 1 (France)               0.7807
+Primeira Liga (Portugal)       0.7871
+```
 
 ```
 at home      0.7709
@@ -319,11 +329,13 @@ My entire dataset is **4 megabytes**. It loads in **0.04 seconds**. Even scrapin
 **A large language model, to read the sentences better than my code does.**
 Worth testing, so I tested it — for free. I gave models the *entire* sentence instead of the 18 things my code pulls out of it.
 
-| What the model sees | AUC |
-|---|---|
-| **18 extracted fields** | **0.7709** |
-| Every 1-to-4 word phrase in the sentence | 0.7612 |
-| A sentence-meaning model (MiniLM) | 0.7584 |
+```
+What the model sees                          AUC
+----------------------------------------  ------
+18 extracted fields                       0.7709
+Every 1-to-4 word phrase in the sentence  0.7612
+A sentence-meaning model (MiniLM)         0.7584
+```
 
 Reading more of the sentence is worth **minus 0.0097**. Everything that sees the whole text does *worse*. The rest of the sentence is player names and filler — noise. There is nothing left in there for a better reader to find, so a bigger model cannot help. I dropped it on that evidence, not on taste.
 
@@ -360,10 +372,9 @@ The project now watches football without me. Here is the whole design, and the o
 
 So I split it in two:
 
-| | Job | Behaviour |
-|---|---|---|
-| **The alarm** | dumb | "wake up every hour" |
-| **The script** | smart | "is a match actually on? is one about to start?" |
+**The alarm** — *dumb*. "wake up every hour".
+
+**The script** — *smart*. "is a match actually on? is one about to start?".
 
 The fixture awareness lives in the script, not the schedule.
 
@@ -497,25 +508,42 @@ Everything about reading a match live assumes the commentary arrives **fast enou
 
 ## Every short form used, in one place
 
-| Short form | Full name | What it means here |
-|---|---|---|
-| **xG** | expected goals | Chance of a shot being scored, 0 to 1. Add them up for a team and you get how much they deserved to score |
-| **AUC** | Area Under the Curve | Show the model one goal and one miss — how often does it pick the goal? 0.50 is guessing, 1.00 is perfect |
-| **ROC** | Receiver Operating Characteristic | The curve AUC is the area under. A radar term from the 1940s. Safe to ignore |
-| **CI** | Continuous Integration | A computer runs all your checks automatically, on a fresh machine, every time you change the code |
-| **API** | Application Programming Interface | A web address that returns data instead of a web page |
-| **JSON** | JavaScript Object Notation | The text format the data arrives in. Readable if you open it |
-| **UTC** | Coordinated Universal Time | The world clock, with no summer-time changes. My schedule bug came from forgetting that the UK's clock *does* change |
-| **BST / GMT** | British Summer Time / Greenwich Mean Time | The UK's two clocks. It switches between them in late October, which moved every kick-off by an hour |
-| **cron** | (from *chronos*, Greek for time) | A list of fixed times at which a computer should run something |
-| **Elo** | (named after Arpad Elo) | A rating for how strong a team is, from its past results. Chess uses it too |
-| **TF-IDF** | Term Frequency – Inverse Document Frequency | A basic way to turn text into numbers: count the words, and weight down ones that appear everywhere |
-| **MiniLM** | a small language model | Turns a sentence into a list of numbers that captures its meaning. Used here to test whether "understanding" the sentence beat extracting from it. It did not |
-| **LLM** | Large Language Model | The kind of model behind ChatGPT. Tested, measured, dropped |
-| **vLLM** | (v for *virtual*) | Software for running an LLM fast on your own hardware. Needs an NVIDIA graphics card, which I do not have |
-| **GPU / CUDA** | Graphics Processing Unit / NVIDIA's toolkit for it | The hardware that makes large models fast, and the software that talks to it |
-| **MAE** | Mean Absolute Error | The average gap between what you predicted and what happened. Mine: 0.781 goals. StatsBomb's: 0.740 |
-| **Brier score** | (named after Glenn Brier) | Like MAE, but it punishes confident wrong answers harder |
-| **log loss** | logarithmic loss | Punishes confident wrong answers *very* hard. Useful because I need honest percentages, not just correct rankings |
-| **data leakage** | — | When information about the answer sneaks into the question. Makes a broken model look perfect. I found four |
-| **HTTP 403 / 404** | Forbidden / Not Found | Website error codes. FBref returned 403 — blocked. This is why I could not use their xG |
+**xG** — *expected goals*. Chance of a shot being scored, 0 to 1. Add them up for a team and you get how much they deserved to score.
+
+**AUC** — *Area Under the Curve*. Show the model one goal and one miss — how often does it pick the goal? 0.50 is guessing, 1.00 is perfect.
+
+**ROC** — *Receiver Operating Characteristic*. The curve AUC is the area under. A radar term from the 1940s. Safe to ignore.
+
+**CI** — *Continuous Integration*. A computer runs all your checks automatically, on a fresh machine, every time you change the code.
+
+**API** — *Application Programming Interface*. A web address that returns data instead of a web page.
+
+**JSON** — *JavaScript Object Notation*. The text format the data arrives in. Readable if you open it.
+
+**UTC** — *Coordinated Universal Time*. The world clock, with no summer-time changes. My schedule bug came from forgetting that the UK's clock does change.
+
+**BST / GMT** — *British Summer Time / Greenwich Mean Time*. The UK's two clocks. It switches between them in late October, which moved every kick-off by an hour.
+
+**cron** — *(from chronos, Greek for time)*. A list of fixed times at which a computer should run something.
+
+**Elo** — *(named after Arpad Elo)*. A rating for how strong a team is, from its past results. Chess uses it too.
+
+**TF-IDF** — *Term Frequency – Inverse Document Frequency*. A basic way to turn text into numbers: count the words, and weight down ones that appear everywhere.
+
+**MiniLM** — *a small language model*. Turns a sentence into a list of numbers that captures its meaning. Used here to test whether "understanding" the sentence beat extracting from it. It did not.
+
+**LLM** — *Large Language Model*. The kind of model behind ChatGPT. Tested, measured, dropped.
+
+**vLLM** — *(v for virtual)*. Software for running an LLM fast on your own hardware. Needs an NVIDIA graphics card, which I do not have.
+
+**GPU / CUDA** — *Graphics Processing Unit / NVIDIA's toolkit for it*. The hardware that makes large models fast, and the software that talks to it.
+
+**MAE** — *Mean Absolute Error*. The average gap between what you predicted and what happened. Mine: 0.781 goals. StatsBomb's: 0.740.
+
+**Brier score** — *(named after Glenn Brier)*. Like MAE, but it punishes confident wrong answers harder.
+
+**log loss** — *logarithmic loss*. Punishes confident wrong answers very hard. Useful because I need honest percentages, not just correct rankings.
+
+**data leakage** — When information about the answer sneaks into the question. Makes a broken model look perfect. I found four
+
+**HTTP 403 / 404** — *Forbidden / Not Found*. Website error codes. FBref returned 403 — blocked. This is why I could not use their xG.

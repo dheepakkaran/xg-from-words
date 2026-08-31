@@ -23,3 +23,5 @@ data/qdrant/
 
 # Latency samples are committed by the workflow, not ignored
 !reports/latency.jsonl
+
+# The rendered paste page is generated; regenerate with writing/to_medium.py
