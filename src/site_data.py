@@ -31,6 +31,18 @@ def momentum():
             for lab, k in pick if k in r.index]
 
 
+def momentum_rows():
+    """Snapshot count behind question one, read from the parquet not retyped."""
+    p = os.path.join(ROOT, "data", "proc", "snapshots.parquet")
+    return int(len(pd.read_parquet(p, columns=["minute"]))) if os.path.exists(p) else None
+
+
+def momentum_ceiling():
+    r = pd.read_csv(os.path.join(ROOT, "reports", "results.csv")).set_index("name")
+    key = "C+. CEILING + counts + Elo"
+    return round(float(r.loc[key, "auc_ovr"]), 2) if key in r.index else None
+
+
 def validation():
     p = pd.read_parquet(os.path.join(ROOT, "data", "proc", "xg_validation.parquet"))
     # Rounded before the ratio, so the page and the tables cannot disagree by
@@ -170,6 +182,8 @@ def main():
                    "leagues": int(df.league.nunique()),
                    "goals": int(df.goal.sum())},
         "momentum": momentum(),
+        "momentum_snapshots": momentum_rows(),
+        "momentum_ceiling": momentum_ceiling(),
         "leak": {"raw_auc": 1.0, "clean_auc": 0.7688,
                  "openers": [{"phrase": "Goal!", "rate": 1.0},
                              {"phrase": "Attempt missed", "rate": 0.0},

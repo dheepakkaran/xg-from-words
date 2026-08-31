@@ -1,5 +1,5 @@
 {
- "generated": "ea52177",
+ "generated": "2e2914e",
  "corpus": {
   "shots": 87980,
   "matches": 3569,
@@ -33,6 +33,8 @@
    "ceiling": true
   }
  ],
+ "momentum_snapshots": 22147,
+ "momentum_ceiling": 0.6,
  "leak": {
   "raw_auc": 1.0,
   "clean_auc": 0.7688,

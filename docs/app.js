@@ -171,9 +171,23 @@ function replayChart(svg, replay) {
 /* ---------- wire it up ---------- */
 const data = await fetch("data.json").then(r => r.json());
 
+/* Every number on the page comes from data.json. A literal typed into the
+   markup goes stale the moment a rerun changes it -- the headline sat at 90.1%
+   for two commits after the result moved, because it was hardcoded. */
+const pick = path => path.split(".").reduce((o, k) => o?.[k], data);
+
+/* data-format says how to render, rather than the code guessing from the
+   value -- 1.0 is a whole number and an AUC of 1.0000 at the same time. */
+const FORMATS = {
+  int: fmt.int, auc: v => v.toFixed(4), score: v => v.toFixed(2),
+  pct: fmt.pct, goals: v => v.toFixed(3),
+};
+
 document.querySelectorAll("[data-fill]").forEach(node => {
-  const v = node.dataset.fill.split(".").reduce((o, k) => o?.[k], data);
-  if (v != null) node.textContent = typeof v === "number" ? fmt.int(v) : v;
+  const v = pick(node.dataset.fill);
+  if (v == null) return;
+  const f = FORMATS[node.dataset.format] || (typeof v === "number" ? fmt.int : String);
+  node.textContent = f(v);
 });
 
 barChart(document.getElementById("chart-momentum"),
@@ -248,7 +262,7 @@ if (data.replay) {
 /* the headline number counts up, once, and only if motion is welcome */
 const hero = document.querySelector("[data-count]");
 if (hero) {
-  const target = Number(hero.dataset.count);
+  const target = Number(pick(hero.dataset.count));
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const show = v => hero.innerHTML =
     `${(v * 100).toFixed(v === target ? 1 : 0)}<sup>%</sup>`;

@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="An expected-goals model that reads">
 <meta property="og:description" content="90% of a tracking-data model, from free commentary text. 87,980 shots, six leagues.">
-<link rel="stylesheet" href="style.css?v=ea52177">
+<link rel="stylesheet" href="style.css?v=2e2914e">
 </head>
 <body data-palette="#2a78d6,#eb6834">
 
@@ -35,7 +35,7 @@
 
   <section>
     <p class="eyebrow">The answer, first</p>
-    <div class="hero-figure" data-count="0.901" data-format="percent">0%</div>
+    <div class="hero-figure" data-count="validation.recovered">0%</div>
     <h2>of what a camera-based model can tell apart, recovered from one English
       sentence per shot.</h2>
     <p>Measured on <b data-fill="validation.shots">8,825</b> shots where both
@@ -49,7 +49,8 @@
     <p class="lead">Pundits say it constantly: <em>they've got all the momentum
       now</em>. If that is real, the words should show it before the score
       does.</p>
-    <p>Four seasons, 22,147 moments, each asking: does either side score in the
+    <p>Four seasons, <b data-fill="momentum_snapshots">22,147</b> moments, each
+      asking: does either side score in the
       next fifteen minutes? A model that guesses randomly scores 0.50. A perfect
       one scores 1.00.</p>
   </section>
@@ -68,7 +69,7 @@
         <div id="table-momentum"></div></details>
     </figure>
     <p class="lead">Even the model that sees the future only reaches
-      <strong>0.60</strong>.</p>
+      <strong data-fill="momentum_ceiling" data-format="score">0.60</strong>.</p>
     <p>That is the useful finding. The words are not failing to read a signal
       that is there — the signal is barely there at all. Which side scores in
       the next quarter of an hour is mostly down to whether a shot goes in, and
@@ -104,7 +105,8 @@
       whole line and it does not learn football — it learns to read the first
       two words.</p>
     <div class="openers" id="openers"></div>
-    <p class="lead">A model given the raw text scores <strong>1.0000</strong>.
+    <p class="lead">A model given the raw text scores
+      <strong data-fill="leak.raw_auc" data-format="auc">1.0000</strong>.
       Flawless, and worthless.</p>
     <p>Removing that took four attempts. Two of them looked clean and were not —
       the second was only caught by printing what the model had learned and
@@ -130,7 +132,7 @@
     <figure>
       <div class="legend" id="legend-validation"></div>
       <svg class="chart" id="chart-validation" role="img"
-           aria-label="The words reach 0.781 against the camera model's 0.812"></svg>
+           aria-label="How the two models compare on the same shots"></svg>
       <figcaption>Both models scoring the same
         <b data-fill="validation.shots">8,825</b> shots, measured above a coin
         toss. The camera model sees exact coordinates and the position of all
@@ -180,10 +182,12 @@
 
   <section>
     <p class="eyebrow">Against the professional model</p>
-    <h1>The same 373 matches, scored by both, and reality settles it.</h1>
+    <h1>The same <span data-fill="head_to_head.matches">373</span> matches,
+      scored by both, and reality settles it.</h1>
     <p class="lead">StatsBomb build expected goals for clubs, from cameras that
       track every player. They publish one Premier League season openly. So
-      both models were pointed at all 373 of its matches and asked the same
+      both models were pointed at all <b data-fill="head_to_head.matches">373</b>
+      of its matches and asked the same
       thing: <em>how many will this side score?</em></p>
     <p>Our model has never seen that season — it was fitted on football from
       six to nine years later. Theirs was built with the season's own tracking
@@ -263,6 +267,6 @@
      from the results.</p>
 </footer>
 
-<script type="module" src="app.js?v=ea52177"></script>
+<script type="module" src="app.js?v=2e2914e"></script>
 </body>
 </html>
