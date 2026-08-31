@@ -16,7 +16,7 @@ import os
 import numpy as np, pandas as pd
 
 DIMENSIONS = ["outside_box", "centre_box", "six_yard", "header", "from_cross",
-              "from_through", "after_corner", "after_break"]
+              "from_headed_pass", "from_through", "after_corner", "after_break"]
 MIN_SHOTS = 60          # below this a profile is noise
 
 
@@ -52,7 +52,8 @@ def describe(fp, top=3):
         return "not enough shots yet"
     words = {"outside_box": "shoots from distance", "centre_box": "gets central",
              "six_yard": "works it very close", "header": "heads it",
-             "from_cross": "crosses", "from_through": "plays through balls",
+             "from_cross": "crosses", "from_headed_pass": "flicks it on",
+             "from_through": "plays through balls",
              "after_corner": "scores off corners", "after_break": "counters"}
     order = fp.sort_values(ascending=False)
     return ", ".join(f"{words[k]} {v:.0%}" for k, v in order.head(top).items())

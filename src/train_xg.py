@@ -13,7 +13,8 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 
 def main():
     df = pd.read_parquet(os.path.join(ROOT, "data", "proc", "shots.parquet"))
-    df = df[df.season >= 2022]          # 2015-16 is the StatsBomb holdout
+    # 2015-16 is the StatsBomb holdout; the other leagues are the transfer test.
+    df = df[(df.league == "eng.1") & (df.season >= 2022)]
     tr, te = df[df.season < 2025], df[df.season == 2025]
     m = xg_model().fit(tr[FIELDS], tr.goal)
     p = m.predict_proba(te[FIELDS])[:, 1]

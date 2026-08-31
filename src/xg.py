@@ -32,7 +32,7 @@ def xg_model(C=1.0):
 
 
 FIELDS = ["six_yard", "centre_box", "side_box", "outside_box", "long_range",
-          "difficult_ang", "header", "left_foot", "right_foot", "from_cross",
+          "difficult_ang", "header", "left_foot", "right_foot", "from_cross", "from_headed_pass",
           "from_through", "after_corner", "after_break", "after_setpiece",
           "assisted", "penalty", "minute"]
 
@@ -47,7 +47,11 @@ def main():
     df = pd.read_parquet(os.path.join(ROOT, "data", "proc", "shots.parquet"))
     # 2015-16 is collected only to validate against StatsBomb; it is held out
     # of the modelling seasons so this comparison stays reproducible.
-    df = df[df.season >= 2022]
+    # Premier League only, everywhere the model is fitted. The other five
+    # leagues exist to test whether it travels (src/transfer.py); training on
+    # the mixture would make "trained on English football, never told about
+    # anywhere else" false.
+    df = df[(df.league == "eng.1") & (df.season >= 2022)]
     tr, te = df[df.season < 2025], df[df.season == 2025]
     y_tr, y_te = tr.goal.values, te.goal.values
     print(f"train {len(tr):,} shots ({y_tr.mean():.1%} goals)  |  "

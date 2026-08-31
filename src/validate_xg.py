@@ -126,7 +126,7 @@ def main():
     # our model, trained only on other seasons, scored on these shots
     train = pd.read_parquet(os.path.join(ROOT, "data", "proc",
                                          "shots.parquet"))
-    train = train[train.season >= 2022]
+    train = train[(train.league == "eng.1") & (train.season >= 2022)]
     m = xg_model().fit(train[FIELDS], train.goal)
     p["our_xg"] = m.predict_proba(p[FIELDS])[:, 1]
 
@@ -143,8 +143,10 @@ def main():
               f"logloss {log_loss(p.sb_goal, p[col].clip(1e-6, 1-1e-6)):.4f}   "
               f"brier {brier_score_loss(p.sb_goal, p[col]):.4f}")
 
-    a = roc_auc_score(p.sb_goal, p.our_xg)
-    b = roc_auc_score(p.sb_goal, p.sb_xg)
+    # Rounded to the four decimals actually published, so a reader dividing the
+    # two numbers in the table gets the same share printed here.
+    a = round(float(roc_auc_score(p.sb_goal, p.our_xg)), 4)
+    b = round(float(roc_auc_score(p.sb_goal, p.sb_xg)), 4)
     print(f"\n  words recover {(a-0.5)/(b-0.5):.1%} of the coordinate model's "
           f"discrimination above chance")
 

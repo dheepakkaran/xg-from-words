@@ -33,8 +33,10 @@ def momentum():
 
 def validation():
     p = pd.read_parquet(os.path.join(ROOT, "data", "proc", "xg_validation.parquet"))
-    ours = roc_auc_score(p.sb_goal, p.our_xg)
-    theirs = roc_auc_score(p.sb_goal, p.sb_xg)
+    # Rounded before the ratio, so the page and the tables cannot disagree by
+    # a tenth of a point.
+    ours = round(float(roc_auc_score(p.sb_goal, p.our_xg)), 4)
+    theirs = round(float(roc_auc_score(p.sb_goal, p.sb_xg)), 4)
     return {"shots": int(len(p)),
             "ours": round(float(ours), 4), "theirs": round(float(theirs), 4),
             "recovered": round((ours - 0.5) / (theirs - 0.5), 3),
@@ -63,7 +65,7 @@ def chance_types(df):
             ("Six yards out", "six_yard"), ("A through ball", "from_through"),
             ("Off a corner", "after_corner"), ("A header", "header"),
             ("A cross", "from_cross"), ("From outside the box", "outside_box")]
-    d = df[df.season >= 2022]
+    d = df[(df.league == "eng.1") & (df.season >= 2022)]
     return [{"label": lab, "rate": round(float(d[d[c] == 1].goal.mean()), 4),
              "n": int(d[c].sum())} for lab, c in rows if d[c].sum() > 200]
 

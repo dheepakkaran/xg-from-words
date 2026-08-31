@@ -17,10 +17,11 @@ PATTERNS = {
     "outside_box":   r"from outside the box",
     "long_range":    r"from a difficult angle and long range|from long range",
     "difficult_ang": r"difficult angle",
-    "header":        r"\bheader\b|\bheaded\b",
+    "header":        r"\bheader\b",
     "left_foot":     r"left footed",
     "right_foot":    r"right footed",
     "from_cross":    r"with a cross",
+    "from_headed_pass": r"with a headed pass",
     "from_through":  r"with a through ball",
     "after_corner":  r"following a corner|corner kick",
     "after_break":   r"following a fast break",
@@ -87,6 +88,11 @@ def strip_outcome(text):
     return " ".join(m.group(0).lower() for m in SAFE.finditer(text))
 
 
+# Fields that describe the strike itself, so must not be read out of the
+# assist clause.
+SHOT_ONLY = {"header", "left_foot", "right_foot", "six_yard", "centre_box",
+             "side_box", "outside_box", "long_range", "difficult_ang"}
+
 GOAL_TYPES = {"Goal", "Goal - Header", "Goal - Volley", "Goal - Free-kick",
               "Penalty - Scored", "Own Goal"}
 SHOT_TYPES = {"Shot On Target", "Shot Off Target", "Shot Blocked",
@@ -116,6 +122,12 @@ def shots_from_summary(summary, event_id=None, season=None):
         if not team:
             continue
         txt = strip_outcome(e.get("text") or "").lower()
+        # How the shot was struck is described before "assisted by"; how the
+        # chance was made comes after. Matching "headed" across the whole
+        # sentence called 1,636 footed shots headers because the assist was a
+        # headed pass -- and those convert at 13.8% against a real header's
+        # 10.0%, so the flag was carrying two different things.
+        shot_part = txt.split("assisted by")[0]
         row = {"event_id": event_id, "season": season, "team": team,
                "side": "home" if team == teams.get("home") else "away",
                "minute": (e.get("time") or {}).get("value", 0) / 60.0,
@@ -123,7 +135,8 @@ def shots_from_summary(summary, event_id=None, season=None):
                "text_raw": e.get("text", ""),
                "text": strip_outcome(e.get("text", ""))}
         for name, pat in PATTERNS.items():
-            row[name] = int(bool(re.search(pat, txt)))
+            where = shot_part if name in SHOT_ONLY else txt
+            row[name] = int(bool(re.search(pat, where)))
         # The event type carries this reliably; the text does not once the
         # outcome clause is gone.
         row["penalty"] = int("Penalty" in ty or "penalty" in txt)

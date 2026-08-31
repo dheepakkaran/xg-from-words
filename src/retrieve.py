@@ -67,7 +67,11 @@ def build(client, df, vecs):
 
 def main(k=40):
     df = pd.read_parquet(os.path.join(PROC, "shots.parquet"))
-    df = df[df.season >= 2022].reset_index(drop=True)
+    # Premier League only. The other five leagues exist to test whether the
+    # model travels (src/transfer.py); mixing them in here would change what
+    # "similar past shots" means and make the number incomparable with the
+    # trained model it is being checked against.
+    df = df[(df.league == "eng.1") & (df.season >= 2022)].reset_index(drop=True)
     vecs = embeddings(df.text.values)
 
     os.makedirs(STORE, exist_ok=True)

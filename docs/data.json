@@ -1,5 +1,5 @@
 {
- "generated": "5cf307d",
+ "generated": "b49a686",
  "corpus": {
   "shots": 87980,
   "matches": 3569,
@@ -57,10 +57,10 @@
  },
  "validation": {
   "shots": 8825,
-  "ours": 0.781,
+  "ours": 0.7826,
   "theirs": 0.8118,
-  "recovered": 0.901,
-  "corr": 0.741,
+  "recovered": 0.906,
+  "corr": 0.735,
   "mean_ours": 0.097,
   "mean_theirs": 0.098
  },
@@ -69,85 +69,85 @@
    "code": "por.1",
    "name": "Primeira Liga",
    "shots": 7000,
-   "auc": 0.7848,
+   "auc": 0.7871,
    "home": false
   },
   {
    "code": "fra.1",
    "name": "Ligue 1",
    "shots": 7391,
-   "auc": 0.7783,
+   "auc": 0.7807,
    "home": false
   },
   {
    "code": "ger.1",
    "name": "Bundesliga",
    "shots": 7853,
-   "auc": 0.7767,
+   "auc": 0.7795,
+   "home": false
+  },
+  {
+   "code": "esp.1",
+   "name": "La Liga",
+   "shots": 9240,
+   "auc": 0.773,
    "home": false
   },
   {
    "code": "eng.1",
    "name": "Premier League",
    "shots": 9194,
-   "auc": 0.7693,
+   "auc": 0.7709,
    "home": true
-  },
-  {
-   "code": "esp.1",
-   "name": "La Liga",
-   "shots": 9240,
-   "auc": 0.7682,
-   "home": false
   },
   {
    "code": "ita.1",
    "name": "Serie A",
    "shots": 9065,
-   "auc": 0.767,
+   "auc": 0.7702,
    "home": false
   }
  ],
  "chances": [
   {
    "label": "A penalty",
-   "rate": 0.7547,
-   "n": 1019
+   "rate": 0.8272,
+   "n": 382
   },
   {
    "label": "On the break",
-   "rate": 0.3203,
-   "n": 2523
+   "rate": 0.3546,
+   "n": 1021
   },
   {
    "label": "Six yards out",
-   "rate": 0.4045,
-   "n": 3525
+   "rate": 0.3962,
+   "n": 1883
   },
   {
    "label": "A through ball",
-   "rate": 0.2558,
-   "n": 2537
+   "rate": 0.2568,
+   "n": 1320
   },
   {
    "label": "Off a corner",
-   "rate": 0.1586,
-   "n": 7523
+   "rate": 0.1635,
+   "n": 3706
   },
   {
    "label": "A header",
-   "rate": 0.1043,
-   "n": 15975
+   "rate": 0.1051,
+   "n": 6920
   },
   {
    "label": "A cross",
-   "rate": 0.1045,
-   "n": 15199
+   "rate": 0.1075,
+   "n": 7062
   },
   {
    "label": "From outside the box",
-   "rate": 0.0397,
-   "n": 25058
+   "rate": 0.0413,
+   "n": 11615
   }
  ],
  "replay": {
@@ -159,42 +159,42 @@
     "home_goals": 0,
     "away_goals": 0,
     "home_xg": 0.05,
-    "away_xg": 0.06
+    "away_xg": 0.1
    },
    {
     "minute": 30,
     "home_goals": 0,
     "away_goals": 0,
-    "home_xg": 0.43,
-    "away_xg": 0.1
+    "home_xg": 0.42,
+    "away_xg": 0.14
    },
    {
     "minute": 45,
     "home_goals": 0,
     "away_goals": 0,
-    "home_xg": 0.71,
-    "away_xg": 0.31
+    "home_xg": 0.69,
+    "away_xg": 0.33
    },
    {
     "minute": 60,
     "home_goals": 0,
     "away_goals": 0,
-    "home_xg": 1.01,
-    "away_xg": 0.4
+    "home_xg": 0.97,
+    "away_xg": 0.42
    },
    {
     "minute": 75,
     "home_goals": 0,
     "away_goals": 2,
-    "home_xg": 1.15,
-    "away_xg": 0.89
+    "home_xg": 1.1,
+    "away_xg": 0.97
    },
    {
     "minute": 90,
     "home_goals": 0,
     "away_goals": 2,
-    "home_xg": 1.35,
-    "away_xg": 0.89
+    "home_xg": 1.31,
+    "away_xg": 0.97
    }
   ]
  }

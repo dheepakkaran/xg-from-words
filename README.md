@@ -37,12 +37,12 @@ coordinates.
 
 | Model | Input | AUC |
 |---|---|---|
-| **ours** | one English sentence | **0.7810** |
+| **ours** | one English sentence | **0.7826** |
 | StatsBomb | shot coordinates, 16 player positions, freeze frames | 0.8118 |
 
 ```
 8,825 shots, both sources describing the same events
-words recover 90.1% of the coordinate model's discrimination above chance
+words recover 90.6% of the coordinate model's discrimination above chance
 means agree to 0.001: ours 0.097, theirs 0.098
 ```
 
@@ -76,15 +76,15 @@ pointed, cold, at five other competitions ESPN describe.
 
 | Competition | Shots | AUC |
 |---|---|---|
-| Premier League *(trained on)* | 9,194 | 0.7688 |
-| La Liga | 9,240 | 0.7675 |
-| Ligue 1 | 7,391 | 0.7775 |
-| Bundesliga | 7,853 | 0.7764 |
-| Serie A | 9,065 | 0.7671 |
-| Primeira Liga | 7,000 | **0.7842** |
+| Premier League *(trained on)* | 9,194 | 0.7709 |
+| La Liga | 9,240 | 0.7730 |
+| Ligue 1 | 7,391 | 0.7807 |
+| Bundesliga | 7,853 | 0.7795 |
+| Serie A | 9,065 | 0.7702 |
+| Primeira Liga | 7,000 | **0.7871** |
 
 ```
-cost of transfer  -0.0058   (a small gain, not a loss)
+cost of transfer  -0.0072   (a small gain, not a loss)
 calibration bias  +0.006    predicted minus actual, abroad
 ```
 
@@ -101,13 +101,13 @@ reader to close that gap, `src/extraction_ceiling.py` asks whether there is
 anything left in the sentence to read.
 
 ```
-regex fields, boosted trees      17 fields   AUC 0.7692
+regex fields, logistic (ships)   18 fields   AUC 0.7709
 every 1-4 gram in the sentence   all words   AUC 0.7612
 sentence embedding (MiniLM)      all words   AUC 0.7584
-embedding + regex fields         both        AUC 0.7578
+embedding + regex fields         both        AUC 0.7589
 ```
 
-**Reading more of the sentence is worth −0.008.** Seventeen extracted fields
+**Reading more of the sentence is worth −0.010.** Eighteen extracted fields
 beat every model given the whole text. The gap to a coordinate model is
 therefore the words themselves — distance, angle, defenders — not the
 extraction, and no better reader can recover what the sentence never contained.
@@ -117,7 +117,7 @@ extraction, and no better reader can recover what the sentence never contained.
 | Tool | The claim | What the measurement said |
 |---|---|---|
 | **Spark** | 3+ seasons needs distributed processing | 87,980 shots is 4 MB; pandas loads it in 0.04 s. All of ESPN's football would be ~15 GB |
-| **LLM extractor** | A better reader closes the gap to coordinates | Every model given the whole sentence loses to 17 extracted fields, by up to 0.010 AUC |
+| **LLM extractor** | A better reader closes the gap to coordinates | Every model given the whole sentence loses to 18 extracted fields, by up to 0.012 AUC |
 | **vLLM** | Self-hosted explanation at scale | Needs CUDA; this machine has none, and installing it downgrades torch across a working environment |
 | **C++ poller** | Python drops messages at multi-match concurrency | Peak is 14 concurrent matches at 2.4 ms each — 0.23% of a 15 s budget, and 60× cheaper than the network round trip it waits on |
 | **Kubeflow** | Weekly in-season retraining with a promotion gate | A model ten years stale costs 0.009 AUC, and one season of data equals three. There is no drift to schedule around |
@@ -138,10 +138,10 @@ parquet that pandas loads in 0.04 s. Each was measured, not waved away.
 shot with its forty nearest neighbours from *earlier seasons only*.
 
 ```
-trained model (regex fields)   AUC 0.7688   brier 0.0846
+trained model (regex fields)   AUC 0.7709   brier 0.0840
 neighbour goal rate (Qdrant)   AUC 0.7603   brier 0.0859
-average of the two             AUC 0.7724   brier 0.0832
-agreement between the two      r = 0.810
+average of the two             AUC 0.7724   brier 0.0831
+agreement between the two      r = 0.830
 ```
 
 A faithful second opinion, and a small ensemble gain. It also pays for itself
@@ -149,8 +149,8 @@ in a way a metric does not show: **the fourth leak above was found by reading a
 retrieval example**, not by a test.
 
 ```
-shot : "right footed shot from very close range following a fast break"
-model says 84%, 26/40 similar past shots were goals (65%)
+shot : "from very close range following a corner"
+model says 87%, 20/40 similar past shots were goals (50%)
 ```
 
 Qdrant runs embedded (`QdrantClient(path=...)`) because the Docker daemon here
@@ -224,7 +224,7 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 
 ./run.sh src/shots.py            # -> data/proc/shots.parquet, 47k shots
 ./run.sh src/xg.py               # xG from the words, held-out season
-./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.1%
+./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.6%
 ./run.sh src/collect.py --leagues esp.1,ger.1,ita.1,fra.1,por.1 --seasons 2025-26
 ./run.sh src/transfer.py         # does one model travel? -> yes
 ./run.sh src/bench_live.py       # is Python the live bottleneck? -> no

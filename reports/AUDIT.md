@@ -7,7 +7,7 @@ Every claim below was checked against the live source or the collected data on
 
 ## Verdict first
 
-**Words recover 90.1% of a coordinate model's discrimination.** Measured on
+**Words recover 90.6% of a coordinate model's discrimination.** Measured on
 8,825 shots where a commentary sentence and a true StatsBomb shot location
 describe the same event.
 
@@ -189,7 +189,7 @@ checked, and any that converts above 80% — well clear of the ~76% penalty rate
 the highest legitimate value — fails the suite. Run against the pre-fix data it
 flags `('free kick', 60, 1.00)` immediately.
 
-Cost of the fix: 0.7727 → 0.7688 AUC. The leak was contributing almost nothing,
+Cost of the fix at the time: 0.7727 → 0.7688 AUC. The leak was contributing almost nothing,
 which is exactly why it survived so long.
 
 Attempt 2 is the important one. It *looked* right, the text read correctly by
@@ -217,7 +217,7 @@ Time-based split. Train 2022-23 → 2024-25 (28,735 shots), test 2025-26
 | Model | AUC | log loss | Brier |
 |---|---|---|---|
 | base rate | 0.5000 | 0.3539 | 0.1006 |
-| **regex fields from the text** | **0.7688** | **0.2965** | **0.0846** |
+| **regex fields from the text** | **0.7709** | **0.2945** | **0.0840** |
 | whitelisted text, tf-idf | 0.7628 | 0.3012 | 0.0861 |
 | *raw text (leaking, not a result)* | *1.0000* | *0.0104* | *0.0004* |
 
@@ -304,8 +304,8 @@ not an easier one.
 ### How close are the two numbers?
 
 ```
-correlation (ours vs StatsBomb xG)  : 0.741
-rank correlation                    : 0.626
+correlation (ours vs StatsBomb xG)  : 0.735
+rank correlation                    : 0.628
 mean   ours 0.097      theirs 0.098
 MAE                                 : 0.052
 ```
@@ -317,18 +317,18 @@ not miss it in a biased direction.
 
 | Model | Input | AUC | log loss | Brier |
 |---|---|---|---|---|
-| **ours** | the commentary sentence | **0.7810** | 0.2709 | 0.0760 |
+| **ours** | the commentary sentence | **0.7826** | 0.2711 | 0.0764 |
 | StatsBomb | shot coordinates, freeze frames, 16 player positions | 0.8118 | 0.2555 | 0.0715 |
 
 ```
-words recover 90.1% of the coordinate model's discrimination above chance
+words recover 90.6% of the coordinate model's discrimination above chance
 ```
 
 That is the number this project exists for. A sentence of English gets nine
 tenths of the way to a model built on tracking data — using a source that is
 free, keyless, and published for far more competitions than coordinates are.
 
-The remaining 9.9% is what the words genuinely cannot say: exact distance
+The remaining 9.3% is what the words genuinely cannot say: exact distance
 inside a zone, the angle, how many defenders stood in the way.
 
 ## Check 8 — Would a better reader close the gap? No.
@@ -340,23 +340,23 @@ or the **words** (a sentence never states distance in metres, the angle, or how
 many defenders were in the way).
 
 This decides which, at no cost, by handing models the *whole* sentence and
-seeing whether they beat the seventeen fields pulled out of it.
+seeing whether they beat the eighteen fields pulled out of it.
 
 | Model | Sees | AUC |
 |---|---|---|
-| **regex fields, boosted trees** | 17 fields | **0.7692** |
-| regex fields, logistic (what ships) | 17 fields | 0.7688 |
+| **regex fields, logistic (what ships)** | 18 fields | **0.7709** |
+| regex fields, boosted trees | 18 fields | 0.7695 |
 | every 1–4 gram in the sentence | all words | 0.7612 |
 | sentence embedding (MiniLM) | all words | 0.7584 |
-| embedding + regex fields | both | 0.7578 |
+| embedding + regex fields | both | 0.7589 |
 
-**Reading more of the sentence is worth −0.008.** Every model given the full
-text does *worse* than seventeen extracted fields, including a semantic
+**Reading more of the sentence is worth −0.010.** Every model given the full
+text does *worse* than eighteen extracted fields, including a semantic
 embedding and a bag of every 1–4 gram. Adding the embedding to the fields makes
 them worse too — the rest of the sentence is player names, team names and
 filler, and it is noise.
 
-So the extraction is not the bottleneck. **The remaining 9.9% is information
+So the extraction is not the bottleneck. **The remaining 9.3% is information
 the sentence never contained**, and no better reader can recover it. An LLM
 extractor was considered and dropped on this evidence rather than on taste;
 `src/extraction_ceiling.py` is the argument, and it reruns in seconds.
@@ -376,22 +376,22 @@ model was pointed at them cold — nothing retrained, nothing tuned**.
 
 | Competition | Shots | Goal rate | AUC | Brier | Mean xG |
 |---|---|---|---|---|---|
-| Premier League *(trained on)* | 9,194 | 11.3% | 0.7688 | 0.0846 | 0.127 |
-| La Liga | 9,240 | 11.1% | 0.7675 | 0.0831 | 0.120 |
-| Ligue 1 | 7,391 | 11.7% | 0.7775 | 0.0868 | 0.123 |
-| Bundesliga | 7,853 | 12.6% | 0.7764 | 0.0913 | 0.126 |
-| Serie A | 9,065 | 10.2% | 0.7671 | 0.0775 | 0.115 |
-| **Primeira Liga** | 7,000 | 11.7% | **0.7842** | 0.0858 | 0.122 |
+| Premier League *(trained on)* | 9,194 | 11.3% | 0.7709 | 0.0840 | 0.127 |
+| La Liga | 9,240 | 11.1% | 0.7730 | 0.0823 | 0.119 |
+| Ligue 1 | 7,391 | 11.7% | 0.7807 | 0.0859 | 0.122 |
+| Bundesliga | 7,853 | 12.6% | 0.7795 | 0.0906 | 0.125 |
+| Serie A | 9,065 | 10.2% | 0.7702 | 0.0771 | 0.115 |
+| **Primeira Liga** | 7,000 | 11.7% | **0.7871** | 0.0851 | 0.122 |
 
 ```
-trained-on league   0.7688
-other leagues, mean 0.7745
-cost of transfer    -0.0058     (a small gain, not a loss)
+trained-on league   0.7709
+other leagues, mean 0.7781
+cost of transfer    -0.0072     (a small gain, not a loss)
 calibration bias abroad +0.006  (predicted minus actual)
 ```
 
 **There is no transfer cost.** The model does marginally *better* abroad than
-at home, and stays calibrated — mean prediction 0.115–0.126 against actual goal
+at home, and stays calibrated — mean prediction 0.115–0.125 against actual goal
 rates of 10.2–12.6%, with the ordering preserved (Serie A both predicted and
 observed lowest, the Bundesliga highest).
 
@@ -524,7 +524,7 @@ branching on model output are real problems. It is not reasonable now.
 ## What must happen before building
 
 1. ~~Read arXiv 2402.06820 in full~~ — **done, check 1. Not prior art.**
-2. ~~Collect ESPN 2015/16 and join to StatsBomb~~ — **done, check 7. 90.7%.**
+2. ~~Collect ESPN 2015/16 and join to StatsBomb~~ — **done, check 7. 90.6%.**
 3. ~~Write the leak test~~ — **done, then rewritten.** `tests/test_shot_text_leak.py`,
    six tests: a behavioural AUC ceiling, a companion test asserting the raw
    text still leaks so the ceiling cannot pass vacuously, and — after the free

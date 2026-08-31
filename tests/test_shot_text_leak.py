@@ -233,3 +233,25 @@ def test_json_model_matches_the_pickled_one():
     assert np.abs(mine - theirs).max() < 1e-4, (
         f"json and pickled model disagree by "
         f"{np.abs(mine - theirs).max():.2e}; rerun src/train_xg.py")
+
+
+def test_shot_fields_are_not_read_out_of_the_assist(df):
+    """How the shot was struck is described before "assisted by"; how the
+    chance was made comes after.
+
+    Matching "headed" across the whole sentence called 1,636 footed shots
+    headers, because their assist was a headed pass -- and those convert at
+    13.8% against a real header's 10.0%, so the flag was quietly carrying two
+    different things. Found by tracing one real shot end to end, not by a test,
+    which is why there is now a test.
+    """
+    text = df.text.str.lower()
+    bad = text.str.contains("footed shot", regex=False) & (df.header == 1)
+    assert bad.sum() == 0, (
+        f"{bad.sum()} footed shots flagged as headers, e.g. "
+        f"{df[bad].text.head(2).tolist()}")
+
+    foot = df.left_foot.astype(bool) & df.right_foot.astype(bool)
+    assert foot.sum() == 0, (
+        f"{foot.sum()} shots struck with both feet, e.g. "
+        f"{df[foot].text.head(2).tolist()}")

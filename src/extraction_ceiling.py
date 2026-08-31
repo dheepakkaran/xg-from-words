@@ -31,7 +31,8 @@ from xg import FIELDS, xg_model
 
 def main():
     df = pd.read_parquet(os.path.join(ROOT, "data", "proc", "shots.parquet"))
-    df = df[df.season >= 2022].reset_index(drop=True)
+    # Premier League only, to stay comparable with the shipped model.
+    df = df[(df.league == "eng.1") & (df.season >= 2022)].reset_index(drop=True)
     emb_path = os.path.join(ROOT, "data", "proc", "shot_embeddings.npy")
     emb = np.load(emb_path) if os.path.exists(emb_path) else None
     if emb is not None and len(emb) != len(df):
@@ -40,6 +41,7 @@ def main():
     te = df.index[df.season == 2025]
     y = df.goal.values
 
+    n_fields = f"{len(FIELDS)} fields"
     rows = []
 
     def run(name, sees, p):
@@ -48,13 +50,13 @@ def main():
         print(f"  {name:42s} {sees:14s} AUC {auc:.4f}", flush=True)
 
     m = xg_model().fit(df.loc[tr, FIELDS], y[tr])
-    run("regex fields (what ships)", "17 fields",
+    run("regex fields (what ships)", n_fields,
         m.predict_proba(df.loc[te, FIELDS])[:, 1])
 
     m = HistGradientBoostingClassifier(max_iter=300, learning_rate=0.05,
                                        random_state=0)
     m.fit(df.loc[tr, FIELDS], y[tr])
-    run("regex fields, boosted trees", "17 fields",
+    run("regex fields, boosted trees", n_fields,
         m.predict_proba(df.loc[te, FIELDS])[:, 1])
 
     m = make_pipeline(TfidfVectorizer(ngram_range=(1, 4), min_df=3,
@@ -81,11 +83,11 @@ def main():
         print("  (embeddings missing -- run src/retrieve.py to build them)")
 
     best_all = max(a for n, s, a in rows if s == "all words")
-    best_fields = max(a for n, s, a in rows if s == "17 fields")
+    best_fields = max(a for n, s, a in rows if s == n_fields)
     print(f"\n  best model seeing every word : {best_all:.4f}")
-    print(f"  best model seeing 17 fields  : {best_fields:.4f}")
+    print(f"  best model seeing {n_fields:9s}  : {best_fields:.4f}")
     print(f"  reading more of the sentence is worth {best_all - best_fields:+.4f}")
-    print("\n  The fields win. Nothing that reads the same sentence has more to"
+    print(f"\n  The {len(FIELDS)} fields win. Nothing reading the same sentence has more to"
           "\n  find, so the gap to a coordinate model is the words themselves --"
           "\n  distance, angle, defenders -- not the extraction. A better reader"
           "\n  cannot recover information the sentence never contained.")
