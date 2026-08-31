@@ -158,7 +158,7 @@ extraction, and no better reader can recover what the sentence never contained.
 | **LLM extractor** | A better reader closes the gap to coordinates | Every model given the whole sentence loses to 18 extracted fields, by up to 0.012 AUC |
 | **vLLM** | Self-hosted explanation at scale | Needs CUDA; this machine has none, and installing it downgrades torch across a working environment |
 | **C++ poller** | Python drops messages at multi-match concurrency | Peak is 14 concurrent matches at 2.4 ms each — 0.23% of a 15 s budget, and 60× cheaper than the network round trip it waits on |
-| **Kubeflow** | Weekly in-season retraining with a promotion gate | A model ten years stale costs 0.009 AUC, and one season of data equals three. There is no drift to schedule around |
+| **Kubeflow** | Weekly in-season retraining with a promotion gate | A model ten years stale costs 0.007 AUC, and one season of data equals three. There is no drift to schedule around |
 | **LangGraph** | Orchestrate score → retrieve → explain | Four steps, one branch, no cycle, no state — an `if` and a function call |
 
 Each is in [reports/AUDIT.md](reports/AUDIT.md) with the numbers, and each has

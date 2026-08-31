@@ -481,18 +481,18 @@ training on one season at a time and testing on the most recent
 
 | Trained on | Shots | Stale by | AUC | Mean xG |
 |---|---|---|---|---|
-| 2015-16 | 9,502 | **10 years** | 0.7605 | 0.138 |
-| 2022-23 | 9,205 | 3 years | 0.7642 | 0.128 |
-| 2023-24 | 10,022 | 2 years | 0.7682 | 0.130 |
-| 2024-25 | 9,508 | 1 year | 0.7671 | 0.123 |
-| all recent *(ships)* | 28,735 | 1 year | 0.7693 | 0.127 |
+| 2015-16 | 9,502 | **10 years** | 0.7641 | 0.138 |
+| 2022-23 | 9,205 | 3 years | 0.7653 | 0.128 |
+| 2023-24 | 10,022 | 2 years | 0.7714 | 0.130 |
+| 2024-25 | 9,508 | 1 year | 0.7705 | 0.124 |
+| all recent *(ships)* | 28,735 | 1 year | 0.7709 | 0.127 |
 
 ```
-a model 10 years stale costs +0.0089 AUC
-one recent season vs three:  -0.0012
+a model 10 years stale costs +0.0068 AUC
+one recent season vs three:  +0.0005
 ```
 
-**A decade of staleness costs less than a hundredth of an AUC point**, and one
+**A decade of staleness costs well under a hundredth of an AUC point**, and one
 season of data is indistinguishable from three. Weekly retraining would chase
 noise; a scheduler to automate it is machinery around a problem that does not
 exist. This is the same conclusion the transfer test reached from the other
