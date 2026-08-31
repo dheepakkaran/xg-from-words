@@ -117,7 +117,7 @@ It reached **0.602**.
 
 Read that again. A model that has already seen the next fifteen minutes can only get to 0.60.
 
-| | AUC | Share of what is possible |
+| Model | AUC | Share of what is possible |
 |---|---|---|
 | Guessing | 0.500 | — |
 | The words | 0.513 | 13% |
@@ -160,7 +160,7 @@ I did not celebrate. A perfect score means something is wrong.
 Here is what was wrong. Every shot's commentary **opens by saying what happened**:
 
 ```
-"Goal!  Chelsea 1, Everton 0. Nicolas Jackson..."     → always a goal
+"Goal! Chelsea 1, Everton 0. Nicolas Jackson..."   → always a goal
 "Attempt missed. Luke Shaw..."                        → never a goal
 "Attempt saved. Marcus Rashford..."                   → never a goal
 "Attempt blocked. Kai Havertz..."                     → never a goal
@@ -236,10 +236,9 @@ Both are well above a coin toss. The gap is 0.029.
 To put it in the plainest terms: measuring from 0.50 (guessing) as the floor,
 
 ```
-mine    = 0.7826 - 0.50 = 0.2826
-theirs  = 0.8118 - 0.50 = 0.3118
-
-0.2826 / 0.3118 = 90.6%
+mine   = 0.7826 - 0.50 = 0.2826
+theirs = 0.8118 - 0.50 = 0.3118
+ratio  = 0.2826 / 0.3118 = 90.6%
 ```
 
 > **A sentence of English gets 90.6% of the way to a stadium full of cameras.**
@@ -264,9 +263,9 @@ Each side of each match is worth one point, to whichever model landed nearer the
 ```
 StatsBomb  404 points
 Mine       342 points
-
-They were closer in 54.2% of cases.
 ```
+
+They were closer in **54.2%** of cases.
 
 They win. Narrowly. On 373 matches they had camera data for and I had a sentence.
 
@@ -399,17 +398,17 @@ My first version woke at four fixed times: 11:25, 13:55, 16:25 and 18:55 UTC. It
 
 Then I checked properly, against all 361 remaining fixtures of the season.
 
-```
 Kick-off times across the season, and whether I covered them:
 
+```
 11:30 UTC     5 matches   covered
 13:00 UTC     9 matches   MISSED
 14:00 UTC    98 matches   covered
-15:00 UTC   175 matches   MISSED   ← the biggest slot in the calendar
+15:00 UTC   175 matches   MISSED
 20:00 UTC    51 matches   MISSED
-
-Covered: 119.   Missed: 242.   That is 67% of the season.
 ```
+
+That 15:00 slot is the biggest in the calendar. **Covered: 119. Missed: 242** — 67% of the season.
 
 **Why?** In late October the United Kingdom moves off summer time. A Saturday 3pm kick-off is 14:00 UTC in August and **15:00 UTC in November**. My alarms were in UTC and I had only looked at August.
 

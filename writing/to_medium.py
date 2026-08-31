@@ -224,17 +224,38 @@ PAGE = """<!doctype html>
 """
 
 
+def looks_like_columns(lines):
+    """True when every line in the block splits into the same column count.
+
+    A converted table does. A quoted sentence, a sum, and an indented timeline
+    do not -- and turning their double spaces into separators mangles them.
+    """
+    counts = {len(re.split(r"\s{2,}", l.strip())) for l in lines if l.strip()}
+    return len(counts) == 1 and counts.pop() > 1
+
+
 def pre_with_breaks(html_body):
     """Make a code block survive Medium's URL importer.
 
-    The importer discards newlines inside <pre> and collapses runs of spaces,
-    which between them destroy the column alignment these blocks exist for.
-    <br> survives, and a non-breaking space is not collapsed -- and in a
-    monospace block it is exactly as wide as the space it replaces.
+    The importer normalises whitespace inside a code block, and no markup stops
+    it: plain newlines are discarded, runs of spaces are collapsed, and a
+    non-breaking space is turned into an ordinary one and collapsed with the
+    rest. Measured over three imports.
+
+    So the import copy does not rely on alignment. Where a block really is
+    columns, they become middle dots; everywhere else only the line breaks are
+    converted. <br> does survive. The paste copy keeps its aligned columns,
+    because paste preserves them and they read better.
     """
     def fix(m):
-        inner = m.group(1).replace(" ", "&nbsp;").replace("\n", "<br>")
-        return "<pre><code>" + inner + "</code></pre>"
+        raw = [l for l in m.group(1).split("\n")]
+        body = [l for l in raw if not (l.strip() and set(l.strip()) <= {"-", " "})]
+        if looks_like_columns(body):
+            out = [" · ".join(c.strip() for c in re.split(r"\s{2,}", l.strip())
+                              if c.strip()) for l in body if l.strip()]
+        else:
+            out = [l.rstrip() for l in raw]
+        return "<pre><code>" + "<br>".join(out) + "</code></pre>"
     return re.sub(r"<pre><code>(.*?)</code></pre>", fix, html_body, flags=re.S)
 
 

@@ -93,7 +93,7 @@ Numbers + which two teams are playing  0.565</code></pre>
 <p>I gave a model the events from <em>inside</em> the fifteen minutes it was supposed to predict. Every shot, every corner, every foul that was about to happen. I removed only the goals themselves. This model has, effectively, <strong>watched the future</strong>, and is only being asked <em>who scored</em>.</p>
 <p>It reached <strong>0.602</strong>.</p>
 <p>Read that again. A model that has already seen the next fifteen minutes can only get to 0.60.</p>
-<pre><code>                              AUC  Share of what is possible
+<pre><code>Model                         AUC  Share of what is possible
 --------------------------  -----  -------------------------
 Guessing                    0.500                          —
 The words                   0.513                        13%
@@ -116,7 +116,7 @@ Cheating — sees the future  0.602                       100%</code></pre>
 <p>I fed the shot sentences to a model. It scored <strong>1.0000</strong>. Perfect. Every single shot, right.</p>
 <p>I did not celebrate. A perfect score means something is wrong.</p>
 <p>Here is what was wrong. Every shot's commentary <strong>opens by saying what happened</strong>:</p>
-<pre><code>"Goal!  Chelsea 1, Everton 0. Nicolas Jackson..."     → always a goal
+<pre><code>"Goal! Chelsea 1, Everton 0. Nicolas Jackson..."   → always a goal
 "Attempt missed. Luke Shaw..."                        → never a goal
 "Attempt saved. Marcus Rashford..."                   → never a goal
 "Attempt blocked. Kai Havertz..."                     → never a goal</code></pre>
@@ -155,10 +155,9 @@ Mine                         one English sentence  0.7826
 StatsBomb  exact coordinates, 16 player positions  0.8118</code></pre>
 <p>Both are well above a coin toss. The gap is 0.029.</p>
 <p>To put it in the plainest terms: measuring from 0.50 (guessing) as the floor,</p>
-<pre><code>mine    = 0.7826 - 0.50 = 0.2826
-theirs  = 0.8118 - 0.50 = 0.3118
-
-0.2826 / 0.3118 = 90.6%</code></pre>
+<pre><code>mine   = 0.7826 - 0.50 = 0.2826
+theirs = 0.8118 - 0.50 = 0.3118
+ratio  = 0.2826 / 0.3118 = 90.6%</code></pre>
 <blockquote><p><strong>A sentence of English gets 90.6% of the way to a stadium full of cameras.</strong></p></blockquote>
 <h3>Result 2: how far each was from the truth, in goals</h3>
 <p>AUC is about ranking. This is about being <em>right</em>.</p>
@@ -171,9 +170,8 @@ StatsBomb, from cameras    0.740 goals</code></pre>
 <h3>Result 3: a point system, because a table nobody reads settles nothing</h3>
 <p>Each side of each match is worth one point, to whichever model landed nearer the real goals. Within a twentieth of a goal, they share it.</p>
 <pre><code>StatsBomb  404 points
-Mine       342 points
-
-They were closer in 54.2% of cases.</code></pre>
+Mine       342 points</code></pre>
+<p>They were closer in <strong>54.2%</strong> of cases.</p>
 <p>They win. Narrowly. On 373 matches they had camera data for and I had a sentence.</p>
 <h3>What this comparison does and does not prove</h3>
 <p><strong>It proves:</strong> words carry most of what matters about shot quality. Not all. Most.</p>
@@ -245,15 +243,13 @@ that is 0.23% of the budget</code></pre>
 <h3>The bug that would have killed this silently</h3>
 <p>My first version woke at four fixed times: 11:25, 13:55, 16:25 and 18:55 UTC. It matched every August fixture. I was happy.</p>
 <p>Then I checked properly, against all 361 remaining fixtures of the season.</p>
-<pre><code>Kick-off times across the season, and whether I covered them:
-
-11:30 UTC     5 matches   covered
+<p>Kick-off times across the season, and whether I covered them:</p>
+<pre><code>11:30 UTC     5 matches   covered
 13:00 UTC     9 matches   MISSED
 14:00 UTC    98 matches   covered
-15:00 UTC   175 matches   MISSED   ← the biggest slot in the calendar
-20:00 UTC    51 matches   MISSED
-
-Covered: 119.   Missed: 242.   That is 67% of the season.</code></pre>
+15:00 UTC   175 matches   MISSED
+20:00 UTC    51 matches   MISSED</code></pre>
+<p>That 15:00 slot is the biggest in the calendar. <strong>Covered: 119. Missed: 242</strong> — 67% of the season.</p>
 <p><strong>Why?</strong> In late October the United Kingdom moves off summer time. A Saturday 3pm kick-off is 14:00 UTC in August and <strong>15:00 UTC in November</strong>. My alarms were in UTC and I had only looked at August.</p>
 <p>Here is the part that should worry you more than the bug. <strong>Nothing would have told me.</strong> The job would wake, find no match, exit successfully, show a green tick — and from October the site would simply stop updating. Forever. Silently.</p>
 <p>The fix: wake every hour through the hours football is played, and let the script decide. I then simulated all 361 fixtures: <strong>every one is caught from kick-off, none mid-match.</strong></p>
