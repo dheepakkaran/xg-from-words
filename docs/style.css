@@ -233,3 +233,25 @@ footer a { color: var(--ink-2); }
   .chart text[font-size="12"] { font-size: 18px; }
   .chart text[font-size="13"] { font-size: 20px; }
 }
+
+/* ---------- the live panel ---------- */
+
+.now-match {
+  width: 100%; max-width: 46rem; display: grid; gap: .5rem;
+  padding: 1.1rem 1.25rem; border: 1px solid var(--rule); border-radius: 14px;
+  background: var(--surface-2);
+}
+.now-match header { display: flex; justify-content: space-between;
+                    align-items: baseline; gap: 1rem;
+                    font-size: .82rem; color: var(--ink-3); }
+.now-side { display: grid; grid-template-columns: 1fr auto auto;
+            align-items: baseline; gap: .8rem; }
+.now-side .team { font-weight: 620; color: var(--ink-1); }
+.now-side .goals { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.now-side .xg { font-variant-numeric: tabular-nums; font-weight: 620;
+                min-width: 3.4rem; text-align: right; }
+.now-side[data-lead="1"] .xg { color: var(--series-1); }
+.now-verdict { font-size: .85rem; color: var(--ink-2); }
+.now-next { display: grid; gap: .3rem; }
+.now-next b { color: var(--ink-1); font-size: calc(var(--step) * 1.1); }
+.now-next span { color: var(--ink-3); font-size: .88rem; }

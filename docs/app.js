@@ -289,3 +289,99 @@ themeBtn.addEventListener("click", () => {
   const now = document.documentElement.dataset.theme || (dark ? "dark" : "light");
   document.documentElement.dataset.theme = now === "dark" ? "light" : "dark";
 });
+
+
+/* ---------- what is happening right now ----------
+   live.json is written by the matchday job to the live-data branch, so main's
+   history stays for changes to the project rather than a feed. When nothing is
+   in progress the panel falls back to the fixture list, which a daily job
+   refreshes from ESPN. */
+
+const LIVE_URL =
+  "https://raw.githubusercontent.com/dheepakkaran/xg-from-words/live-data/docs/live.json";
+
+const verdict = form =>
+  form > 0.7 ? "finishing above what the chances deserved"
+  : form < -0.7 ? "wasteful — created more than they have scored"
+  : "scoring about what the chances deserved";
+
+const when = iso => {
+  const t = new Date(iso), h = (t - Date.now()) / 3.6e6;
+  const day = t.toLocaleDateString("en-GB",
+    { weekday: "long", day: "numeric", month: "long" });
+  /* The viewer's own clock, labelled -- an unlabelled 15:00 next to a UTC
+     kickoff time in the repository is how people miss matches. */
+  const time = t.toLocaleTimeString("en-GB",
+    { hour: "2-digit", minute: "2-digit", timeZoneName: "short" });
+  const away = h < 0 ? "under way"
+    : h < 1 ? `in ${Math.round(h * 60)} minutes`
+    : h < 24 ? `in ${Math.round(h)} hours`
+    : `in ${Math.round(h / 24)} days`;
+  return { day, time, away };
+};
+
+async function renderNow() {
+  const head = document.getElementById("now-head");
+  const body = document.getElementById("now-body");
+  const note = document.getElementById("now-note");
+
+  let live = null;
+  try {
+    live = await fetch(`${LIVE_URL}?t=${Date.now()}`, { cache: "no-store" })
+      .then(r => r.ok ? r.json() : null);
+  } catch { /* the branch does not exist until the first matchday */ }
+
+  if (live?.matches?.length) {
+    head.textContent = live.matches.length === 1
+      ? "One match is under way." : `${live.matches.length} matches are under way.`;
+    body.replaceChildren(...live.matches.map(m => {
+      const card = document.createElement("div");
+      card.className = "now-match";
+      const lead = m.sides.reduce((a, b) => (b.xg > a.xg ? b : a), m.sides[0]);
+      const h = document.createElement("header");
+      h.innerHTML = `<span>${m.clock ?? ""}</span><span>chances created</span>`;
+      card.append(h);
+      m.sides.forEach(s => {
+        const row = document.createElement("div");
+        row.className = "now-side";
+        row.dataset.lead = s.team === lead.team ? "1" : "0";
+        row.innerHTML =
+          `<span class="team">${s.team}</span>` +
+          `<span class="goals">${s.goals} ${s.goals === 1 ? "goal" : "goals"}</span>` +
+          `<span class="xg">${fmt.xg(s.xg)}</span>`;
+        card.append(row);
+      });
+      const v = document.createElement("div");
+      v.className = "now-verdict";
+      v.textContent = `${lead.team} have created the most. ` +
+        `${lead.team} are ${verdict(lead.form)}.`;
+      card.append(v);
+      return card;
+    }));
+    const lag = live.matches.map(m => m.commentary_lag_seconds)
+      .filter(x => x != null);
+    note.textContent = lag.length
+      ? `Read from commentary published ${Math.round(Math.min(...lag))} seconds ago.`
+      : "Chances created, not chances coming — this does not predict the next goal.";
+    return;
+  }
+
+  const fx = await fetch("fixtures.json").then(r => r.json()).catch(() => null);
+  const next = fx?.next?.find(f => !f.completed);
+  if (!next) {
+    head.textContent = "No Premier League match is in progress.";
+    return;
+  }
+  const w = when(next.kickoff);
+  head.textContent = "No match is in progress.";
+  const card = document.createElement("div");
+  card.className = "now-match now-next";
+  card.innerHTML =
+    `<b>${next.home} v ${next.away}</b>` +
+    `<span>${w.day}, ${w.time} — ${w.away}</span>`;
+  body.replaceChildren(card);
+  note.textContent = `${fx.upcoming} fixtures still to play this season. ` +
+    `A job wakes up at kickoff and reads the match as the commentary arrives.`;
+}
+
+renderNow();
