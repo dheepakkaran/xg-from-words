@@ -20,7 +20,7 @@ SB = "https://raw.githubusercontent.com/statsbomb/open-data/master/data/"
 CACHE = os.path.join(ROOT, "data", "statsbomb")
 SEASON = "2015-16"
 sys.path.insert(0, os.path.dirname(__file__))
-from xg import FIELDS
+from xg import FIELDS, xg_model
 
 
 def fetch(path):
@@ -127,7 +127,7 @@ def main():
     train = pd.read_parquet(os.path.join(ROOT, "data", "proc",
                                          "shots.parquet"))
     train = train[train.season >= 2022]
-    m = LogisticRegression(max_iter=2000).fit(train[FIELDS], train.goal)
+    m = xg_model().fit(train[FIELDS], train.goal)
     p["our_xg"] = m.predict_proba(p[FIELDS])[:, 1]
 
     print("\n=== the number this project exists for ===")

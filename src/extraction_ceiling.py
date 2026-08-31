@@ -26,7 +26,7 @@ from sklearn.preprocessing import StandardScaler
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, os.path.dirname(__file__))
-from xg import FIELDS
+from xg import FIELDS, xg_model
 
 
 def main():
@@ -47,7 +47,7 @@ def main():
         rows.append((name, sees, auc))
         print(f"  {name:42s} {sees:14s} AUC {auc:.4f}", flush=True)
 
-    m = LogisticRegression(max_iter=2000).fit(df.loc[tr, FIELDS], y[tr])
+    m = xg_model().fit(df.loc[tr, FIELDS], y[tr])
     run("regex fields (what ships)", "17 fields",
         m.predict_proba(df.loc[te, FIELDS])[:, 1])
 

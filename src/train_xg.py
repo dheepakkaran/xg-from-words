@@ -6,7 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, brier_score_loss
 
 sys.path.insert(0, os.path.dirname(__file__))
-from xg import FIELDS
+from xg import FIELDS, xg_model
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 
@@ -15,7 +15,7 @@ def main():
     df = pd.read_parquet(os.path.join(ROOT, "data", "proc", "shots.parquet"))
     df = df[df.season >= 2022]          # 2015-16 is the StatsBomb holdout
     tr, te = df[df.season < 2025], df[df.season == 2025]
-    m = LogisticRegression(max_iter=2000).fit(tr[FIELDS], tr.goal)
+    m = xg_model().fit(tr[FIELDS], tr.goal)
     p = m.predict_proba(te[FIELDS])[:, 1]
 
     os.makedirs(os.path.join(ROOT, "models"), exist_ok=True)

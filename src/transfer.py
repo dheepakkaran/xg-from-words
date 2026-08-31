@@ -21,7 +21,7 @@ from sklearn.metrics import roc_auc_score, brier_score_loss
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, os.path.dirname(__file__))
-from xg import FIELDS
+from xg import FIELDS, xg_model
 
 NAMES = {"eng.1": "Premier League", "esp.1": "La Liga", "ger.1": "Bundesliga",
          "ita.1": "Serie A", "fra.1": "Ligue 1", "por.1": "Primeira Liga"}
@@ -33,7 +33,7 @@ def main():
         raise SystemExit("no league column -- rerun src/shots.py")
 
     tr = df[(df.league == "eng.1") & (df.season >= 2022) & (df.season < 2025)]
-    m = LogisticRegression(max_iter=2000).fit(tr[FIELDS], tr.goal)
+    m = xg_model().fit(tr[FIELDS], tr.goal)
     print(f"trained on {len(tr):,} Premier League shots, 2022-23 to 2024-25\n")
 
     print(f"  {'competition':18s} {'shots':>7s} {'goal rate':>10s} "
@@ -68,7 +68,7 @@ def main():
         if len(own) < 2000:
             print(f"  {NAMES.get(lg, lg):18s} not enough history to refit")
             continue
-        m2 = LogisticRegression(max_iter=2000).fit(own[FIELDS], own.goal)
+        m2 = xg_model().fit(own[FIELDS], own.goal)
         print(f"  {NAMES.get(lg, lg):18s} own model "
               f"{roc_auc_score(g.goal, m2.predict_proba(g[FIELDS])[:, 1]):.4f}")
 

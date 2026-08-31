@@ -470,6 +470,57 @@ budget. The margin is not close at any plausible scale.
 
 C++ joins vLLM, the LLM extractor and Spark: proposed, measured, declined.
 
+## Check 11 — Kubeflow and LangGraph, the last two
+
+### Kubeflow: there is no drift to schedule around
+
+Kubeflow's case in the proposal was weekly in-season retraining with a
+promotion gate. That is worth automating only if the model decays. Measured by
+training on one season at a time and testing on the most recent
+(`src/drift.py`):
+
+| Trained on | Shots | Stale by | AUC | Mean xG |
+|---|---|---|---|---|
+| 2015-16 | 9,502 | **10 years** | 0.7605 | 0.138 |
+| 2022-23 | 9,205 | 3 years | 0.7642 | 0.128 |
+| 2023-24 | 10,022 | 2 years | 0.7682 | 0.130 |
+| 2024-25 | 9,508 | 1 year | 0.7671 | 0.123 |
+| all recent *(ships)* | 28,735 | 1 year | 0.7693 | 0.127 |
+
+```
+a model 10 years stale costs +0.0089 AUC
+one recent season vs three:  -0.0012
+```
+
+**A decade of staleness costs less than a hundredth of an AUC point**, and one
+season of data is indistinguishable from three. Weekly retraining would chase
+noise; a scheduler to automate it is machinery around a problem that does not
+exist. This is the same conclusion the transfer test reached from the other
+direction — a model this stable across ten years and six countries is not
+drifting.
+
+What Kubeflow would genuinely have provided is already here in cheaper form:
+provenance lives in `models/xg.meta.json` (data window, metrics, git SHA), and
+the promotion gate is the test suite in CI.
+
+### LangGraph: there is no flow to orchestrate
+
+LangGraph earns its place where there are cycles, retries, human-in-the-loop
+steps, or state that has to persist across several agents. The flow here, after
+the LLM was dropped on the evidence in check 8, is:
+
+```
+score the shot  ->  above threshold?  ->  Qdrant lookup  ->  format a string
+```
+
+Four steps, one branch, no cycle, no state. That is an `if` and a function
+call. Wrapping it in a graph framework would add a dependency, a runtime and a
+vocabulary in exchange for nothing.
+
+If an LLM ever does enter the picture — a different text source, a
+conversational interface — LangGraph becomes reasonable, because retries and
+branching on model output are real problems. It is not reasonable now.
+
 ## What must happen before building
 
 1. ~~Read arXiv 2402.06820 in full~~ — **done, check 1. Not prior art.**

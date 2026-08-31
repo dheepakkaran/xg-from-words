@@ -31,7 +31,7 @@ STORE = os.path.join(ROOT, "data", "qdrant")
 COLL = "shots"
 TRAIN_MAX, TEST = 2024, 2025
 sys.path.insert(0, os.path.dirname(__file__))
-from xg import FIELDS
+from xg import FIELDS, xg_model
 
 
 def embeddings(texts):
@@ -87,7 +87,7 @@ def main(k=40):
 
     y = df.loc[te, "goal"].values
     tr = df[df.season <= TRAIN_MAX]
-    lr = LogisticRegression(max_iter=2000).fit(tr[FIELDS], tr.goal)
+    lr = xg_model().fit(tr[FIELDS], tr.goal)
     model_xg = lr.predict_proba(df.loc[te, FIELDS])[:, 1]
 
     print(f"\nheld-out {TEST}-26, {len(te):,} shots, k={k}")

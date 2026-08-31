@@ -10,12 +10,27 @@ seasons, test on the most recent one. Three models:
 """
 import os, sys
 import numpy as np, pandas as pd
+sys.path.insert(0, os.path.dirname(__file__))
+from platform_quirks import silence_accelerate_matmul
+
+silence_accelerate_matmul()
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss
 from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
+def xg_model(C=1.0):
+    """The shipped estimator.
+
+    `minute` runs 0-95 while every other field is 0/1, so the scaler keeps the
+    solver's steps sensible. It does not change the fit materially.
+    """
+    return make_pipeline(StandardScaler(),
+                         LogisticRegression(max_iter=2000, C=C))
+
+
 FIELDS = ["six_yard", "centre_box", "side_box", "outside_box", "long_range",
           "difficult_ang", "header", "left_foot", "right_foot", "from_cross",
           "from_through", "after_corner", "after_break", "after_setpiece",
@@ -41,7 +56,7 @@ def main():
     print("held-out season 2025-26")
     report("0. base rate", y_te, np.full(len(te), y_tr.mean()))
 
-    m = LogisticRegression(max_iter=2000, C=1.0).fit(tr[FIELDS], y_tr)
+    m = xg_model().fit(tr[FIELDS], y_tr)
     p_fields = m.predict_proba(te[FIELDS])[:, 1]
     report("1. regex fields", y_te, p_fields)
 
