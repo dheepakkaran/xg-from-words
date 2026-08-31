@@ -291,6 +291,83 @@ themeBtn.addEventListener("click", () => {
 });
 
 
+/* ---------- ours against the professional model ---------- */
+
+const tiles = (host, items) => host.replaceChildren(...items.map(([n, label, tone]) => {
+  const d = document.createElement("div");
+  if (tone) d.dataset.tone = tone;
+  const b = document.createElement("b"); b.textContent = n;
+  const s = document.createElement("span"); s.textContent = label;
+  d.append(b, s);
+  return d;
+}));
+
+const h2h = data.head_to_head;
+if (h2h) {
+  /* Error in goals, and the real zero is zero -- a model that was never wrong
+     draws nothing. Lower is better, which the caption says out loud. */
+  barChart(document.getElementById("chart-h2h"), [
+    { label: "Ours, from words", value: h2h.ours.mean_error,
+      color: "var(--series-1)" },
+    { label: "StatsBomb, cameras", value: h2h.theirs.mean_error,
+      color: "var(--series-2)" },
+  ], { format: v => `${v.toFixed(3)} goals`, min: 0,
+       max: Math.max(h2h.ours.mean_error, h2h.theirs.mean_error) * 1.25,
+       labelWidth: 190 });
+  legend(document.getElementById("legend-h2h"),
+    [["one English sentence per shot", "var(--series-1)"],
+     ["cameras tracking every player", "var(--series-2)"]]);
+  table(document.getElementById("table-h2h"),
+    ["Model", "Average error (goals)", "Points", "Closer in"],
+    [["Ours, from words", h2h.ours.mean_error.toFixed(3),
+      h2h.ours.points, `${h2h.split.ours_closer} innings`],
+     ["StatsBomb, cameras", h2h.theirs.mean_error.toFixed(3),
+      h2h.theirs.points, `${h2h.split.theirs_closer} innings`],
+     ["Level", "—", "—", `${h2h.split.level} innings`]]);
+
+  const gap = h2h.ours.mean_error - h2h.theirs.mean_error;
+  document.getElementById("h2h-verdict").innerHTML =
+    `The commercial model is better, by <strong>${gap.toFixed(3)} of a goal` +
+    `</strong> per side per match. That is the whole difference between a` +
+    ` sentence of English and a stadium full of cameras.`;
+
+  tiles(document.getElementById("h2h-score"), [
+    [h2h.ours.points, "points, ours", "ours"],
+    [h2h.theirs.points, "points, StatsBomb", "theirs"],
+    [`${(h2h.theirs.points / h2h.innings * 100).toFixed(0)}%`,
+     "of innings they were closer"],
+  ]);
+
+  const t = document.getElementById("table-h2h-matches");
+  t.innerHTML =
+    "<thead><tr><th>Match</th><th>Side</th><th>Goals</th>" +
+    "<th>Ours</th><th>StatsBomb</th><th>Point</th></tr></thead>";
+  const tb = t.appendChild(document.createElement("tbody"));
+  h2h.examples.slice(0, 12).forEach(e => {
+    const tr = tb.insertRow();
+    [`${e.home} v ${e.away}`, e.side, e.goals, e.ours.toFixed(2),
+     e.theirs.toFixed(2),
+     e.point === 1 ? "ours" : e.point === 0 ? "StatsBomb" : "shared"]
+      .forEach(v => tr.insertCell().textContent = v);
+  });
+}
+
+const sc = data.scorecard;
+if (sc) {
+  const decisive = sc.called - sc.drawn;
+  tiles(document.getElementById("scorecard"), [
+    [`${(sc.hit_rate * 100).toFixed(0)}%`, "of decisive matches called right", "ours"],
+    [sc.right, "right"],
+    [sc.wrong, "wrong"],
+    [sc.drawn, "ended level"],
+  ]);
+  document.getElementById("scorecard-note").textContent =
+    `Of ${sc.matches} matches last season, the model put one side clearly ` +
+    `ahead in ${sc.called}. ${sc.drawn} of those finished level, which no ` +
+    `chance-quality reading can be blamed for. Of the ${decisive} that had a ` +
+    `winner, it called ${sc.right}.`;
+}
+
 /* ---------- what is happening right now ----------
    live.json is written by the matchday job to the live-data branch, so main's
    history stays for changes to the project rather than a feed. When nothing is

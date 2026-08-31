@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="An expected-goals model that reads">
 <meta property="og:description" content="90% of a tracking-data model, from free commentary text. 87,980 shots, six leagues.">
-<link rel="stylesheet" href="style.css?v=b49a686">
+<link rel="stylesheet" href="style.css?v=ea52177">
 </head>
 <body data-palette="#2a78d6,#eb6834">
 
@@ -179,28 +179,58 @@
   </section>
 
   <section>
-    <p class="eyebrow">What was deliberately left out</p>
-    <h1>Six tools were proposed. All six were measured, and declined.</h1>
-    <table class="declined">
-      <thead><tr><th>Tool</th><th>Why it was proposed</th><th>What the measurement said</th></tr></thead>
-      <tbody>
-        <tr><td>Spark</td><td>Too much data for one machine</td>
-            <td>The whole corpus is 4 MB. It loads in 0.04 seconds.</td></tr>
-        <tr><td>An LLM</td><td>A better reader would close the gap</td>
-            <td>Every model given the whole sentence did worse than seventeen fields pulled out of it.</td></tr>
-        <tr><td>vLLM</td><td>Serve explanations at scale</td>
-            <td>Needs a kind of graphics card this machine does not have.</td></tr>
-        <tr><td>C++</td><td>Python is too slow live</td>
-            <td>2.4 ms per match, against a 15-second budget — and 60× cheaper than waiting for the network.</td></tr>
-        <tr><td>Kubeflow</td><td>Weekly retraining</td>
-            <td>A model ten years stale loses 0.009. There is nothing to retrain.</td></tr>
-        <tr><td>LangGraph</td><td>Orchestrate the steps</td>
-            <td>Four steps, one branch. That is an <code>if</code>.</td></tr>
-      </tbody>
-    </table>
-    <p>Each has a script in the repository that reruns the measurement in
-      seconds. Adding a tool that earns nothing is not a neutral act — it is a
-      claim you cannot defend.</p>
+    <p class="eyebrow">Against the professional model</p>
+    <h1>The same 373 matches, scored by both, and reality settles it.</h1>
+    <p class="lead">StatsBomb build expected goals for clubs, from cameras that
+      track every player. They publish one Premier League season openly. So
+      both models were pointed at all 373 of its matches and asked the same
+      thing: <em>how many will this side score?</em></p>
+    <p>Our model has never seen that season — it was fitted on football from
+      six to nine years later. Theirs was built with the season's own tracking
+      data in hand.</p>
+    <p>Earlier the two were compared on <em>ranking</em>: given two shots, which
+      is the better chance. This asks something blunter, and closer to what
+      anyone actually wants from an xG number — <strong>how many goals did each
+      model expect, and which came nearer the truth?</strong></p>
+  </section>
+
+  <section>
+    <p class="eyebrow">How far each was from the truth</p>
+    <figure>
+      <div class="legend" id="legend-h2h"></div>
+      <svg class="chart" id="chart-h2h" role="img"
+           aria-label="Average error in goals per team per match, ours against StatsBomb's"></svg>
+      <figcaption><strong>Lower is better.</strong> Average gap between what
+        each model expected and what the side actually scored, across
+        <b data-fill="head_to_head.innings">746</b> team-innings.</figcaption>
+      <details class="table"><summary>See the numbers</summary>
+        <div id="table-h2h"></div></details>
+    </figure>
+    <p class="lead" id="h2h-verdict"></p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Match by match, a point to whoever was closer</p>
+    <div class="scoreline" id="h2h-score"></div>
+    <p>One point per team per match to whichever model landed nearer the real
+      goals; inside a twentieth of a goal they share it. It is a blunt way to
+      read the same thing the average error says — but it is readable.</p>
+    <figure>
+      <table class="declined" id="table-h2h-matches"></table>
+      <figcaption>The first six matches of the season, both sides of each.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <p class="eyebrow">And against reality alone</p>
+    <h1>When it rates one side clearly higher, that side usually scores more.</h1>
+    <p>A different test, with no benchmark in it. Across last season, whenever
+      the model put one side clearly ahead on chance quality, did that side
+      actually outscore the other?</p>
+    <div class="scoreline" id="scorecard"></div>
+    <p id="scorecard-note"></p>
+    <p class="lead">This is the test that keeps running. Every match from here
+      is scored the same way, and the tally moves.</p>
   </section>
 
   <section id="now">
@@ -233,6 +263,6 @@
      from the results.</p>
 </footer>
 
-<script type="module" src="app.js?v=b49a686"></script>
+<script type="module" src="app.js?v=ea52177"></script>
 </body>
 </html>

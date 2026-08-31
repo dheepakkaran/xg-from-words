@@ -255,3 +255,23 @@ footer a { color: var(--ink-2); }
 .now-next { display: grid; gap: .3rem; }
 .now-next b { color: var(--ink-1); font-size: calc(var(--step) * 1.1); }
 .now-next span { color: var(--ink-3); font-size: .88rem; }
+
+/* ---------- the head-to-head scoreline ---------- */
+
+.scoreline {
+  width: 100%; max-width: 46rem;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: .6rem;
+}
+.scoreline div {
+  padding: 1rem 1.1rem; border: 1px solid var(--rule); border-radius: 14px;
+  background: var(--surface-2);
+}
+.scoreline b {
+  display: block; font-size: clamp(1.9rem, 1.3rem + 2vw, 2.7rem);
+  line-height: 1.05; font-weight: 700; letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums; color: var(--ink-1);
+}
+.scoreline span { font-size: .84rem; color: var(--ink-3); }
+.scoreline div[data-tone="ours"] b { color: var(--series-1); }
+.scoreline div[data-tone="theirs"] b { color: var(--series-2); }

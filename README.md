@@ -94,6 +94,30 @@ reads is the sentence, and Opta build the sentence the same way everywhere.
 
 87,980 shots, 3,569 matches, six competitions.
 
+### Against the professional model, on goals rather than ranking
+
+The 90.6% above is about ranking — given two shots, which is the better chance.
+`src/head_to_head.py` asks the blunter question: how many goals did each model
+expect, and which came nearer? Same 373 matches, both sides of each.
+
+| Model | Mean error (goals) | Points | Closer in |
+|---|---|---|---|
+| Ours, from words | 0.781 | 342 | 281 innings |
+| **StatsBomb, cameras** | **0.740** | **404** | 343 innings |
+| Level | — | — | 122 innings |
+
+```
+the commercial model is better by 0.041 of a goal per side per match
+```
+
+A point per team per match to whichever landed closer, shared inside 0.05.
+StatsBomb win, on 54% of innings. Four hundredths of a goal is the whole
+distance between a sentence of English and a stadium full of cameras.
+
+And with no benchmark at all — across 2025-26, whenever the model put one side
+clearly ahead on chance quality, that side outscored the other in **75%** of
+the matches that had a winner (187 right, 62 wrong, 93 finished level).
+
 ### Is the extraction the limit, or the words?
 
 The words reach 0.781 against coordinates' 0.812. Before reaching for a bigger
@@ -227,6 +251,7 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/validate_xg.py      # the join against StatsBomb -> 90.6%
 ./run.sh src/collect.py --leagues esp.1,ger.1,ita.1,fra.1,por.1 --seasons 2025-26
 ./run.sh src/transfer.py         # does one model travel? -> yes
+./run.sh src/head_to_head.py     # ours vs StatsBomb on goals -> reports/
 ./run.sh src/bench_live.py       # is Python the live bottleneck? -> no
 ./run.sh src/drift.py            # does the model go stale? -> barely
 ./run.sh src/extraction_ceiling.py   # is there anything left to read?
@@ -270,6 +295,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/xg.py` | The xG model, and the size of the leak if the text is left raw |
 | `src/validate_xg.py` | Joins ESPN 2015/16 to StatsBomb, shot by shot |
 | `src/transfer.py` | The Premier League model, pointed at five other leagues |
+| `src/head_to_head.py` | Ours against StatsBomb's xG on goals, match by match |
 | `src/bench_live.py` | Concurrency, cpu and network cost of the live path |
 | `src/drift.py` | How much a stale model costs, and so whether to retrain |
 | `src/platform_quirks.py` | One known-false numpy/Accelerate warning, reproduced before silencing |

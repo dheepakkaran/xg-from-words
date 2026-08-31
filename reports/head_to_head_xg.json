@@ -1,0 +1,140 @@
+{
+ "season": "2015-16",
+ "matches": 373,
+ "innings": 746,
+ "ours": {
+  "points": 342.0,
+  "mean_error": 0.781
+ },
+ "theirs": {
+  "points": 404.0,
+  "mean_error": 0.74
+ },
+ "split": {
+  "ours_closer": 281,
+  "theirs_closer": 343,
+  "level": 122
+ },
+ "examples": [
+  {
+   "home": "Everton",
+   "away": "Watford",
+   "side": "away",
+   "team": "Watford",
+   "goals": 2,
+   "ours": 0.81,
+   "theirs": 0.62,
+   "point": 1.0
+  },
+  {
+   "home": "Everton",
+   "away": "Watford",
+   "side": "home",
+   "team": "Everton",
+   "goals": 2,
+   "ours": 0.52,
+   "theirs": 0.77,
+   "point": 0.0
+  },
+  {
+   "home": "Manchester United",
+   "away": "Tottenham Hotspur",
+   "side": "away",
+   "team": "Tottenham Hotspur",
+   "goals": 0,
+   "ours": 0.72,
+   "theirs": 0.58,
+   "point": 0.0
+  },
+  {
+   "home": "Manchester United",
+   "away": "Tottenham Hotspur",
+   "side": "home",
+   "team": "Manchester United",
+   "goals": 0,
+   "ours": 0.78,
+   "theirs": 0.53,
+   "point": 0.0
+  },
+  {
+   "home": "Chelsea",
+   "away": "Swansea City",
+   "side": "away",
+   "team": "Swansea City",
+   "goals": 2,
+   "ours": 2.35,
+   "theirs": 2.47,
+   "point": 1.0
+  },
+  {
+   "home": "Chelsea",
+   "away": "Swansea City",
+   "side": "home",
+   "team": "Chelsea",
+   "goals": 1,
+   "ours": 0.67,
+   "theirs": 0.49,
+   "point": 1.0
+  },
+  {
+   "home": "Leicester City",
+   "away": "Sunderland",
+   "side": "away",
+   "team": "Sunderland",
+   "goals": 2,
+   "ours": 1.23,
+   "theirs": 1.37,
+   "point": 0.0
+  },
+  {
+   "home": "Leicester City",
+   "away": "Sunderland",
+   "side": "home",
+   "team": "Leicester City",
+   "goals": 4,
+   "ours": 2.61,
+   "theirs": 2.26,
+   "point": 1.0
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Aston Villa",
+   "side": "home",
+   "team": "AFC Bournemouth",
+   "goals": 0,
+   "ours": 0.62,
+   "theirs": 1.11,
+   "point": 1.0
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Aston Villa",
+   "side": "away",
+   "team": "Aston Villa",
+   "goals": 1,
+   "ours": 0.56,
+   "theirs": 0.65,
+   "point": 0.0
+  },
+  {
+   "home": "Norwich City",
+   "away": "Crystal Palace",
+   "side": "away",
+   "team": "Crystal Palace",
+   "goals": 2,
+   "ours": 1.54,
+   "theirs": 1.28,
+   "point": 1.0
+  },
+  {
+   "home": "Norwich City",
+   "away": "Crystal Palace",
+   "side": "home",
+   "team": "Norwich City",
+   "goals": 1,
+   "ours": 1.14,
+   "theirs": 1.37,
+   "point": 1.0
+  }
+ ]
+}
