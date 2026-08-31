@@ -4,24 +4,31 @@ name: matchday
 # arrive, and publishes the result. Also records how stale ESPN's newest
 # commentary line is -- the one claim in this project with no evidence yet.
 #
-# The schedule covers the usual kickoff slots. When nothing is in progress the
-# job exits after three quiet polls, so a firing that catches no football costs
-# a couple of minutes.
+# The schedule cannot know when matches are: cron times are fixed strings, and
+# Premier League kickoffs land on ten different UTC times across a season
+# because the UK leaves BST in October -- Saturday 3pm is 14:00 UTC in August
+# and 15:00 UTC in November. Four hardcoded slots covered 119 of 361 fixtures.
+#
+# So it fires hourly through the hours football is played, and the script
+# decides whether to stay awake: it keeps polling while a match is live or a
+# kickoff is inside the next half hour, and otherwise exits after three quiet
+# polls. A firing that catches nothing costs about three minutes.
 #
 # Live data goes to the `live-data` branch, not main: a matchday is thirty
 # writes and main's history is for changes to the project, not for a feed.
 
 on:
   schedule:
-    - cron: "25 11 * * *"    # 11:30 UTC kickoffs
-    - cron: "55 13 * * *"    # 14:00
-    - cron: "25 16 * * *"    # 16:30
-    - cron: "55 18 * * *"    # 19:00, midweek and Monday
+    # Every hour at :50, through the window every Premier League kickoff falls
+    # in (11:30 to 20:00 UTC across the season). Kickoffs sit on :00 and :30,
+    # so a firing at :50 either finds a match already running or one starting
+    # within the half hour it waits for.
+    - cron: "50 10-21 * * *"
   workflow_dispatch:
     inputs:
       minutes:
         description: how long to poll for
-        default: "150"
+        default: "165"
 
 concurrency:
   group: matchday
@@ -48,7 +55,7 @@ jobs:
       - name: watch the match
         run: |
           python src/publish.py --watch --every 60 \
-            --minutes "${{ github.event.inputs.minutes || '150' }}" \
+            --minutes "${{ github.event.inputs.minutes || '165' }}" \
             --quit-after-idle 3
 
       - name: publish to the live-data branch

@@ -19,7 +19,37 @@ from score import Scorer
 LIVE = {"STATUS_FIRST_HALF", "STATUS_SECOND_HALF", "STATUS_IN_PROGRESS",
         "STATUS_HALFTIME", "STATUS_END_PERIOD"}
 RECENT = 20                       # minutes, for the "where is the action" sort
+KICKOFF_WINDOW = 45               # minutes ahead worth waiting for
+# 45 rather than 30 because kickoffs sit on :00 and :30 while the schedule
+# fires on :50 -- a 15:30 kickoff is 40 minutes after the 14:50 firing, and a
+# 30-minute window would let that job go back to sleep 40 minutes early.
 session = requests.Session()      # no custom User-Agent; see collect.py
+
+
+def kickoff_soon(now, minutes=KICKOFF_WINDOW):
+    """Is a fixture about to start?
+
+    The schedule cannot know when matches are -- GitHub cron times are fixed
+    strings in the workflow file. So the schedule fires hourly through the
+    football window and this decides whether to stay awake: if a kickoff is
+    inside the next half hour, keep polling rather than exiting on an empty
+    scoreboard.
+
+    That matters more than it sounds. Premier League kickoffs land on ten
+    different UTC times across a season, because the UK moves off BST in
+    October -- Saturday 3pm is 14:00 UTC in August and 15:00 UTC in November.
+    Four hardcoded slots covered 119 of 361 remaining fixtures.
+    """
+    path = os.path.join(ROOT, "docs", "fixtures.json")
+    if not os.path.exists(path):
+        return None
+    for f in json.load(open(path)).get("fixtures", []):
+        if f.get("completed"):
+            continue
+        t = dt.datetime.fromisoformat(f["kickoff"].replace("Z", "+00:00"))
+        if 0 <= (t - now).total_seconds() <= minutes * 60:
+            return f
+    return None
 
 
 def newest_lag(summary, now):
@@ -94,6 +124,13 @@ def one_cycle(score, out_path, latency_path):
               f"{m['away'][:20]:20s} {str(m['clock']):>7s}  "
               f"lag {lag if lag is None else f'{lag:5.0f}s'}", flush=True)
     if not matches:
+        soon = kickoff_soon(now)
+        if soon:
+            t = dt.datetime.fromisoformat(soon["kickoff"].replace("Z", "+00:00"))
+            mins = (t - now).total_seconds() / 60
+            print(f"{now:%H:%M:%S}  nothing yet -- {soon['home']} v "
+                  f"{soon['away']} in {mins:.0f} min, staying awake", flush=True)
+            return -1            # awake, but with nothing to score
         print(f"{now:%H:%M:%S}  nothing in progress", flush=True)
     return len(matches)
 
@@ -102,7 +139,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--watch", action="store_true", help="keep polling")
     ap.add_argument("--every", type=float, default=60.0)
-    ap.add_argument("--minutes", type=float, default=150.0)
+    ap.add_argument("--minutes", type=float, default=165.0)
     ap.add_argument("--quit-after-idle", type=int, default=3)
     ap.add_argument("--out", default=os.path.join(ROOT, "docs", "live.json"))
     ap.add_argument("--latency",
@@ -118,7 +155,9 @@ def main():
     deadline, idle = time.time() + args.minutes * 60, 0
     while time.time() < deadline:
         try:
-            idle = 0 if one_cycle(score, args.out, args.latency) else idle + 1
+            found = one_cycle(score, args.out, args.latency)
+            # -1 means nothing live but a kickoff is imminent: not idle.
+            idle = 0 if found != 0 else idle + 1
         except Exception as e:                     # one bad poll is not fatal
             print(f"poll failed: {e}", flush=True)
             idle += 1
