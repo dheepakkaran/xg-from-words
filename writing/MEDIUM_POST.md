@@ -25,7 +25,7 @@ I will explain every short form as it appears. There are only a few, and none of
 **xG — expected goals.**
 A number between 0 and 1 for a single shot. It answers one question: *if a hundred shots like this were taken, how many would go in?*
 
-- A penalty is about **0.76**. Out of 100 penalties, about 76 are scored.
+- A penalty is about **0.75** across this data. Out of 100 penalties, about 75 are scored. (In the Premier League alone it is 0.83 — better takers.)
 - A shot from far outside the box is about **0.04**. Out of 100, about 4 go in.
 
 Add up every shot a team takes and you get how much they *deserved* to score. That is why you sometimes hear "Arsenal won 1–0 but the xG was 0.4 to 2.1" — it means Arsenal won, and did not play better.
@@ -487,9 +487,11 @@ Everything about reading a match live assumes the commentary arrives **fast enou
 
 ---
 
-*Code, full write-up and the live page:*
-**https://github.com/dheepakkaran/xg-from-words**
-**https://dheepakkaran.github.io/xg-from-words/**
+*Code and the full technical write-up:*
+[github.com/dheepakkaran/xg-from-words](https://github.com/dheepakkaran/xg-from-words)
+
+*The live page, which updates itself during matches:*
+[dheepakkaran.github.io/xg-from-words](https://dheepakkaran.github.io/xg-from-words/)
 
 *Data: ESPN's public commentary feed, and StatsBomb's open data.*
 

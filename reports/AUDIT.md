@@ -185,8 +185,8 @@ list of forbidden words, and `free kick` was not on it — because a free kick i
 a legitimate thing to describe. A list only catches leaks already imagined.
 
 The replacement asks the data instead: every n-gram appearing 25+ times is
-checked, and any that converts above 80% — well clear of the ~76% penalty rate,
-the highest legitimate value — fails the suite. Run against the pre-fix data it
+checked, and any that converts above 80% — well clear of the penalty rate --
+75% across the corpus, 83% in the Premier League alone — fails the suite. Run against the pre-fix data it
 flags `('free kick', 60, 1.00)` immediately.
 
 Cost of the fix at the time: 0.7727 → 0.7688 AUC. The leak was contributing almost nothing,

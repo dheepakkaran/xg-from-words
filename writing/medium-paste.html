@@ -42,7 +42,7 @@
 <h2>First, two words you need</h2>
 <p>I will explain every short form as it appears. There are only a few, and none of them are hard.</p>
 <p><strong>xG — expected goals.</strong> A number between 0 and 1 for a single shot. It answers one question: <em>if a hundred shots like this were taken, how many would go in?</em></p>
-<ul><li>A penalty is about <strong>0.76</strong>. Out of 100 penalties, about 76 are scored.</li><li>A shot from far outside the box is about <strong>0.04</strong>. Out of 100, about 4 go in.</li></ul>
+<ul><li>A penalty is about **0.75*across this data. Out of 100 penalties, about 75 are scored. (In the Premier League alone it is 0.83 — better takers.)</li><li>A shot from far outside the box is about <strong>0.04</strong>. Out of 100, about 4 go in.</li></ul>
 <p>Add up every shot a team takes and you get how much they <em>deserved</em> to score. That is why you sometimes hear "Arsenal won 1–0 but the xG was 0.4 to 2.1" — it means Arsenal won, and did not play better.</p>
 <p><strong>AUC — Area Under the Curve.</strong> This is the score I use to say how good a model is. The full name is <em>area under the ROC curve</em>, and ROC stands for <em>Receiver Operating Characteristic</em>, which is a name from World War Two radar and tells you nothing. Ignore it.</p>
 <p>Here is what AUC actually means, and it is simple:</p>
@@ -278,7 +278,8 @@ Covered: 119.   Missed: 242.   That is 67% of the season.</code></pre>
 <ul><li>**Commentary cannot tell you when a goal is coming.<em>I measured how unpredictable it is: even a model that has </em>watched the next fifteen minutesonly reaches 0.60. The problem is the football, not the model.</li><li>**Commentary can tell you how good a chance was.*It reaches **90.6%*of a camera-based commercial model, tested on a season nine years outside anything it had seen.</li><li>**The same model works in six countries*with no retraining, and slightly better abroad than at home.</li><li><strong>It found four separate leaks</strong>, three of which passed my own inspection. Each is now a test.</li><li>**Six impressive tools were measured and dropped.*None of them earned a place.</li><li><strong>It runs on its own</strong>, hourly, through the whole season, and a test proves the schedule catches all 361 remaining matches.</li></ul>
 <p><strong>The thing I would actually want you to take away:</strong> when a model fails, measure whether the problem is the model or the target. Almost nobody does. It is the difference between "my project didn't work" and "here is how unpredictable this actually is, with a number."</p>
 <hr>
-<p><em>Code, full write-up and the live page:</em> <strong>https://github.com/dheepakkaran/xg-from-words</strong> <strong>https://dheepakkaran.github.io/xg-from-words/</strong></p>
+<p><em>Code and the full technical write-up:</em> <a href="https://github.com/dheepakkaran/xg-from-words">github.com/dheepakkaran/xg-from-words</a></p>
+<p><em>The live page, which updates itself during matches:</em> <a href="https://dheepakkaran.github.io/xg-from-words/">dheepakkaran.github.io/xg-from-words</a></p>
 <p><em>Data: ESPN's public commentary feed, and StatsBomb's open data.</em></p>
 <hr>
 <h2>Every short form used, in one place</h2>

@@ -36,8 +36,9 @@ FORBIDDEN = ["goal", "scored", "converts", "saved", "missed", "misses",
 # this is the leak coming back, not a modelling breakthrough.
 AUC_CEILING = 0.85
 
-# Penalties are the best legitimate feature and convert at ~76%. A phrase whose
-# conversion is *confidently* above this is naming the outcome, not the chance.
+# Penalties are the best legitimate feature. They convert at 75% across the
+# corpus and 83% in the Premier League alone, so this bar sits above both: a
+# phrase confidently converting higher is naming the outcome, not the chance.
 LOWER_BOUND = 0.85
 
 
