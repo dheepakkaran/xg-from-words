@@ -6,10 +6,10 @@
  ],
  "n_train": 28735,
  "held_out_season": 2025,
- "n_test": 9194,
- "auc": 0.7688,
+ "n_test": 49743,
+ "auc": 0.7738,
  "brier": 0.0846,
- "base_rate": 0.1134,
+ "base_rate": 0.1138,
  "features": [
   "six_yard",
   "centre_box",
@@ -29,5 +29,5 @@
   "penalty",
   "minute"
  ],
- "git_sha": "4187f6b84c55726509ce0214c84091d1e8493f6d"
+ "git_sha": "a7e14f0c30ca6363aa8c2d442f58b75f0c79cb5c"
 }

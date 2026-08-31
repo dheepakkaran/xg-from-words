@@ -6,7 +6,6 @@ possible model. This exists to answer one question before any real work is
 committed: does the text carry enough to rate a chance at all?
 """
 import gzip, glob, json, os, re, sys
-import pandas as pd
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 
@@ -133,6 +132,7 @@ def shots_from_summary(summary, event_id=None, season=None):
 
 
 def parse():
+    import pandas as pd
     # fixtures.json is authoritative for which competition a match belongs to;
     # the summary payload does not carry it reliably.
     fx_path = os.path.join(ROOT, "data", "fixtures.json")
@@ -154,6 +154,7 @@ def parse():
 
 
 def main():
+    import pandas as pd
     df = parse()
     out = os.path.join(ROOT, "data", "proc", "shots.parquet")
     df.to_parquet(out, index=False)

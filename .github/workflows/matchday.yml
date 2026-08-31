@@ -1,0 +1,65 @@
+name: matchday
+
+# Polls whatever Premier League match is in progress, scores the shots as they
+# arrive, and publishes the result. Also records how stale ESPN's newest
+# commentary line is -- the one claim in this project with no evidence yet.
+#
+# The schedule covers the usual kickoff slots. When nothing is in progress the
+# job exits after three quiet polls, so a firing that catches no football costs
+# a couple of minutes.
+#
+# Live data goes to the `live-data` branch, not main: a matchday is thirty
+# writes and main's history is for changes to the project, not for a feed.
+
+on:
+  schedule:
+    - cron: "25 11 * * *"    # 11:30 UTC kickoffs
+    - cron: "55 13 * * *"    # 14:00
+    - cron: "25 16 * * *"    # 16:30
+    - cron: "55 18 * * *"    # 19:00, midweek and Monday
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: how long to poll for
+        default: "150"
+
+concurrency:
+  group: matchday
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 175
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # requests is the only dependency. The model is committed as plain
+      # numbers in models/xg.json and scored in pure Python, so no sklearn,
+      # no pandas, and no pickle to trust.
+      - run: pip install requests
+
+      - name: watch the match
+        run: |
+          python src/publish.py --watch --every 60 \
+            --minutes "${{ github.event.inputs.minutes || '150' }}" \
+            --quit-after-idle 3
+
+      - name: publish to the live-data branch
+        if: always()
+        run: |
+          if [ ! -s docs/live.json ]; then echo "nothing to publish"; exit 0; fi
+          git config user.name  "Dheepak Karan"
+          git config user.email "elusanthi16@gmail.com"
+          git fetch origin live-data --depth 1 2>/dev/null || true
+          git checkout -B live-data
+          git add -f docs/live.json reports/latency.jsonl
+          git diff --cached --quiet || \
+            git commit -m "live data $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -f origin live-data

@@ -21,6 +21,19 @@ def main():
     os.makedirs(os.path.join(ROOT, "models"), exist_ok=True)
     dump({"model": m, "features": FIELDS},
          os.path.join(ROOT, "models", "xg.joblib"))
+
+    # The same model as plain numbers. A scaler and a logistic regression over
+    # seventeen fields is a dot product, so serving it needs no pickle, no
+    # sklearn, and no version agreement -- and anyone can read what it believes.
+    scaler, lr = m.named_steps["standardscaler"], m.named_steps["logisticregression"]
+    json.dump({
+        "kind": "standardised logistic regression",
+        "features": FIELDS,
+        "mean": [round(float(x), 6) for x in scaler.mean_],
+        "scale": [round(float(x), 6) for x in scaler.scale_],
+        "coef": [round(float(x), 6) for x in lr.coef_[0]],
+        "intercept": round(float(lr.intercept_[0]), 6),
+    }, open(os.path.join(ROOT, "models", "xg.json"), "w"), indent=1)
     meta = {
         "trained_on": sorted(tr.season.unique().tolist()),
         "n_train": len(tr), "held_out_season": 2025, "n_test": len(te),
@@ -34,6 +47,7 @@ def main():
     }
     json.dump(meta, open(os.path.join(ROOT, "models", "xg.meta.json"), "w"),
               indent=1)
+    print("wrote models/xg.joblib, models/xg.json, models/xg.meta.json")
     print(json.dumps(meta, indent=1))
 
 

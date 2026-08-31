@@ -209,3 +209,27 @@ def test_committed_fixture_is_not_stale():
     if "league" in real and "league" in sample:
         assert set(sample.league) == set(real.league), (
             "fixture and corpus cover different competitions")
+
+
+def test_json_model_matches_the_pickled_one():
+    """models/xg.json is what the live path scores with; models/xg.joblib is
+    what training produced. If they drift, the site and the paper disagree.
+
+    Skips where the pickle is absent -- it is not committed, only the JSON is.
+    """
+    import numpy as np, pandas as pd
+    sys.path.insert(0, os.path.join(HERE, "..", "src"))
+    from score import Scorer
+    jl = os.path.join(HERE, "..", "models", "xg.joblib")
+    js = os.path.join(HERE, "..", "models", "xg.json")
+    if not (os.path.exists(jl) and os.path.exists(js) and os.path.exists(PROC)):
+        pytest.skip("needs both model files and a sample")
+    from joblib import load
+    b = load(jl)
+    sc = Scorer(js)
+    d = pd.read_parquet(PROC).head(500)
+    mine = np.array([sc(r) for r in d.to_dict("records")])
+    theirs = b["model"].predict_proba(d[b["features"]])[:, 1]
+    assert np.abs(mine - theirs).max() < 1e-4, (
+        f"json and pickled model disagree by "
+        f"{np.abs(mine - theirs).max():.2e}; rerun src/train_xg.py")
