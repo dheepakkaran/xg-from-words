@@ -1,5 +1,10 @@
 # Test-only dependencies. The full stack (torch, sentence-transformers,
 # xgboost) is in requirements.txt and is not needed to run the test suite.
+#
+# requests is here because the schedule test reads a constant out of
+# src/publish.py, which is the live path and does import it. Leaving it out
+# turned the whole schedule suite red.
+requests
 pandas
 numpy
 scikit-learn
