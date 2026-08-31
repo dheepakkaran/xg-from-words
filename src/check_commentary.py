@@ -16,8 +16,20 @@ def skeleton(text):
     return re.sub(r"\d+", "#", NAME.sub("<N>", text)).strip()
 
 
-def main(sample=400):
+def main(sample=400, league="eng.1"):
+    # Premier League only, like every other script here. data/raw grew to six
+    # competitions for the transfer test, and sampling across all of them
+    # changes these counts without changing what they are about.
+    fx_path = os.path.join(ROOT, "data", "fixtures.json")
+    keep = None
+    if os.path.exists(fx_path):
+        keep = {f["event_id"] for f in json.load(open(fx_path))
+                if f.get("league", "eng.1") == league}
     files = sorted(glob.glob(os.path.join(ROOT, "data", "raw", "*.json.gz")))
+    if keep:
+        files = [f for f in files
+                 if os.path.basename(f).split(".")[0] in keep]
+    random.seed(0)                      # so the counts are reproducible
     files = random.sample(files, min(sample, len(files)))
     by_type = defaultdict(Counter)
     per_season = defaultdict(list)

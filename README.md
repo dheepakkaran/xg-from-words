@@ -28,8 +28,8 @@ model of almost nothing. [reports/FINDINGS.md](reports/FINDINGS.md).
 ## 2. Does it say how good a *chance* was? — Yes, to within 9%.
 
 Measuring the first question turned up something else: foul and corner
-commentary is templated (41 templates across 16,864 lines), but shot commentary
-is not (1,045 across 3,499). The words describe body part, zone and build-up —
+commentary is templated (42 templates across 16,583 lines), but shot commentary
+is not (1,015 across 3,532). The words describe body part, zone and build-up —
 which is what an expected-goals model is made of.
 
 So: rate a shot from its sentence, and check it against a model built on real
