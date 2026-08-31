@@ -166,6 +166,23 @@ Tottenham Hotspur v Newcastle United   0-2   90'+4'
 Seventeen shots to eleven, and the side that created more lost 2-0. That is
 the reading the scoreline cannot give you.
 
+`--replay <event_id>` steps through a finished match the way the live view
+would have seen it — at each checkpoint, only the commentary up to that minute:
+
+```
+   min   score   Tottenham Hotspu  Newcastle United   what changed
+    15  0-  0                0.05              0.06   Tottenham 5% chance
+    30  0-  0                0.44              0.10   Tottenham 17% chance
+    45  0-  0                0.72              0.31   Newcastle 14% chance
+    60  0-  0                1.01              0.39   Tottenham 26% chance
+    75  0-  2                1.15              0.89   Newcastle 33% chance
+    90  0-  2                1.35              0.89   Tottenham 11% chance
+```
+
+Goalless at the hour with Spurs having created two and a half times as much,
+then two Newcastle goals from half a chance. You can watch the scoreline come
+apart from the game.
+
 `src/style.py --team "Manchester City"` compares a run of matches with the
 season, which is the smallest window where a shot profile means anything:
 

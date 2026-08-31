@@ -102,14 +102,59 @@ def render(reports):
                 print(f"  {'':26s} best: {s['best_xg']:.0%}  \"{s['best']}\"")
 
 
+def replay(bundle, event_id, step=15):
+    """Step through a finished match the way the live view would see it.
+
+    Nothing here is hindsight: at each checkpoint only the commentary up to
+    that minute is used, which is exactly what would have been on the wire.
+    """
+    sm = session.get(f"{BASE}/summary", params={"event": event_id},
+                     timeout=30).json()
+    rows = SH.shots_from_summary(sm, event_id=event_id)
+    if not rows:
+        raise SystemExit("no shots parsed for that match")
+    df = pd.DataFrame(rows)
+    df["xg"] = bundle["model"].predict_proba(df[bundle["features"]])[:, 1]
+
+    comp = sm["header"]["competitions"][0]
+    teams = {c["homeAway"]: c["team"]["displayName"] for c in comp["competitors"]}
+    h, a = teams["home"], teams["away"]
+    print(f"{h} v {a}\n")
+    print(f"  {'min':>4s}  {'score':^7s}  "
+          f"{h[:16]:>16s}  {a[:16]:>16s}   what changed")
+    prev = None
+    for M in range(step, 96, step):
+        seen = df[df.minute <= M]
+        gh = int(seen[(seen.side == "home") & (seen.goal == 1)].shape[0])
+        ga = int(seen[(seen.side == "away") & (seen.goal == 1)].shape[0])
+        xh = seen[seen.side == "home"].xg.sum()
+        xa = seen[seen.side == "away"].xg.sum()
+        window = df[(df.minute > M - step) & (df.minute <= M)]
+        best = (window.loc[window.xg.idxmax()] if len(window) else None)
+        note = (f"{best.team[:14]} {best.xg:.0%} chance" if best is not None
+                else "nothing")
+        print(f"  {M:4d}  {gh}-{ga:^5d}  {xh:16.2f}  {xa:16.2f}   {note}")
+        prev = (gh, ga)
+    print(f"\n  final {prev[0]}-{prev[1]}   "
+          f"chances {df[df.side=='home'].xg.sum():.2f} v "
+          f"{df[df.side=='away'].xg.sum():.2f}")
+    for side, name in (("home", h), ("away", a)):
+        s_ = df[df.side == side]
+        print(f"  {name:26s} {int(s_.goal.sum())} from {s_.xg.sum():.2f} "
+              f"-- {s_.goal.sum()-s_.xg.sum():+.2f}")
+
+
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--replay", help="ESPN event id, to step through a match")
     ap.add_argument("--date", help="YYYYMMDD, to replay a finished matchday")
     ap.add_argument("--finished", action="store_true",
                     help="include completed matches (for replay)")
     args = ap.parse_args()
 
     bundle = model()
+    if args.replay:
+        return replay(bundle, args.replay)
     p = {"dates": args.date} if args.date else {}
     evs = session.get(f"{BASE}/scoreboard", params=p, timeout=30).json().get("events", [])
     evs = [e for e in evs if e["status"]["type"]["name"] in LIVE
