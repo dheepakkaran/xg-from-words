@@ -225,9 +225,16 @@ PAGE = """<!doctype html>
 
 
 def pre_with_breaks(html_body):
+    """Make a code block survive Medium's URL importer.
+
+    The importer discards newlines inside <pre> and collapses runs of spaces,
+    which between them destroy the column alignment these blocks exist for.
+    <br> survives, and a non-breaking space is not collapsed -- and in a
+    monospace block it is exactly as wide as the space it replaces.
+    """
     def fix(m):
-        inner = m.group(1)
-        return "<pre><code>" + inner.replace("\n", "<br>") + "</code></pre>"
+        inner = m.group(1).replace(" ", "&nbsp;").replace("\n", "<br>")
+        return "<pre><code>" + inner + "</code></pre>"
     return re.sub(r"<pre><code>(.*?)</code></pre>", fix, html_body, flags=re.S)
 
 
