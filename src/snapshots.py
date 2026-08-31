@@ -16,6 +16,11 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 RAW = os.path.join(ROOT, "data", "raw")
 PROC = os.path.join(ROOT, "data", "proc")
 
+# The four seasons the momentum experiment is defined over. fixtures.json also
+# holds 2015-16, which exists only to validate the xG model against StatsBomb,
+# and five other competitions, which exist only for the transfer test.
+SEASONS = {"2022-23", "2023-24", "2024-25", "2025-26"}
+
 MINUTES = list(range(10, 81, 5))   # snapshot every 5 minutes
 HORIZON = 15                       # headline label window, in minutes
 HORIZONS = [5, 10, 15, 30]         # every window labelled, for the sweep
@@ -179,8 +184,21 @@ def build_match(fx, summary, elo=None):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    # Premier League by default, and on purpose. fixtures.json grew to six
+    # competitions for the transfer test in src/transfer.py; letting them into
+    # the momentum experiment would silently change every number it produced,
+    # and a rebuild would no longer reproduce the published result.
+    ap.add_argument("--leagues", default="eng.1",
+                    help="comma-separated ESPN league codes")
+    args = ap.parse_args()
+    wanted = {l.strip() for l in args.leagues.split(",") if l.strip()}
+
     os.makedirs(PROC, exist_ok=True)
     fixtures = json.load(open(os.path.join(ROOT, "data", "fixtures.json")))
+    fixtures = [f for f in fixtures if f.get("league", "eng.1") in wanted
+                and f["season"] in SEASONS]
     elo = strength.build(fixtures)
     rows, missing, sparse, bad_label = [], 0, 0, 0
     for fx in fixtures:
@@ -198,6 +216,8 @@ def main():
             bad_label += 1
             continue
         out = build_match(fx, summary, elo)
+        for r in out:
+            r["league"] = fx.get("league", "eng.1")
         if not out:
             sparse += 1
         rows += out

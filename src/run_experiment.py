@@ -115,6 +115,10 @@ def main():
     args = ap.parse_args()
 
     df = pd.read_parquet(os.path.join(PROC, "snapshots.parquet"))
+    # Premier League only. snapshots.py already restricts to it, but the
+    # experiment states which football it is about rather than inheriting it.
+    if "league" in df.columns:
+        df = df[df.league == "eng.1"]
     df = df.sort_values(["date", "event_id", "minute"]).reset_index(drop=True)
     label_col = f"label_{args.horizon}"
     if label_col not in df.columns:
