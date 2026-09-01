@@ -1,19 +1,9 @@
 {
  "league": "eng.1",
- "refreshed": "2026-08-31T11:50:14+00:00",
- "played": 19,
- "upcoming": 361,
+ "refreshed": "2026-09-01T10:25:13+00:00",
+ "played": 20,
+ "upcoming": 360,
  "next": [
-  {
-   "event_id": "401879295",
-   "kickoff": "2026-08-31T19:00Z",
-   "home": "Aston Villa",
-   "away": "Arsenal",
-   "home_short": "Aston Villa",
-   "away_short": "Arsenal",
-   "completed": false,
-   "score": null
-  },
   {
    "event_id": "401879288",
    "kickoff": "2026-09-04T19:00Z",
@@ -61,6 +51,16 @@
    "away": "Crystal Palace",
    "home_short": "Fulham",
    "away_short": "C Palace",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879287",
+   "kickoff": "2026-09-05T14:00Z",
+   "home": "Manchester City",
+   "away": "Coventry City",
+   "home_short": "Man City",
+   "away_short": "Coventry",
    "completed": false,
    "score": null
   }
@@ -263,8 +263,8 @@
    "away": "Arsenal",
    "home_short": "Aston Villa",
    "away_short": "Arsenal",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "0-1"
   },
   {
    "event_id": "401879288",

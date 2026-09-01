@@ -1,14 +1,14 @@
 {
- "refreshed": "2026-09-01T05:03:02+00:00",
+ "refreshed": "2026-09-01T10:25:13+00:00",
  "close_threshold": 0.15,
  "tally": {
-  "matches": 19,
-  "right": 10,
+  "matches": 20,
+  "right": 11,
   "wrong": 4,
   "drawn": 4,
   "too close to call": 1,
-  "decisive": 14,
-  "hit_rate": 0.714
+  "decisive": 15,
+  "hit_rate": 0.733
  },
  "matches": [
   {
@@ -314,6 +314,22 @@
    "favoured": "Manchester United",
    "verdict": "right",
    "shots": 43
+  },
+  {
+   "event_id": "401879295",
+   "kickoff": "2026-08-31T19:00Z",
+   "home": "Aston Villa",
+   "away": "Arsenal",
+   "score": "0-1",
+   "goals": [
+    0,
+    1
+   ],
+   "our_home": 0.36,
+   "our_away": 0.81,
+   "favoured": "Arsenal",
+   "verdict": "right",
+   "shots": 14
   }
  ]
 }
