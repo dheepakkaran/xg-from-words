@@ -32,6 +32,8 @@ GRAPH = {
     "models/xg.json": ["src/train_xg.py", "src/xg.py",
                        "data/proc/shots.parquet"],
     "models/xg.joblib": ["src/train_xg.py", "data/proc/shots.parquet"],
+    "models/xg.shift.json": ["src/recalibrate.py", "src/xg.py",
+                             "data/proc/shots.parquet", "data/fixtures.json"],
     "reports/results.csv": ["src/run_experiment.py", "src/evaluate.py",
                             "data/proc/snapshots.parquet"],
     "reports/head_to_head_xg.json": ["src/head_to_head.py",
@@ -41,7 +43,8 @@ GRAPH = {
                        "reports/results.csv",
                        "data/proc/xg_validation.parquet",
                        "reports/head_to_head_xg.json"],
-    "docs/scorecard.json": ["src/scorecard.py", "models/xg.json"],
+    "docs/scorecard.json": ["src/scorecard.py", "models/xg.json",
+                            "models/xg.shift.json"],
     "writing/cover.png": ["writing/cover.py", "docs/data.json"],
 }
 

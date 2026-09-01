@@ -496,8 +496,15 @@ one recent season vs three:  +0.0005
 season of data is indistinguishable from three. Weekly retraining would chase
 noise; a scheduler to automate it is machinery around a problem that does not
 exist. This is the same conclusion the transfer test reached from the other
-direction — a model this stable across ten years and six countries is not
-drifting.
+direction.
+
+**But read the last column too.** Mean xG falls from 0.138 to 0.124 across the
+same rows — a 10% slide in the level while AUC does not move. When this table
+was written only the AUC column was read, and the conclusion drawn from it —
+"a model this stable across ten years is not drifting" — is half wrong. The
+ranking does not drift. The level does, by roughly 10% a decade, and check 12
+is what that turned out to be. Kubeflow is still not the answer; the answer is
+one number, refitted in season.
 
 What Kubeflow would genuinely have provided is already here in cheaper form:
 provenance lives in `models/xg.meta.json` (data window, metrics, git SHA), and
@@ -521,6 +528,112 @@ If an LLM ever does enter the picture — a different text source, a
 conversational interface — LangGraph becomes reasonable, because retries and
 branching on model output are real problems. It is not reasonable now.
 
+## Check 12 — The over-estimate, and what it turned out to be
+
+Check 4 left an unexplained residue: on the held-out 2025-26 season the model
+predicts 1.54 goals per team-match against 1.38 actual, an 11.9% over-estimate
+that does not appear in the 2015-16 comparison. Item 7 of the list below asked
+why. This is the answer, and it is more interesting than a bug.
+
+### It decomposes exactly
+
+```
+league goal rate, 2022-23 -> 2025-26      0.1199 -> 0.1134    x 1.057
+mean prediction vs its own training rate  0.1199 -> 0.1270    x 1.059
+                                                      product   1.119
+```
+
+Observed over-estimate: 11.9%. The two factors multiply to the whole of it,
+with nothing left over. The first is the Premier League converting slightly
+less often than it used to. The second is stranger: a logistic regression's
+mean prediction on its training set equals the training base rate by
+construction, so a mean of 0.1270 on 2025-26 means the *parsed features* of
+those shots look better than the shots the model was fitted on — while
+actually producing fewer goals.
+
+### Two phrases account for it
+
+```
+                    share of shots            conversion
+six yard box        4.2% -> 6.0%              39.1% -> 35.8%
+following a fast    1.9% -> 3.3%              47.2% -> 28.4%
+break
+```
+
+Both phrases became more common and less productive at the same time. A fast
+break converting at 47% in 2022-23 and 28% in 2025-26 is not a change in
+football; a 74% rise in how often the phrase appears is not one either. This is
+ESPN's writers using the words more loosely. The model, which knows nothing
+except the words, reads a better shot than the one that was taken.
+
+### The decade confirms it
+
+Scored with the shipped model, trained on 2022-24:
+
+```
+2015-16   mean xG 0.1023   actual 0.1052    -2.7%
+2025-26   mean xG 0.1270   actual 0.1134   +11.9%
+```
+
+The sign flips. In 2015-16 "following a fast break" appeared on 0.73% of shots
+and converted at 49.3%; by 2025-26 it appeared on 3.30% and converted at 28.4%
+— four and a half times as common, at little more than half the conversion. The
+model, fitted in the middle, under-reads the older season and over-reads the
+newer one. That is a drift signature, not a defect in the parser.
+
+### Retraining cannot fix it
+
+```
+trained on all three seasons (shipped)     +11.9%
+trained on the last two                    +11.9%
+trained on the last one only                +9.1%
+recency weighted, half-life one season      +9.9%
+```
+
+None of it works, and the reason is not that the data is old. Next season's
+conversion rate is not in this season's data at any weighting. The best of
+these buys 2.8 points of the 11.9 and pays for it with two thirds of the
+training set.
+
+### Waiting does fix it
+
+Once a few hundred shots of the new season have been played, their realised
+rate is simply observable. One number added to the intercept pulls the level
+back. Walking forward through 2025-26 and refitting that number only on shots
+already played:
+
+```
+                  mean xG   actual   over     log loss
+uncorrected        0.1267   0.1132   +12.0%    0.29523
+recalibrated       0.1165   0.1132    +2.9%    0.29443
+```
+
+8,694 shots evaluated, after a 500-shot warm-up — about twenty matches, three
+weekends — during which the model runs uncorrected because the realised rate is
+still too noisy to correct towards. `src/recalibrate.py`, applied by
+`src/score.py`, tested in `tests/test_recalibration.py`.
+
+An intercept shift is monotone, so AUC is unchanged by construction, and a test
+asserts it: the guard is against a future maintainer improving calibration by
+reaching for the coefficients, which would trade the ranking — the result this
+project exists for — to buy a better mean.
+
+### What this adds to the finding
+
+Check 11 measured drift and found it cheap: a ten-year-stale model costs 0.007
+AUC. That measurement was correct and incomplete — and the missing half was
+already printed in its own table, in the mean xG column, sliding from 0.138 to
+0.124 while the AUC column stayed flat. Nobody read it, this one included,
+because the question being asked was "does accuracy decay" and the answer was
+no. Drift barely touches the ranking and badly damages the level.
+
+> The words rank shots about as well as coordinates do, and go on doing so for
+> a decade. It is the mapping from words to probabilities that moves, because
+> the words themselves are written by people whose habits change.
+
+Which is a limitation specific to text-derived features, worth stating plainly:
+a coordinate does not drift, and a phrase does.
+
 ## What must happen before building
 
 1. ~~Read arXiv 2402.06820 in full~~ — **done, check 1. Not prior art.**
@@ -535,6 +648,7 @@ branching on model output are real problems. It is not reasonable now.
 5. **Measure live latency** during an actual match. Still the only claim in
    this project with no evidence behind it.
 6. ~~Ask whether a better reader would help~~ — **done, check 8. It would not.**
-7. **Correct the small over-estimate** seen on 2025-26 (mean xG 1.54 against
-   1.38 goals per team-match). It does not appear in the 2015-16 comparison,
-   where the means match exactly — worth understanding why.
+7. ~~Correct the small over-estimate~~ — **done, check 12.** It was phrase
+   drift, not a parser defect, and it is not fixable by retraining. An
+   in-season intercept refit takes it from +11.9% to +2.9% without touching
+   the ranking. `src/recalibrate.py`.

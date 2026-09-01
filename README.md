@@ -158,7 +158,7 @@ extraction, and no better reader can recover what the sentence never contained.
 | **LLM extractor** | A better reader closes the gap to coordinates | Every model given the whole sentence loses to 18 extracted fields, by up to 0.012 AUC |
 | **vLLM** | Self-hosted explanation at scale | Needs CUDA; this machine has none, and installing it downgrades torch across a working environment |
 | **C++ poller** | Python drops messages at multi-match concurrency | Peak is 14 concurrent matches at 2.4 ms each — 0.23% of a 15 s budget, and 60× cheaper than the network round trip it waits on |
-| **Kubeflow** | Weekly in-season retraining with a promotion gate | A model ten years stale costs 0.007 AUC, and one season of data equals three. There is no drift to schedule around |
+| **Kubeflow** | Weekly in-season retraining with a promotion gate | A model ten years stale costs 0.007 AUC, and one season of data equals three. What does drift is the *level*, not the ranking — and that is one number refitted in season, not a pipeline ([check 12](reports/AUDIT.md)) |
 | **LangGraph** | Orchestrate score → retrieve → explain | Four steps, one branch, no cycle, no state — an `if` and a function call |
 
 Each is in [reports/AUDIT.md](reports/AUDIT.md) with the numbers, and each has
@@ -277,7 +277,8 @@ for h in 5 10 30; do ./run.sh src/run_experiment.py --horizon $h \
 ./run.sh src/head_to_head.py     # ours vs StatsBomb on goals -> reports/
 ./run.sh src/scorecard.py        # this season vs the result -> docs/scorecard.json
 ./run.sh src/bench_live.py       # is Python the live bottleneck? -> no
-./run.sh src/drift.py            # does the model go stale? -> barely
+./run.sh src/drift.py            # does the ranking go stale? -> barely
+./run.sh src/recalibrate.py       # does the level? -> yes, +11.9%; -> models/xg.shift.json
 ./run.sh src/extraction_ceiling.py   # is there anything left to read?
 ./run.sh src/retrieve.py         # Qdrant neighbours + second opinion
 ./run.sh src/train_xg.py         # -> models/xg.joblib
@@ -296,6 +297,9 @@ whatever is in progress, scores the shots as the commentary arrives, and writes
 to a `live-data` branch — a matchday is thirty writes, and main's history is for
 changes to the project rather than a feed. It needs one dependency, because the
 model ships as plain numbers in `models/xg.json` and is scored in pure Python.
+One more number sits beside it in `models/xg.shift.json`: the phrases ESPN use
+drift, so the level is refitted from shots already played this season while the
+ranking is left alone.
 
 `run.sh` exists because the macOS xgboost wheel hard-codes an rpath to
 Homebrew's `libomp`, which is not installed on this machine; the wrapper puts a
@@ -324,6 +328,7 @@ copy from the torch wheel on the loader path. On a machine with
 | `src/scorecard.py` | This season marked against the result; grows as matches finish |
 | `src/bench_live.py` | Concurrency, cpu and network cost of the live path |
 | `src/drift.py` | How much a stale model costs, and so whether to retrain |
+| `src/recalibrate.py` | The level drifts with the commentary; this refits it in season |
 | `src/platform_quirks.py` | One known-false numpy/Accelerate warning, reproduced before silencing |
 | `src/extraction_ceiling.py` | Is the extraction the limit, or the words? |
 | `src/retrieve.py` | Qdrant neighbours: the estimate with its evidence |

@@ -38,6 +38,9 @@ step "the xG model"
 ./run.sh src/train_xg.py
 ./run.sh src/xg.py
 
+step "the in-season level correction, refitted on shots already played"
+./run.sh src/recalibrate.py
+
 step "validation against StatsBomb, and the head to head"
 ./run.sh src/validate_xg.py
 ./run.sh src/head_to_head.py

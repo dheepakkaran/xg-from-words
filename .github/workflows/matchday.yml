@@ -56,8 +56,10 @@ jobs:
           python-version: "3.11"
 
       # requests is the only dependency. The model is committed as plain
-      # numbers in models/xg.json and scored in pure Python, so no sklearn,
-      # no pandas, and no pickle to trust.
+      # numbers in models/xg.json -- plus one intercept correction in
+      # models/xg.shift.json, refitted in season because the commentary
+      # phrases drift (reports/AUDIT.md check 12) -- and scored in pure
+      # Python, so no sklearn, no pandas, and no pickle to trust.
       - run: pip install requests
 
       - name: watch the match

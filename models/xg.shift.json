@@ -1,0 +1,44 @@
+{
+ "season": 2025,
+ "league": "eng.1",
+ "trained_on": [
+  2022,
+  2023,
+  2024
+ ],
+ "n_shots_seen": 9194,
+ "warmup_shots": 500,
+ "active": true,
+ "realised_rate": 0.11344,
+ "uncorrected_mean_xg": 0.12696,
+ "shift": -0.15494,
+ "evidence": {
+  "n_evaluated": 8694,
+  "actual_rate": 0.11318,
+  "uncorrected_mean_xg": 0.12673,
+  "recalibrated_mean_xg": 0.11647,
+  "uncorrected_over_pct": 11.97,
+  "recalibrated_over_pct": 2.91,
+  "shifts_applied": [
+   -0.14742,
+   -0.17707,
+   -0.11861,
+   -0.09899,
+   -0.06599,
+   -0.07584,
+   -0.0649,
+   -0.05876,
+   -0.11375,
+   -0.10685,
+   -0.11487,
+   -0.10859,
+   -0.1344,
+   -0.13674,
+   -0.15156,
+   -0.1541,
+   -0.14863,
+   -0.15077
+  ]
+ },
+ "note": "Added to the intercept in models/xg.json. Monotone, so it moves the level and cannot move the ranking."
+}
