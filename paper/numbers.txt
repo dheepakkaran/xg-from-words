@@ -1,0 +1,228 @@
+PROVENANCE FOR THE PAPER
+========================
+Every number in paper.tex, dumped from the artefact it came from.
+
+NOTE ON THE FIRST BLOCK BELOW: the first VALIDATION JOIN section computes AUC
+against ESPN's goal flag and gets 93.9% recovery. That is WRONG and is kept
+here deliberately. validate_xg.py labels with StatsBomb's own goal flag, so
+their model is not penalised for annotation differences in ours -- the two
+sources disagree on 26 of 8,825 shots. The corrected block further down
+reproduces the published 90.6%. The paper uses 90.6%.
+
+==================================================================
+MODEL
+{
+ "trained_on": [
+  2022,
+  2023,
+  2024
+ ],
+ "n_train": 28735,
+ "held_out_season": 2025,
+ "n_test": 9194,
+ "auc": 0.7709,
+ "brier": 0.084,
+ "base_rate": 0.1134,
+ "features": [
+  "six_yard",
+  "centre_box",
+  "side_box",
+  "outside_box",
+  "long_range",
+  "difficult_ang",
+  "header",
+  "left_foot",
+  "right_foot",
+  "from_cross",
+  "from_headed_pass",
+  "from_through",
+  "after_corner",
+  "after_break",
+  "after_setpiece",
+  "assisted",
+  "penalty",
+  "minute"
+ ],
+ "git_sha": "d8475d250f26ddeaf1b2a15ce09223d5df33b6f8"
+}
+
+SHIFT
+{'season': 2025, 'league': 'eng.1', 'trained_on': [2022, 2023, 2024], 'n_shots_seen': 9194, 'warmup_shots': 500, 'active': True, 'realised_rate': 0.11344, 'uncorrected_mean_xg': 0.12696, 'shift': -0.15494, 'note': 'Added to the intercept in models/xg.json. Monotone, so it moves the level and cannot move the ranking.'}
+evidence: {
+ "n_evaluated": 8694,
+ "actual_rate": 0.11318,
+ "uncorrected_mean_xg": 0.12673,
+ "recalibrated_mean_xg": 0.11647,
+ "uncorrected_over_pct": 11.97,
+ "recalibrated_over_pct": 2.91,
+ "shifts_applied": [
+  -0.14742,
+  -0.17707,
+  -0.11861,
+  -0.09899,
+  -0.06599,
+  -0.07584,
+  -0.0649,
+  -0.05876,
+  -0.11375,
+  -0.10685,
+  -0.11487,
+  -0.10859,
+  -0.1344,
+  -0.13674,
+  -0.15156,
+  -0.1541,
+  -0.14863,
+  -0.15077
+ ]
+}
+==================================================================
+HEAD TO HEAD
+{
+ "season": "2015-16",
+ "matches": 373,
+ "innings": 746,
+ "ours": {
+  "points": 342.0,
+  "mean_error": 0.781
+ },
+ "theirs": {
+  "points": 404.0,
+  "mean_error": 0.74
+ },
+ "agreement": {
+  "correlation": 0.869,
+  "mean_abs_diff": 0.249,
+  "median_abs_diff": 0.198,
+  "max_abs_diff": 1.536,
+  "mean_xg_ours": 1.15,
+  "mean_xg_theirs": 1.161,
+  "mean_goals": 1.192
+ },
+ "split": {
+  "ours_closer": 281,
+  "theirs_closer": 343,
+  "level": 122
+ },
+ "matches_won": {
+  "ours": 98,
+  "theirs": 136,
+  "level": 139
+ }
+}
+==================================================================
+CORPUS
+total shots 87,980   goals 10,109   matches 3,569   leagues 6
+        shots  goals  matches    rate
+league                               
+eng.1   47431   5489     1892  0.1157
+esp.1    9240   1024      380  0.1108
+fra.1    7391    863      305  0.1168
+ger.1    7853    990      306  0.1261
+ita.1    9065    922      380  0.1017
+por.1    7000    821      306  0.1173
+
+eng.1 by season:
+        shots  goals  matches    rate
+season                               
+2015     9502   1000      373  0.1052
+2022     9205   1085      380  0.1179
+2023    10022   1246      380  0.1243
+2024     9508   1115      380  0.1173
+2025     9194   1043      379  0.1134
+==================================================================
+VALIDATION JOIN
+joined shots 8,825   matches 373   goals 897
+outcome agreement ESPN vs StatsBomb: 0.99705
+mean our_xg 0.0972   mean sb_xg 0.0982
+per-shot corr 0.7351   spearman 0.6282   MAE 0.0520
+  ours       AUC 0.7873  logloss 0.2706  brier 0.0764
+  statsbomb  AUC 0.8059  logloss 0.2601  brier 0.0728
+  recovery above chance: 0.9390
+==================================================================
+VALIDATION — CORRECTED: label = sb_goal (as validate_xg.py publishes)
+joined shots 8,825  matches 373  StatsBomb goals 889  ESPN goals 897
+outcome agreement 0.99705  (26 shots differ)
+  ours       AUC 0.7826  logloss 0.2711  brier 0.0764
+  statsbomb  AUC 0.8118  logloss 0.2555  brier 0.0715
+  RECOVERY 90.6%   (a=0.7826 b=0.8118)
+  corr 0.7351  spearman 0.6282  MAE 0.0520
+  mean ours 0.0972  theirs 0.0982
+
+NOTE: this model is fit on eng.1 season>=2022 (incl. 2025), tested on
+2015-16, which is NOT in training. The SHIPPED model is a different fit:
+trained 2022-24, tested 2025-26.
+==================================================================
+GOAL RATE BY FIELD (eng.1, season>=2022)
+n=37929  overall rate 0.1184
+  penalty          n=   382    1.0% of shots    82.7% goals
+  six_yard         n=  1883    5.0% of shots    39.6% goals
+  after_break      n=  1021    2.7% of shots    35.5% goals
+  from_through     n=  1320    3.5% of shots    25.7% goals
+  after_corner     n=  3706    9.8% of shots    16.4% goals
+  from_headed_pass n=   992    2.6% of shots    15.1% goals
+  centre_box       n= 13740   36.2% of shots    14.4% goals
+  right_foot       n= 18359   48.4% of shots    11.9% goals
+  long_range       n=   148    0.4% of shots    11.5% goals
+  left_foot        n= 12317   32.5% of shots    11.3% goals
+  from_cross       n=  7062   18.6% of shots    10.7% goals
+  assisted         n= 28778   75.9% of shots    10.7% goals
+  header           n=  6920   18.2% of shots    10.5% goals
+  difficult_ang    n=   941    2.5% of shots     8.1% goals
+  side_box         n=  7011   18.5% of shots     5.6% goals
+  outside_box      n= 11615   30.6% of shots     4.1% goals
+
+==================================================================
+SHIPPED MODEL COEFFICIENTS (standardised)
+  penalty          +0.275
+  after_break      +0.257
+  six_yard         +0.248
+  from_through     +0.151
+  after_corner     +0.115
+  minute           +0.020
+  after_setpiece   +0.000
+  from_headed_pass -0.010
+  assisted         -0.011
+  long_range       -0.025
+  from_cross       -0.165
+  centre_box       -0.195
+  difficult_ang    -0.219
+  side_box         -0.677
+  left_foot        -0.727
+  right_foot       -0.758
+  header           -0.857
+  outside_box      -0.926
+  intercept        -2.353
+
+==================================================================
+PHRASE DRIFT, eng.1
+  six_yard:
+     2015  share  3.22%   conv  43.5%  (n=306)
+     2022  share  4.25%   conv  39.1%  (n=391)
+     2023  share  4.84%   conv  43.3%  (n=485)
+     2024  share  4.83%   conv  40.7%  (n=459)
+     2025  share  5.96%   conv  35.8%  (n=548)
+  after_break:
+     2015  share  0.73%   conv  49.3%  (n=69)
+     2022  share  1.91%   conv  47.2%  (n=176)
+     2023  share  2.31%   conv  34.9%  (n=232)
+     2024  share  3.26%   conv  36.1%  (n=310)
+     2025  share  3.30%   conv  28.4%  (n=303)
+  centre_box:
+     2015  share 32.84%   conv  14.2%  (n=3120)
+     2022  share 36.56%   conv  14.1%  (n=3365)
+     2023  share 36.07%   conv  15.6%  (n=3615)
+     2024  share 35.86%   conv  14.5%  (n=3410)
+     2025  share 36.44%   conv  13.2%  (n=3350)
+  outside_box:
+     2015  share 39.15%   conv   2.9%  (n=3720)
+     2022  share 31.10%   conv   4.3%  (n=2863)
+     2023  share 30.97%   conv   4.1%  (n=3104)
+     2024  share 29.74%   conv   4.1%  (n=2828)
+     2025  share 30.67%   conv   4.0%  (n=2820)
+  penalty:
+     2015  share  0.94%   conv  83.1%  (n=89)
+     2022  share  1.08%   conv  74.7%  (n=99)
+     2023  share  1.07%   conv  89.7%  (n=107)
+     2024  share  0.87%   conv  83.1%  (n=83)
+     2025  share  1.01%   conv  82.8%  (n=93)
