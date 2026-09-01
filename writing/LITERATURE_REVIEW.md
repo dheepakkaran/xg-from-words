@@ -119,18 +119,42 @@ Being precise matters more than being encouraging.
   alignment all exist
 * treating structured events as a language — Seq2Event and others
 
+**~~Appears unexplored~~ — RETIRED by the blog search:**
+
+* ~~using **free commentary text as the input** to a shot-quality model~~
+
+  **This has been done.** `calbal91/project-moneyballing-fpl` scrapes Premier
+  League website commentary, states "we can infer the shot position from the
+  text commentary", and builds conversion rates by shot category from it. No
+  fitted model, no held-out evaluation, no reference comparison, no AUC — but
+  the input idea is theirs and predates this. See
+  [BLOG_SEARCH.md](BLOG_SEARCH.md). The blogs were the stated risk in the
+  limits section above, and the risk was real.
+
 **Appears unexplored, on this evidence:**
 
-* using **free commentary text as the input** to a shot-quality model
 * **measuring how much of a commercial coordinate-based model is recoverable**
   from that text — the 90.6% figure. Nothing found puts a number on the gap
-  between what the words carry and what the cameras carry
+  between what the words carry and what the cameras carry, and the blog search
+  found the question apparently unasked
+* **that the ranking survives drift while the level does not** — check 12.
+  New specifically against Robberechts & Davis (2020), who established the
+  coordinate-side baseline and found staleness negligible on calibration. A
+  coordinate does not drift; a phrase does
 * **the ceiling method applied to momentum** — bounding a negative result by
   building a model that sees the future. The technique is not new; using it to
   say *how unpredictable* next-goal timing is appears to be
 
-The second of those is the strongest. It is a measurement nobody seems to have
-taken, it is falsifiable, and it matters to anyone who cannot afford the data.
+The first of those is the strongest, and after the blog search it is now the
+*only* claim about the contribution itself. It is a measurement nobody seems to
+have taken, it is falsifiable, and it matters to anyone who cannot afford the
+data.
+
+**Also demoted by the blog search:** two side findings — that the model
+survives a decade of staleness (`src/drift.py`) and that it travels between
+leagues (`src/transfer.py`) — were both established by Robberechts & Davis
+(2020) six years earlier, on coordinates. They are replications and must be
+cited as such.
 
 ## What to do with this
 
@@ -138,9 +162,10 @@ taken, it is falsifiable, and it matters to anyone who cannot afford the data.
    with stated holes.
 2. **Have someone redo it with Scopus and Web of Science.** A supervisor has
    the access; that closes the biggest gap.
-3. **Search the blogs by hand.** StatsBomb's articles, American Soccer
-   Analysis, Opta Analyst, and the r/soccernerd corners of the internet. An
-   afternoon. This is where the risk is.
+3. ~~**Search the blogs by hand.**~~ — **done, [BLOG_SEARCH.md](BLOG_SEARCH.md).**
+   Sixteen searches, three fetches. It found prior art on the input side and a
+   citation this project was missing, and it left reddit unsearched because the
+   crawler is blocked there. The risk was real and it landed.
 4. **Cite #11 and #12 whatever happens.** #11 is the mirror image and #12
    shares the dataset — a reviewer who knows the field will look for both.
 

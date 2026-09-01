@@ -10,6 +10,15 @@
   "points": 404.0,
   "mean_error": 0.74
  },
+ "agreement": {
+  "correlation": 0.869,
+  "mean_abs_diff": 0.249,
+  "median_abs_diff": 0.198,
+  "max_abs_diff": 1.536,
+  "mean_xg_ours": 1.15,
+  "mean_xg_theirs": 1.161,
+  "mean_goals": 1.192
+ },
  "split": {
   "ours_closer": 281,
   "theirs_closer": 343,

@@ -331,6 +331,47 @@ free, keyless, and published for far more competitions than coordinates are.
 The remaining 9.3% is what the words genuinely cannot say: exact distance
 inside a zone, the angle, how many defenders stood in the way.
 
+### Is that gap large? Compared to what the paid providers manage — no
+
+"90.6% of a coordinate model" only means something against a scale, and the
+obvious scale is how well the commercial providers agree with *each other*.
+Public comparisons across five seasons and five leagues (~4,290 matches) report
+match-level xG correlations:
+
+```
+Opta      x Understat      0.96
+Opta      x StatsBomb      0.92 - 0.93
+StatsBomb x Understat      0.92 - 0.93
+Wyscout   x the others     0.86 - 0.88
+```
+
+On the 746 team-matches of the join (`src/head_to_head.py`):
+
+```
+ours (commentary text) x StatsBomb   0.869
+mean | ours - StatsBomb |            0.249 xG per team-match
+median                               0.198
+max                                  1.54
+mean xG: ours 1.150   StatsBomb 1.161   goals 1.202
+```
+
+**A model reading only English sentences agrees with StatsBomb about as closely
+as a commercial provider does.** 0.869 lands inside the Wyscout band and below
+the Opta/Understat/StatsBomb band — so the gap between words and coordinates is
+of the same order as the gap between two companies both watching the video.
+
+Caveats, because the comparison is close rather than exact:
+
+* Theirs is per match across five leagues and five seasons; this is per
+  team-match on one league and one season, 373 matches.
+* A widely quoted "~1 xG mean absolute difference between providers, max 3.88
+  for Manchester City" figure is **not used here**. Its unit is unresolved —
+  naming a team alongside 3.88 reads as a season aggregate, which would make it
+  much *tighter* per match than 0.249, not looser — and the source paywalls.
+  Quoting it would have flattered this project on an unverified reading.
+
+Source and search record: `writing/BLOG_SEARCH.md`.
+
 ## Check 8 — Would a better reader close the gap? No.
 
 The words reach 0.781 against StatsBomb's 0.812. Something is missing, and

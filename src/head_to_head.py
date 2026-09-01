@@ -103,6 +103,11 @@ def main():
               f"{r.our_home:5.2f}-{r.our_away:<5.2f}  "
               f"{r.sb_home:5.2f}-{r.sb_away:<5.2f}  {r.winner}")
 
+    print(f"\n  agreement with StatsBomb, per team-match")
+    print(f"    correlation        {g.our_xg.corr(g.sb_xg):.3f}"
+          f"   (Opta x Understat 0.96, Wyscout x others 0.86-0.88)")
+    print(f"    mean |difference|  {(g.our_xg - g.sb_xg).abs().mean():.3f} xG")
+
     out = {
         "season": "2015-16",
         "matches": int(g.event_id.nunique()),
@@ -111,6 +116,22 @@ def main():
                  "mean_error": round(float(g.our_err.mean()), 3)},
         "theirs": {"points": round(float(theirs), 1),
                    "mean_error": round(float(g.sb_err.mean()), 3)},
+        # Against the goals is one question; against each other is another,
+        # and it is the one the published provider comparisons answer. Those
+        # report match-level correlations -- Opta x Understat 0.96,
+        # Opta x StatsBomb 0.92-0.93, Wyscout against the others 0.86-0.88 --
+        # so this is the figure that puts a text-derived model on the same
+        # axis as the paid ones. See writing/BLOG_SEARCH.md.
+        "agreement": {
+            "correlation": round(float(g.our_xg.corr(g.sb_xg)), 3),
+            "mean_abs_diff": round(float((g.our_xg - g.sb_xg).abs().mean()), 3),
+            "median_abs_diff": round(float((g.our_xg - g.sb_xg).abs()
+                                           .median()), 3),
+            "max_abs_diff": round(float((g.our_xg - g.sb_xg).abs().max()), 3),
+            "mean_xg_ours": round(float(g.our_xg.mean()), 3),
+            "mean_xg_theirs": round(float(g.sb_xg.mean()), 3),
+            "mean_goals": round(float(g.goals.mean()), 3),
+        },
         "split": {"ours_closer": int((g.margin > TIE).sum()),
                   "theirs_closer": int((g.margin < -TIE).sum()),
                   "level": int((g.margin.abs() <= TIE).sum())},
