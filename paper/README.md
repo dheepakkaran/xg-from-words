@@ -23,15 +23,15 @@ whole pipeline with `../rebuild.sh`.
 
 ## Before submitting
 
-- [ ] Register an ORCID at <https://orcid.org> and uncomment the
-      `\orcidID{}` line in `paper.tex`. It is free and open to anyone --
-      Northeastern's own guide just points you at orcid.org. Register with the
-      NU address as primary and **add a personal address as a second email**,
-      because the NU one stops working after graduation and an ORCID is meant
-      to last a career. Then link it in your arXiv account settings.
-      This matters more than usual here: "Dheepak Karan Elumalai Santhakumari"
-      is exactly the kind of name indexers split wrong, and an ORCID is the
-      only thing that fixes that permanently
+- [x] ORCID registered: **0009-0007-2152-8401**, in `paper.tex`. Checksum
+      validated (ISO/IEC 7064 MOD 11-2) and resolved against the public API,
+      which returns given `DHEEPAK KARAN`, family `ELUMALAI SANTHAKUMARI` --
+      the split the bib entry declares
+- [ ] On orcid.org: set the name to title case (it is stored in capitals, and
+      that is what citation exports will carry), and add Northeastern under
+      Education
+- [ ] Link the ORCID in arXiv account settings once the account exists, so the
+      preprint carries a verified identifier
 - [ ] Confirm the affiliation line
 - [ ] arXiv needs an endorsement for a first submission in `cs.LG` — a
       `northeastern.edu` address may clear it automatically; you find out on
