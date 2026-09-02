@@ -1,6 +1,6 @@
 {
  "league": "eng.1",
- "refreshed": "2026-09-01T10:25:13+00:00",
+ "refreshed": "2026-09-02T09:53:13+00:00",
  "played": 20,
  "upcoming": 360,
  "next": [
@@ -507,16 +507,6 @@
    "score": null
   },
   {
-   "event_id": "401879273",
-   "kickoff": "2026-09-19T14:00Z",
-   "home": "Leeds United",
-   "away": "Crystal Palace",
-   "home_short": "Leeds",
-   "away_short": "C Palace",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401879271",
    "kickoff": "2026-09-19T14:00Z",
    "home": "Newcastle United",
@@ -543,6 +533,16 @@
    "away": "Liverpool",
    "home_short": "Bournemouth",
    "away_short": "Liverpool",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879273",
+   "kickoff": "2026-09-20T13:00Z",
+   "home": "Leeds United",
+   "away": "Crystal Palace",
+   "home_short": "Leeds",
+   "away_short": "C Palace",
    "completed": false,
    "score": null
   },
@@ -807,16 +807,6 @@
    "score": null
   },
   {
-   "event_id": "401878765",
-   "kickoff": "2026-10-24T14:00Z",
-   "home": "Liverpool",
-   "away": "Brighton & Hove Albion",
-   "home_short": "Liverpool",
-   "away_short": "Brighton",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401878767",
    "kickoff": "2026-10-24T16:30Z",
    "home": "Chelsea",
@@ -843,6 +833,16 @@
    "away": "Brentford",
    "home_short": "Hull",
    "away_short": "Brentford",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401878765",
+   "kickoff": "2026-10-25T14:00Z",
+   "home": "Liverpool",
+   "away": "Brighton & Hove Albion",
+   "home_short": "Liverpool",
+   "away_short": "Brighton",
    "completed": false,
    "score": null
   },
@@ -938,7 +938,7 @@
   },
   {
    "event_id": "401879250",
-   "kickoff": "2026-11-01T14:00Z",
+   "kickoff": "2026-10-31T20:00Z",
    "home": "Aston Villa",
    "away": "Fulham",
    "home_short": "Aston Villa",
