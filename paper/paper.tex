@@ -24,35 +24,40 @@
 \maketitle
 
 \begin{abstract}
-Expected goals (xG) models are built on shot coordinates, which are collected
-by hand or by camera and are largely paywalled. Free-text match commentary is
-neither: it is published for far more competitions than coordinates are, it
-needs no key, and it describes each shot in a sentence. We ask how much of a
-coordinate-based xG model survives if the only input is that sentence.
+Expected goals (xG) models are estimated from shot coordinates, which are
+collected by human annotators or tracking cameras and are, outside a small
+number of open releases, sold rather than published. Free-text match commentary
+is subject to neither constraint: it is available without a key, it is
+published for many competitions that have no open coordinate data, and it
+describes each shot in a single sentence. We ask how much of a coordinate-based
+xG model can be recovered when that sentence is the only input.
 
 We parse \num{87,980} shots from ESPN commentary across six European
-competitions into eighteen binary and ordinal fields, fit a logistic
-regression on three Premier League seasons, and evaluate on a held-out fourth
-(AUC \num{0.7709}). Joining \num{8,825} shots to StatsBomb's open Premier
-League 2015/16 data, where both a commentary sentence and a hand-collected
-coordinate xG exist for the same shot, the text model reaches AUC \num{0.7826}
-against StatsBomb's \num{0.8118}: the words recover \textbf{90.6\%} of the
-coordinate model's discrimination above chance. Per team-match the two agree at
-$r=\num{0.869}$, which sits inside the band that commercial providers occupy
-against each other. Handing a model the whole sentence instead of the extracted
-fields is worth $-0.010$ AUC, so the extraction is not the bottleneck; the
-missing 9.4\% is information the sentence never contained.
+competitions into eighteen binary and ordinal fields, estimate a logistic
+regression on three Premier League seasons, and evaluate it on a held-out
+fourth, obtaining an AUC of \num{0.7709}. To compare words against coordinates
+directly, we join \num{8,825} shots to StatsBomb's open Premier League 2015/16
+release, for which both a commentary sentence and a hand-collected coordinate
+xG exist for the same shot. The text model attains an AUC of \num{0.7826}
+against StatsBomb's \num{0.8118}, recovering 90.6\% of the coordinate model's
+discrimination above chance. Aggregated to the team-match, the two estimates
+correlate at $r=\num{0.869}$, which falls within the range reported between
+commercial providers. Substituting the full sentence for the extracted fields
+reduces AUC by \num{0.010}, indicating that the extraction is not the binding
+constraint and that the residual gap reflects information the sentence does not
+contain.
 
-We then report a failure mode specific to text-derived features. Confirming
-Robberechts and Davis, a decade-stale model loses only \num{0.0068} AUC and
-transfers between leagues at no cost --- the \emph{ranking} is stable. The
-\emph{level} is not: the shipped model over-predicts the held-out season by
-11.9\%, which decomposes exactly into a 5.7\% fall in the league goal rate and
-a 5.9\% shift in phrase mix. Two phrases carry the second half; unambiguous
-phrases such as ``penalty'' do not move at all. Retraining cannot fix this, but
-refitting a single intercept on shots already played reduces the error to
-2.9\% without touching the ranking. A coordinate does not drift. A phrase does,
-because a person writes it.
+We then characterise a failure mode particular to text-derived features.
+Consistent with Robberechts and Davis, a decade-stale model loses only
+\num{0.0068} AUC and transfers between leagues without cost, so the induced
+ranking is stable. The predicted level is not: the model over-estimates the
+held-out season by 11.9\%, which decomposes into a 5.7\% decline in the league
+goal rate and a 5.9\% shift in the distribution of parsed phrases. Two phrases
+account for the second component, while unambiguous phrases such as
+``penalty'' are unchanged. Re-estimation on more recent data does not correct
+this, whereas refitting a single intercept on shots already played reduces the
+error to 2.9\% while leaving the ranking unaltered. The instability is
+confined to phrases whose application requires a judgement by the annotator.
 
 \keywords{Expected goals \and Football analytics \and Text as features \and
 Concept drift \and Calibration}
@@ -60,15 +65,17 @@ Concept drift \and Calibration}
 
 \section{Introduction}
 
-An expected goals model estimates the probability that a shot becomes a goal.
-Every widely used version is built on where the shot was taken from: a
-coordinate pair, a distance, an angle, and increasingly the positions of
-everyone else in frame~\cite{mead2023xg,cavus2022explainable}. Those
-coordinates are the expensive part. They are produced by human annotators or
-tracking cameras, and outside a handful of open releases they are sold rather
+An expected goals model estimates the probability that a given shot results in
+a goal. Every widely used specification is built on the location from which the
+shot was taken: a coordinate pair, a derived distance and angle, and
+increasingly the positions of the other players in
+frame~\cite{mead2023xg,cavus2022explainable}. That location is the expensive
+component. It is produced either by human annotators or by tracking cameras,
+and with the exception of a small number of open releases it is licensed rather
 than published.
 
-Free-text commentary is the opposite. For each shot, a sentence like
+Free-text commentary carries none of that cost. For each shot, a sentence of
+the following form is published live and without authentication:
 
 \begin{quote}
 \textit{``Attempt saved. Bukayo Saka (Arsenal) right footed shot from the
@@ -77,100 +84,103 @@ centre of the box is saved in the bottom left corner. Assisted by Martin
 \end{quote}
 
 \noindent
-is published live, without a key, for competitions that will never have open
-coordinates. It plainly contains \emph{some} of what an xG model wants. The
-question this paper answers is: how much?
+Such sentences are available for many competitions for which open coordinate
+data does not exist and is unlikely to. They plainly encode part of what an xG
+model requires, and the question we address is what proportion.
 
-That framing matters, because the answer is a number rather than a yes or no.
-If commentary recovers a small fraction of a coordinate model, it is a
-curiosity. If it recovers most of one, then xG becomes available in every
-competition where somebody writes sentences about the football --- which is
-most of them.
+We treat this as a measurement problem rather than a feasibility question,
+because the practical implication depends on the magnitude. Recovery of a small
+fraction of a coordinate model would be of limited interest. Recovery of most
+of one would make xG estimable in any competition for which a commentary feed
+is written, a substantially wider population of competitions than those with
+open coordinates.
 
 \subsection*{Contributions}
 
 \begin{enumerate}
-\item \textbf{A measurement.} On \num{8,825} shots for which both a commentary
-sentence and a StatsBomb coordinate xG exist, a model reading only the sentence
-recovers \textbf{90.6\%} of the coordinate model's discrimination above chance
+\item We quantify how much of a coordinate xG model is recoverable from
+commentary text. On \num{8,825} shots for which both a commentary sentence and
+a StatsBomb coordinate xG are available, a model given only the sentence
+recovers 90.6\% of the coordinate model's discrimination above chance
 (Section~\ref{sec:headline}).
-\item \textbf{A scale for that number.} Agreement with StatsBomb per team-match
-is $r=\num{0.869}$, comparable to how closely commercial providers agree with
-each other (Section~\ref{sec:band}).
-\item \textbf{An upper bound on extraction.} Giving models the full sentence
-instead of eighteen extracted fields --- every 1--4 gram, and a sentence
-embedding --- makes them \emph{worse} by \num{0.010} AUC. The remaining gap is
-not a parsing failure (Section~\ref{sec:ceiling}).
-\item \textbf{A drift result specific to text features.} The ranking is stable
-over a decade, replicating~\cite{robberechts2020data} on a different feature
-source; the calibration level is not, and we identify the two phrases
-responsible, show a control phrase that does not move, and give a leak-free
+\item We calibrate that figure against the agreement observed between
+commercial providers, which is the only external scale available for it
+(Section~\ref{sec:band}).
+\item We establish that the extraction is not the binding constraint. Models
+given the full sentence, including all 1--4 grams and a sentence embedding,
+perform worse than the eighteen extracted fields by \num{0.010} AUC
+(Section~\ref{sec:ceiling}).
+\item We characterise concept drift in text-derived features. The ranking is
+stable across a decade, replicating~\cite{robberechts2020data} on a different
+feature source, whereas the calibrated level is not. We localise the drift to
+two phrases, exhibit control phrases that do not move, and give a leak-free
 in-season correction (Section~\ref{sec:drift}).
-\item \textbf{A reproducible pipeline.} Collection, parsing, training,
-evaluation and every figure in this paper rebuild from one
+\item We release the full pipeline. Collection, parsing, estimation,
+evaluation and every figure reported here are reproduced by a single
 script~\cite{xgfromwords2026}.
 \end{enumerate}
 
 \section{Related Work}
 
-\paragraph{Coordinate xG.}
-Expected goals is two decades old and well surveyed. Recent work has focused on
-explainability~\cite{cavus2022explainable}, player and position
-correction~\cite{scholtes2024bayesxg}, and demonstrating downstream
-value~\cite{mead2023xg}. All of it takes location as given.
+\paragraph{Coordinate-based xG.}
+Expected goals models have been studied for roughly two decades. Recent work
+addresses explainability~\cite{cavus2022explainable}, player and position
+correction~\cite{scholtes2024bayesxg}, and downstream
+validity~\cite{mead2023xg}. In each case shot location is taken as given.
 
-\paragraph{Data requirements of xG.}
-Robberechts and Davis~\cite{robberechts2020data} ask what data an xG model
-actually needs. They find a basic logistic model converges at roughly
-\num{6,000} shots, that training on less recent data costs ``only a negligible
-performance hit'', that league-specific and cross-league models ``perform
-equally'', and that data from different providers should not be mixed. They
-argue calibration, not ranking, is the objective. This paper is in their debt
-twice: our staleness and transfer results replicate theirs from a different
-feature source, and our drift finding is only interesting because they
-established the coordinate-side baseline.
+\paragraph{Data requirements.}
+Robberechts and Davis~\cite{robberechts2020data} examine what data an xG model
+requires. They report that a basic logistic specification converges at
+approximately \num{6,000} shots, that estimation on less recent data incurs
+``only a negligible performance hit'', that league-specific and cross-league
+models ``perform equally'', and that data from different providers should not
+be pooled. They further argue that calibration rather than ranking is the
+appropriate objective. Their results bear on the present work in two ways: our
+staleness and transfer results replicate theirs on a different feature source,
+and our drift result is interpretable only against the coordinate-side
+baseline they establish.
 
 \paragraph{Language and football.}
-Text has been used to \emph{forecast} events from event
-sequences~\cite{mendesneves2024forecasting}, and to \emph{explain} an xG model
-by turning its coefficients into sentences~\cite{rahimian2025wordalisations}.
-The latter is this paper's mirror image: they go from a model to words, we go
-from words to a model. That both directions are being explored suggests the
-interface between the two is worth studying; it does not make either one the
-other.
+Text has been used to forecast match events from event
+sequences~\cite{mendesneves2024forecasting}, and to render an xG model's
+coefficients as natural-language explanations of individual
+shots~\cite{rahimian2025wordalisations}. The latter proceeds in the opposite
+direction to the present work, mapping a fitted model onto words rather than
+words onto a model. The two are complementary rather than equivalent.
 
-\paragraph{Prior art on the input.}
-A public hobby project~\cite{ballard2020moneyball} scrapes Premier League
-website commentary and states directly that ``we can infer the shot position
-from the text commentary'', deriving goal-conversion rates by shot category. To
-our knowledge this is the first use of commentary text as a shot-quality input,
-and it predates this work. It reports no fitted model, no held-out evaluation,
-no comparison against a reference xG model, and no AUC, log loss or Brier
-score. \textbf{The idea is not ours. The measurement is what we contribute.}
+\paragraph{Prior use of commentary as input.}
+An unpublished public repository~\cite{ballard2020moneyball} scrapes Premier
+League match commentary and states that shot position can be inferred from the
+commentary text, from which goal-conversion rates by shot category are derived.
+To our knowledge this is the earliest use of commentary text as a shot-quality
+input, and it precedes the present work. It reports no fitted model, no
+held-out evaluation, no comparison against a reference xG model, and no AUC,
+log loss or Brier score. The contribution claimed here is therefore the
+measurement rather than the representation.
 
-\paragraph{Provider agreement.}
-Public comparisons of Opta, Understat, StatsBomb and Wyscout report match-level
-xG correlations between \num{0.86} and \num{0.96} depending on the
-pair~\cite{pythonfootball2024providers}. We use this as the scale against which
-our own agreement with StatsBomb should be read.
+\paragraph{Agreement between providers.}
+Published comparisons of Opta, Understat, StatsBomb and Wyscout report
+match-level xG correlations between \num{0.86} and \num{0.96} depending on the
+pair~\cite{pythonfootball2024providers}. We use these figures as the reference
+scale for our own agreement with StatsBomb in Section~\ref{sec:band}.
 
-\paragraph{Feature corroboration.}
-American Soccer Analysis publish their xG feature
-set~\cite{asa2015xg3}: distance, goal mouth available, headed, off a cross or
-through ball, and pattern of play including corners, free kicks, fast breaks
-and penalties, fitted with logistic regression. With the exception of the two
-continuous geometric terms, this is almost exactly the field list a commentary
-sentence yields --- independent evidence that the phrase-derived fields are the
-right ones to want.
+\paragraph{Feature sets in public models.}
+American Soccer Analysis publish their xG specification~\cite{asa2015xg3},
+comprising distance, available goal mouth, whether the shot was headed,
+whether it followed a cross or through ball, and pattern of play including
+corners, free kicks, fast breaks and penalties, estimated by logistic
+regression. Setting aside the two continuous geometric terms, this is close to
+the field set a commentary sentence yields, which provides independent support
+for the choice of features in Section~\ref{sec:features}.
 
 \section{Data}
 
 \subsection{Commentary}
 
 ESPN publish an Opta-derived English commentary feed through a public endpoint
-requiring no key. We collected \num{3,569} matches across six competitions
-(Table~\ref{tab:corpus}), yielding \num{87,980} parsed shots and \num{10,109}
-goals.
+that requires no authentication. We collected \num{3,569} matches across six
+competitions (Table~\ref{tab:corpus}), from which \num{87,980} shots and
+\num{10,109} goals were parsed.
 
 \begin{table}[t]
 \caption{The commentary corpus. Premier League spans 2015/16 and
@@ -196,68 +206,75 @@ Primeira Liga  & 306 & \num{7,000} & 821         & 11.7\% \\
 
 \subsection{The reference model}
 
-StatsBomb release Premier League 2015/16 openly~\cite{statsbomb2024open}, with
-a true shot location, a freeze frame of every player, and their own xG for each
-shot. Joining it to ESPN commentary for the same matches is the only way to put
-words and coordinates on the same shots.
+StatsBomb release Premier League 2015/16 as open
+data~\cite{statsbomb2024open}, including a shot location, a freeze frame of
+all players in view, and their own xG estimate for each shot. Joining this
+release to ESPN commentary for the same fixtures is, to our knowledge, the only
+available means of evaluating words and coordinates on identical shots.
 
-The join is deliberately conservative: a shot pairs only when the match, the
-team and the minute all agree, and an unmatched shot is dropped rather than
-guessed at. This yields \textbf{\num{8,825} shots across 373 matches}. As a
-sanity check on the join itself, the two sources agree on whether the shot was
-a goal for \textbf{99.71\%} of paired shots (26 disagreements). All evaluation
-in Section~\ref{sec:headline} uses StatsBomb's goal flag as the label, so their
-model is not penalised for annotation differences in ours.
+The join is deliberately conservative. A shot is paired only when the fixture,
+the team and the minute all agree, and an unmatched shot is discarded rather
+than imputed. This yields \num{8,825} shots across 373 matches. As a check on
+the join itself, the two sources agree on whether a shot was a goal for
+99.71\% of paired shots, disagreeing on 26. All evaluation in
+Section~\ref{sec:headline} takes StatsBomb's goal indicator as the label, so
+that their model is not penalised for annotation differences in the commentary
+feed.
 
 \section{Method}
 
-\subsection{The label is in the sentence}
+\subsection{Outcome leakage in the commentary sentence}
 \label{sec:leak}
 
-Commentary states the outcome before it describes the chance. Every line begins
-``Goal!'', ``Attempt missed'', ``Attempt saved'' or ``Attempt blocked'', and
-often repeats it in the verb (``is saved in the bottom left corner'', ``hits
-the left post''). That text \emph{is} the label. A model handed the raw
-sentence scores a perfect AUC and has learned nothing.
+Commentary states the outcome of a shot before describing the chance that
+produced it. Every line opens with ``Goal!'', ``Attempt missed'', ``Attempt
+saved'' or ``Attempt blocked'', and the outcome is frequently restated in the
+verb, as in ``is saved in the bottom left corner'' or ``hits the left post''.
+That text constitutes the label. A model estimated on the unmodified sentence
+attains an AUC of \num{1.00} while learning nothing about the quality of the
+chance.
 
-Removing it is harder than it looks, and four separate leaks survived earlier
-attempts:
+Reliable removal of the outcome proved difficult, and four distinct leaks
+survived successive attempts:
 
 \begin{enumerate}
-\item Stripping only the opening clause left penalties at 100\% conversion.
-\item A blacklist of outcome words missed the verbs; inspection of the fitted
-coefficients found \texttt{goal} weighted at $+7.99$.
-\item After moving to a \textbf{whitelist} --- keeping only spans matching a
-fixed list of chance-describing patterns --- the phrase ``from a free kick''
-still converted 60 of 60. Free kicks are consequently absent from the feature
-set.
-\item The \texttt{header} field was being set by the phrase ``headed
-\emph{pass}'', mislabelling \num{1,636} shots and inflating their apparent
+\item Stripping only the opening clause left penalties converting at 100\%.
+\item A blacklist of outcome words failed to remove the verbs; inspection of
+the fitted coefficients found \texttt{goal} weighted at $+7.99$.
+\item Under a whitelist, retaining only spans matching a fixed set of
+chance-describing patterns, the phrase ``from a free kick'' still converted 60
+of 60. Free kicks are consequently excluded from the feature set.
+\item The \texttt{header} indicator was being set by the phrase ``headed
+\emph{pass}'', mislabelling \num{1,636} shots and raising their apparent
 conversion from 10.0\% to 13.8\%. Fields describing the shot itself are now
 read only from the text preceding ``assisted by''.
 \end{enumerate}
 
-The lesson generalises: with text features, a leak is a phrasing nobody thought
-of, so the guard has to be behavioural rather than a word list. We train a
-model on the stripped text and assert it \emph{cannot} separate goals too well
-(ceiling AUC \num{0.85}, against \num{1.00} for the raw text), and we flag any
-$n$-gram whose Wilson lower bound on conversion exceeds that of penalties ---
-the best legitimate feature. This is the check that caught leak (3) and cleared
-a genuine high-conversion phrase (``close range following fast break'',
-26 of 32) that a fixed 80\% threshold had wrongly flagged.
+These cases share a structure. A leak in text features is a phrasing that was
+not anticipated, so a fixed word list cannot bound the problem and the
+safeguard must be behavioural. We therefore estimate a model on the stripped
+text and require that it not separate goals beyond a specified threshold, which
+we set at AUC \num{0.85} against \num{1.00} for the unmodified text. We
+additionally flag any $n$-gram whose Wilson lower bound on conversion exceeds
+that of penalties, the highest-converting legitimate feature. This procedure
+identified leak (3), and correctly admitted a genuine high-conversion phrase,
+``close range following fast break'' at 26 of 32, that a fixed 80\% threshold
+had rejected.
 
 \subsection{Features}
+\label{sec:features}
 
-Eighteen fields are extracted by whitelist regex: six location zones
-(\texttt{six\_yard}, \texttt{centre\_box}, \texttt{side\_box},
+Eighteen fields are extracted by whitelist regular expression: six location
+zones (\texttt{six\_yard}, \texttt{centre\_box}, \texttt{side\_box},
 \texttt{outside\_box}, \texttt{long\_range}, \texttt{difficult\_ang}), three
 body parts, five build-up descriptors (\texttt{from\_cross},
 \texttt{from\_headed\_pass}, \texttt{from\_through}, \texttt{after\_corner},
-\texttt{after\_break}), \texttt{assisted}, \texttt{penalty}, and the minute.
+\texttt{after\_break}), \texttt{assisted}, \texttt{penalty}, and the minute of
+the match.
 
-Table~\ref{tab:signal} shows the resulting spread. A twentyfold range in
-conversion, recovered from English sentences alone, is the reason the rest of
-the paper is possible.
+Table~\ref{tab:signal} reports the conversion rate associated with each field.
+The observed range spans roughly a factor of twenty, from 4.1\% for shots
+described as coming from outside the box to 82.7\% for penalties.
 
 \begin{table}[t]
 \caption{Goal rate by parsed field, \num{37,929} Premier League shots
@@ -278,40 +295,43 @@ centre of box    & 36.2 & 14.4\% & outside the box & 30.6 & 4.1\%  \\
 \end{tabular}
 \end{table}
 
-\subsection{Model and protocol}
+\subsection{Specification and evaluation protocol}
 
-The shipped model is a standardised logistic regression. It is deliberately the
-simplest thing that works: with eighteen mostly binary fields there is little
-for a stronger learner to find, and Section~\ref{sec:ceiling} confirms this
-empirically.
+The model is a logistic regression on standardised features. We adopt this
+specification rather than a more flexible learner because eighteen
+predominantly binary fields offer limited scope for interaction effects, a
+choice Section~\ref{sec:ceiling} supports empirically.
 
-Two distinct fits are reported and should not be confused.
+Two distinct fits are reported and should be distinguished:
 
 \begin{itemize}
-\item \textbf{The shipped model}, trained on Premier League 2022/23--2024/25
+\item the \emph{primary} fit, estimated on Premier League 2022/23--2024/25
 (\num{28,735} shots) and evaluated on the held-out 2025/26 season
-(\num{9,194} shots).
-\item \textbf{The comparison model}, trained on Premier League
+(\num{9,194} shots);
+\item the \emph{comparison} fit, estimated on Premier League
 2022/23--2025/26 (\num{37,929} shots) and evaluated on 2015/16, which is
-excluded from its training data. This is the fit used against StatsBomb.
+excluded from its estimation sample. This is the fit evaluated against
+StatsBomb.
 \end{itemize}
 
-All training is scoped to the Premier League, following
-\cite{robberechts2020data} on not mixing sources; the other five competitions
-are held out entirely as a transfer test (Section~\ref{sec:transfer}).
+All estimation is restricted to the Premier League, following
+\cite{robberechts2020data} on pooling across sources. The remaining five
+competitions are held out entirely and used as a transfer test
+(Section~\ref{sec:transfer}).
 
 \section{Results}
 
 \subsection{Held-out season}
 
-On 2025/26, unseen during training, the model reaches
-\textbf{AUC \num{0.7709}}, Brier \num{0.0840}, against a base rate of 11.3\%.
+On the 2025/26 season, which is not used in estimation, the primary model
+attains an AUC of \num{0.7709} and a Brier score of \num{0.0840} against a
+base rate of 11.3\%.
 
-\subsection{Against a coordinate model}
+\subsection{Comparison against a coordinate model}
 \label{sec:headline}
 
-Table~\ref{tab:headline} is the central result. Both models predict the same
-\num{8,825} shots, labelled by StatsBomb.
+Table~\ref{tab:headline} reports the central result. Both models are evaluated
+on the same \num{8,825} shots, labelled by StatsBomb.
 
 \begin{table}[t]
 \caption{Words against coordinates, \num{8,825} shots, Premier League 2015/16.}
@@ -321,7 +341,7 @@ Table~\ref{tab:headline} is the central result. Both models predict the same
 \toprule
 Model & Input & AUC & Log loss & Brier \\
 \midrule
-Ours & the commentary sentence & \num{0.7826} & \num{0.2711} & \num{0.0764} \\
+Commentary model & the commentary sentence & \num{0.7826} & \num{0.2711} & \num{0.0764} \\
 StatsBomb & coordinates, freeze frames, 16 player positions
 & \num{0.8118} & \num{0.2555} & \num{0.0715} \\
 \bottomrule
@@ -329,23 +349,24 @@ StatsBomb & coordinates, freeze frames, 16 player positions
 \end{table}
 
 \begin{equation}
-\frac{0.7826 - 0.5}{0.8118 - 0.5} = \mathbf{0.906}
+\frac{0.7826 - 0.5}{0.8118 - 0.5} = 0.906
 \end{equation}
 
 \noindent
-\textbf{The words recover 90.6\% of the coordinate model's discrimination above
-chance.} The mean predictions agree to within \num{0.001} (\num{0.0972} against
-\num{0.0982}), so whatever the words miss, they do not miss it in a biased
-direction. Per-shot correlation is \num{0.735} (Spearman \num{0.628}), mean
-absolute difference \num{0.052}.
+The commentary model therefore recovers 90.6\% of the coordinate model's
+discrimination above chance. The two mean predictions agree to within
+\num{0.001}, at \num{0.0972} against \num{0.0982}, so the information the words
+omit does not enter as a systematic bias. Per-shot correlation is \num{0.735}
+(Spearman \num{0.628}), with a mean absolute difference of \num{0.052}.
 
-\subsection{Is 90.6\% close? A scale}
+\subsection{Interpreting the recovery figure}
 \label{sec:band}
 
-A recovery figure means little without something to compare it to. The natural
-comparison is how closely the commercial providers agree with \emph{each
-other}~\cite{pythonfootball2024providers}, and Table~\ref{tab:band} places our
-model on the same axis.
+A recovery figure of this kind requires an external scale. The natural
+comparison is the agreement observed between commercial providers, all of which
+work from coordinates and none of which agrees exactly with the
+others~\cite{pythonfootball2024providers}. Table~\ref{tab:band} places the
+commentary model on that scale.
 
 \begin{table}[t]
 \caption{Match-level xG agreement. Provider figures
@@ -362,32 +383,36 @@ Opta $\times$ StatsBomb & \num{0.92}--\num{0.93} \\
 StatsBomb $\times$ Understat & \num{0.92}--\num{0.93} \\
 Wyscout $\times$ the others & \num{0.86}--\num{0.88} \\
 \midrule
-\textbf{Ours (commentary text) $\times$ StatsBomb} & \textbf{\num{0.869}} \\
+Commentary model $\times$ StatsBomb & \num{0.869} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Mean absolute difference is \num{0.249} xG per team-match (median \num{0.198},
-max \num{1.54}); mean xG \num{1.150} against StatsBomb's \num{1.161} and
-\num{1.192} actual goals.
+Mean absolute difference is \num{0.249} xG per team-match, with a median of
+\num{0.198} and a maximum of \num{1.54}. Mean xG is \num{1.150} for the
+commentary model against \num{1.161} for StatsBomb and \num{1.192} observed
+goals.
 
-\textbf{A model that reads only English sentences agrees with StatsBomb about
-as closely as a commercial provider does.} Two caveats attach. First, the
-aggregation levels are close but not identical: theirs is per match across five
-leagues and five seasons, ours is per team-match on one league and one season.
-Second, a widely repeated ``$\approx$1 xG mean absolute difference between
-providers, maximum \num{3.88}'' figure is deliberately \emph{not} used here.
-Naming a single club alongside \num{3.88} reads as a season aggregate, which
-would make that figure far tighter per match than our \num{0.249} rather than
-looser --- and the source paywalls, so we cannot confirm the unit.
+A model estimated from English sentences therefore agrees with StatsBomb to
+approximately the degree that a commercial provider does. Two qualifications
+apply. First, the levels of aggregation are similar but not identical: the
+published figures are per match across five leagues and five seasons, whereas
+ours is per team-match on one league and one season. Second, a frequently
+repeated figure of approximately 1 xG mean absolute difference between
+providers, with a maximum of \num{3.88}, is deliberately not used here. The
+attribution of \num{3.88} to a single club suggests a season aggregate, which
+would make the published figure substantially tighter per match than our
+\num{0.249} rather than looser, and the underlying source is not openly
+available, so the unit cannot be confirmed.
 
-\subsection{Is the extraction the bottleneck? No}
+\subsection{Whether extraction is the binding constraint}
 \label{sec:ceiling}
 
-The 9.4\% gap has two possible homes: the regexes catch only phrasings someone
-thought of, or the sentence never contained the information. This is decided by
-handing models the whole sentence and seeing whether they beat the eighteen
-fields pulled out of it (Table~\ref{tab:ceiling}).
+The residual 9.4\% may arise from either of two sources: the regular
+expressions capture only anticipated phrasings, or the sentence does not
+contain the missing information. These can be distinguished by supplying models
+with the entire sentence and testing whether they improve on the eighteen
+extracted fields. Table~\ref{tab:ceiling} reports the comparison.
 
 \begin{table}[t]
 \caption{Reading more of the sentence, held-out 2025/26 season.}
@@ -397,39 +422,41 @@ fields pulled out of it (Table~\ref{tab:ceiling}).
 \toprule
 Model & Sees & AUC \\
 \midrule
-\textbf{18 regex fields, logistic (shipped)} & 18 fields & \textbf{\num{0.7709}} \\
-18 regex fields, gradient-boosted trees & 18 fields & \num{0.7695} \\
+18 extracted fields, logistic \emph{(primary)} & 18 fields & \num{0.7709} \\
+18 extracted fields, gradient-boosted trees & 18 fields & \num{0.7695} \\
 every 1--4 gram, TF-IDF & all words & \num{0.7612} \\
 sentence embedding (MiniLM) & all words & \num{0.7584} \\
-embedding $+$ regex fields & both & \num{0.7589} \\
+embedding $+$ extracted fields & both & \num{0.7589} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Every model given the full text does \emph{worse}, including a semantic
-embedding; adding the embedding to the fields makes those worse too. The rest
-of the sentence is player names, team names and filler. \textbf{Reading more is
-worth $-0.010$ AUC}, so no better reader --- an LLM extractor included ---
-closes the gap. The missing 9.4\% is information the sentence never contained:
-the exact distance inside a zone, the angle, and how many defenders stood in
-the way.
+Every specification given the full text performs worse, including the sentence
+embedding, and appending the embedding to the extracted fields degrades those
+as well. The remainder of the sentence consists largely of player and team
+names and connective text, which the models fit as noise. The cost of reading
+more of the sentence is \num{0.010} AUC, so no more capable reader, including a
+large language model used as an extractor, can be expected to close the gap.
+The residual 9.4\% corresponds to information the sentence does not encode: the
+exact distance within a zone, the shot angle, and the number of intervening
+defenders.
 
-\subsection{Transfer}
+\subsection{Transfer across competitions}
 \label{sec:transfer}
 
-The claim that xG becomes available wherever commentary exists is only real if
-the model travels. The Premier League model was pointed at five other
-competitions cold --- nothing retrained, nothing tuned (Table~\ref{tab:transfer}).
+The claim that xG becomes estimable wherever commentary is published holds only
+if the model transfers. We applied the Premier League fit to five further
+competitions without re-estimation or tuning (Table~\ref{tab:transfer}).
 
 \begin{table}[t]
-\caption{One model, six competitions. Nothing retrained.}
+\caption{The Premier League fit applied to five further competitions without re-estimation.}
 \label{tab:transfer}
 \centering
 \begin{tabular}{lrrrr}
 \toprule
 Competition & Shots & Goal rate & AUC & Mean xG \\
 \midrule
-Premier League \emph{(trained on)} & \num{9,194} & 11.3\% & \num{0.7709} & \num{0.127} \\
+Premier League \emph{(estimation sample)} & \num{9,194} & 11.3\% & \num{0.7709} & \num{0.127} \\
 La Liga        & \num{9,240} & 11.1\% & \num{0.7730} & \num{0.119} \\
 Ligue 1        & \num{7,391} & 11.7\% & \num{0.7807} & \num{0.122} \\
 Bundesliga     & \num{7,853} & 12.6\% & \num{0.7795} & \num{0.125} \\
@@ -439,21 +466,24 @@ Primeira Liga  & \num{7,000} & 11.7\% & \num{0.7871} & \num{0.122} \\
 \end{tabular}
 \end{table}
 
-Mean AUC abroad is \num{0.7781} against \num{0.7709} at home: a transfer cost
-of $-0.0072$, which is to say a small gain. Calibration holds, with predictions
-of \num{0.115}--\num{0.125} against observed rates of 10.2--12.6\% and the
-ordering preserved. This replicates~\cite{robberechts2020data} on a feature
-source they did not consider, and it works for a reason specific to this
-setting: Opta build the sentence the same way in every competition.
+Mean AUC across the five held-out competitions is \num{0.7781} against
+\num{0.7709} on the estimation league, a transfer cost of $-0.0072$ and hence
+a marginal improvement. Calibration is maintained, with mean predictions of
+\num{0.115} to \num{0.125} against observed rates of 10.2\% to 12.6\%, and the
+ordering across competitions is preserved. This replicates the cross-league
+result of~\cite{robberechts2020data} on a feature source they do not consider.
+A plausible mechanism is specific to this setting: the commentary template is
+constructed identically across competitions, so the feature distribution is
+comparatively stable across them.
 
-\section{The Ranking Holds, the Level Does Not}
+\section{Concept Drift in Text-Derived Features}
 \label{sec:drift}
 
-\subsection{The symptom}
+\subsection{The observed discrepancy}
 
 On the held-out season the model predicts \num{1.54} goals per team-match
-against \num{1.38} actual --- an \textbf{11.9\% over-estimate}. It decomposes
-exactly:
+against \num{1.38} observed, an over-estimate of 11.9\%. This decomposes as
+follows.
 
 \begin{center}
 \begin{tabular}{lcr}
@@ -470,17 +500,18 @@ mean prediction vs.\ its own training rate
 \end{tabular}
 \end{center}
 
-The first factor is the league converting slightly less often. The second is
-stranger: a logistic regression's mean prediction on its training set equals the
-training base rate by construction, so a mean of \num{0.1270} on 2025/26 means
-the \emph{parsed features} of those shots look better than the shots the model
-was fitted on --- while producing fewer goals.
+The first factor reflects a decline in the league's conversion rate. The second
+requires explanation. The mean prediction of a logistic regression on its own
+estimation sample equals the sample base rate by construction, so a mean of
+\num{0.1270} on 2025/26 implies that the parsed features of those shots are
+more favourable than those of the shots on which the model was estimated, while
+the shots themselves produced fewer goals.
 
-\subsection{Two phrases, and a control that does not move}
+\subsection{Localising the shift to individual phrases}
 
 \begin{table}[t]
-\caption{Phrase drift in Premier League commentary. Two phrases move; two
-controls do not.}
+\caption{Share of shots and conversion rate for four commentary phrases,
+Premier League 2015/16 against 2025/26.}
 \label{tab:drift}
 \centering
 \begin{tabular}{lrrrrr}
@@ -489,8 +520,8 @@ controls do not.}
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}
 Phrase & \% shots & conv. & \% shots & conv. & \\
 \midrule
-``six yard box''        & 3.22 & 43.5\% & 5.96 & 35.8\% & \textbf{drifts} \\
-``following a fast break'' & 0.73 & 49.3\% & 3.30 & 28.4\% & \textbf{drifts} \\
+``six yard box''        & 3.22 & 43.5\% & 5.96 & 35.8\% & shifts \\
+``following a fast break'' & 0.73 & 49.3\% & 3.30 & 28.4\% & shifts \\
 \midrule
 ``centre of the box''   & 32.84 & 14.2\% & 36.44 & 13.2\% & stable \\
 ``penalty''             & 0.94 & 83.1\% & 1.01 & 82.8\% & stable \\
@@ -498,29 +529,34 @@ Phrase & \% shots & conv. & \% shots & conv. & \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:drift} localises the second factor. ``Following a fast break''
-became \textbf{4.5 times more common at little over half the conversion} in a
-decade. That is not a change in football. It is a change in how loosely the
-phrase is written, and the model --- which knows nothing except the words ---
-reads a better shot than the one that was taken.
+Table~\ref{tab:drift} attributes the second factor to two phrases. Over the
+decade separating the two seasons, ``following a fast break'' became
+approximately 4.5 times more frequent while its conversion rate fell to a
+little over half its former value. A change of this magnitude in the
+underlying football is implausible on both counts simultaneously. The more
+parsimonious explanation is a change in how loosely the phrase is applied by
+whoever writes the feed, with the consequence that a model conditioned only on
+the words attributes higher quality to the shot than was warranted.
 
-The controls matter as much as the finding. ``Penalty'' is unambiguous, and it
-does not move: 0.94\% of shots at 83.1\% in 2015/16, 1.01\% at 82.8\% in
-2025/26. ``Centre of the box'' is nearly as stable. \textbf{The drift is not a
-general artefact of the parser or the corpus; it is specific to phrases that
-require a judgement call from whoever is writing.}
+The control phrases are as informative as the two that move. ``Penalty'' admits
+no interpretive latitude and is unchanged, at 0.94\% of shots converting at
+83.1\% in 2015/16 against 1.01\% at 82.8\% in 2025/26. ``Centre of the box'' is
+nearly as stable. The shift is therefore not a general artefact of the parser
+or of corpus composition, but is confined to phrases whose application requires
+a judgement by the annotator.
 
-Scored with the shipped model, the sign of the error flips across the decade:
-$-2.7\%$ on 2015/16, $+11.9\%$ on 2025/26. The model was fitted in between.
+Scored with the primary fit, the sign of the calibration error reverses across
+the decade, from $-2.7\%$ on 2015/16 to $+11.9\%$ on 2025/26. The estimation
+sample lies between the two.
 
-\subsection{Retraining does not help}
+\subsection{Re-estimation does not correct the level}
 
 \begin{center}
 \begin{tabular}{lr}
 \toprule
 Training window & Over-estimate \\
 \midrule
-all three seasons (shipped) & $+11.9\%$ \\
+all three seasons \emph{(primary)} & $+11.9\%$ \\
 last two seasons & $+11.9\%$ \\
 last season only & $+9.1\%$ \\
 recency weighted, half-life one season & $+9.9\%$ \\
@@ -528,16 +564,19 @@ recency weighted, half-life one season & $+9.9\%$ \\
 \end{tabular}
 \end{center}
 
-The best of these buys 2.8 of the 11.9 points and pays two thirds of the
-training set for it. The reason is not that the data is old: \textbf{next
-season's conversion rate is not in this season's data at any weighting.}
+The most favourable of these recovers 2.8 of the 11.9 percentage points at the
+cost of two thirds of the estimation sample. The limitation is not the age of
+the data. The conversion rate of the forthcoming season is not present in the
+current season's data under any weighting scheme, so no re-weighting of past
+observations can recover it.
 
-\subsection{Waiting does}
+\subsection{In-season intercept correction}
 
-Once a few hundred shots of the new season have been played, their realised
-rate is observable, and one number added to the intercept pulls the level back.
-We walk forward through 2025/26 in blocks of 500 shots, refitting the shift by
-bisection on \emph{only} the shots played before each block:
+Once several hundred shots of a season have been played, the realised
+conversion rate for that season is observable, and a single additive shift on
+the intercept restores the level. We walk forward through 2025/26 in blocks of
+500 shots, obtaining the shift by bisection on only those shots played before
+each block, so that no future observation enters the correction applied to it.
 
 \begin{center}
 \begin{tabular}{lrrrr}
@@ -550,86 +589,89 @@ recalibrated & \num{0.1165} & \num{0.1132} & $+2.9\%$  & \num{0.29443} \\
 \end{tabular}
 \end{center}
 
-\num{8,694} shots evaluated after a 500-shot warm-up --- roughly twenty
-matches --- during which the model runs uncorrected because the realised rate
-is still too noisy to correct towards. An intercept shift is monotone, so AUC
-is unchanged by construction, and our test suite asserts it: the guard is
-against improving calibration by reaching for the coefficients, which would
-trade away the ranking to buy a better mean.
+The comparison covers \num{8,694} shots evaluated after a warm-up of 500
+shots, approximately twenty matches, during which the model runs uncorrected
+because the realised rate is too imprecise to correct towards. An additive
+shift on the intercept is a monotone transformation of the predicted
+probabilities, so AUC is invariant by construction; the accompanying test suite
+asserts this. The purpose of that assertion is to prevent a subsequent
+adjustment to the coefficients, which would improve calibration at the expense
+of the induced ranking.
 
-\subsection{Why this is not a contradiction of prior work}
+\subsection{Relation to prior results on staleness}
 
-Robberechts and Davis~\cite{robberechts2020data} put calibration at the centre
-of xG evaluation and found staleness negligible. We reproduce their ranking
-result exactly --- a decade-stale model costs \num{0.0068} AUC --- and observe
-the level moving 10\% over the same span. Both are true, and together they say
-something neither says alone:
+Robberechts and Davis~\cite{robberechts2020data} treat calibration as the
+primary objective in xG evaluation and report that staleness has a negligible
+effect. We reproduce their ranking result, finding that a decade-stale model
+costs \num{0.0068} AUC, while observing the predicted level move by
+approximately 10\% over the same interval. The two findings are consistent, and
+taken together they separate two properties that are often reported jointly.
+Event-data xG is stable in precisely the respect, calibration, in which a
+text-derived model is not, and the instability we observe is confined to
+phrases requiring annotator judgement. Coordinates are measurements and do not
+drift; phrases are authored and do.
 
-\begin{quote}
-\textbf{A coordinate does not drift. A phrase does, because a person writes
-it.} Event-data xG is stable in precisely the sense --- calibration --- where a
-text-derived model is not, and the instability is confined to phrases requiring
-human judgement.
-\end{quote}
-
-This is, to our knowledge, the first characterisation of concept drift in
-text-derived sports features, and it has a practical consequence: any system
-built on commentary phrasing needs an in-season level correction, and does not
-need retraining.
+To our knowledge this is the first characterisation of concept drift in
+text-derived features for sports data. It carries a practical implication: a
+system conditioned on commentary phrasing requires periodic correction of the
+level within a season, and does not require re-estimation.
 
 \section{Limitations}
 
-We state these in full rather than in passing.
-
 \begin{itemize}
-\item \textbf{One reference model, one season.} The headline compares against
-StatsBomb alone, on Premier League 2015/16. A second provider, or a second
-season, would strengthen it considerably. StatsBomb's open releases are the
-constraint.
+\item \emph{A single reference model on a single season.} The headline
+comparison is against StatsBomb alone, on Premier League 2015/16. A second
+provider or a second season would strengthen it materially. The availability of
+open releases is the binding constraint.
 
-\item \textbf{Free kicks are absent.} The phrase ``from a free kick'' leaked
-(60 of 60 conversions), and rather than repair it we removed the feature. A
-model that handled free kicks properly would likely do better.
+\item \emph{Free kicks are excluded.} The phrase ``from a free kick'' leaked
+the outcome, converting 60 of 60, and the feature was removed rather than
+repaired. A specification that handled free kicks correctly would likely
+perform better.
 
-\item \textbf{Matches with no commentary are dropped silently.} A small number
-of matches arrive with an empty feed and contribute nothing. The rate is low
-but it is not zero and it is not currently guarded.
+\item \emph{Matches without commentary are discarded without record.} A small
+number of fixtures return an empty feed and contribute nothing to the corpus.
+The rate is low but non-zero, and is not currently instrumented.
 
-\item \textbf{Latency is unmeasured.} We claim commentary arrives fast enough
-for live use and have no measurement to support it. A scheduled matchday
-watcher exists but the cloud scheduler that triggers it fired 2 of 12 slots on
-the day tested, and missed the kickoff.
+\item \emph{Latency is not measured.} We assert that commentary is published
+quickly enough for live estimation without evidence. A scheduled matchday
+observer exists, but on the day tested the cloud scheduler triggered 2 of 12
+scheduled intervals and did not cover the kickoff.
 
-\item \textbf{The novelty claim rests on an imperfect search.} Our literature
-search of arXiv, OpenAlex and Crossref returned 5 of 6 recall probes and not
-always the same five. A follow-up blog and grey-literature search --- which
-found~\cite{ballard2020moneyball} --- returned 3 of 4 probes by name, and
-\texttt{reddit.com} refuses our crawler entirely, which is exactly where an
-unpublished version of this would be discussed. Both searches are recorded
-query-by-query in the repository. We have not searched paywalled indexes,
-thesis repositories, or non-English sources.
+\item \emph{The novelty claim rests on an incomplete search.} Our search of
+arXiv, OpenAlex and Crossref returned 5 of 6 recall probes, and not
+consistently the same five. A subsequent search of grey literature, which
+located~\cite{ballard2020moneyball}, returned 3 of 4 probes by name, and one
+major discussion forum refuses automated access, which is a plausible location
+for unpublished work of this kind. Both searches are recorded query by query in
+the repository. We have not searched licensed indexes, thesis repositories, or
+non-English sources.
 
-\item \textbf{The provider-agreement comparison is close but not exact}, as
-noted in Section~\ref{sec:band}.
+\item \emph{The provider-agreement comparison is approximate}, for the reasons
+given in Section~\ref{sec:band}.
 \end{itemize}
 
 \section{Conclusion}
 
-A sentence of English recovers 90.6\% of a tracking-data expected goals model's
-discrimination above chance, and agrees with it per team-match about as closely
-as one commercial provider agrees with another. The gap is not a parsing
-failure --- richer readers of the same sentence do worse --- but information
-the sentence never contained. The model transfers across six competitions at no
-cost, because the sentence is built the same way in each.
+A model estimated from commentary sentences recovers 90.6\% of a coordinate
+expected-goals model's discrimination above chance, and agrees with it at the
+team-match level to approximately the degree that one commercial provider
+agrees with another. The residual gap is not attributable to the extraction
+step, since richer readers of the same sentence perform worse; it corresponds
+to information the sentence does not encode. The model transfers to five
+further competitions without re-estimation, which we attribute to the
+commentary template being constructed identically across them.
 
-The interesting failure is not in the ranking but in the level. Text features
-drift where coordinate features do not, because a phrase is written by a person
-whose habits change, and we localise that drift to phrases requiring judgement
-while unambiguous phrases stay fixed. One intercept, refitted in season on
-shots already played, corrects it.
+The failure mode we identify lies in the calibrated level rather than the
+ranking. Text-derived features drift where coordinate features do not, and the
+drift is confined to phrases whose application requires a judgement by the
+annotator, while unambiguous phrases are unchanged over a decade. A single
+intercept, refitted within the season on shots already played, corrects the
+level without affecting the ranking.
 
-For competitions that will never have open coordinates --- which is most of
-them --- this is the difference between having an xG model and not having one.
+For competitions with no prospect of open coordinate data, which comprise the
+large majority, this is the difference between an available xG estimate and
+none.
 
 \begin{credits}
 \subsubsection{\ackname}
@@ -642,14 +684,17 @@ The author declares no competing interests.
 
 \section*{Reproducibility}
 
-Every number in this paper is produced by \texttt{rebuild.sh}
-in~\cite{xgfromwords2026}, which runs the pipeline in dependency order from raw
-collection to final figures. The repository additionally contains a test suite
-of 50 tests, including behavioural leak guards, a walk-forward check that the
-recalibration uses no future shots, an assertion that the shift leaves AUC
-unchanged, and a dependency graph that fails if any artefact predates its
-inputs. The literature and blog searches are recorded query-by-query with their
-recall probes.
+Every quantity reported in this paper is produced by a single script in the
+accompanying repository~\cite{xgfromwords2026}, which executes the pipeline in
+dependency order from collection through to the final tables. The repository
+also contains a test suite of 50 tests. These include behavioural guards
+against outcome leakage, a check that the walk-forward correction of
+Section~\ref{sec:drift} uses no observation from after the block it is applied
+to, an assertion that the intercept shift leaves AUC unchanged, and a
+dependency graph that fails if any derived artefact predates the inputs from
+which it was built. The literature and grey-literature searches on which the novelty claim of
+Section~2 rests are recorded in the repository query by query, together with
+the recall probes discussed in the limitations.
 
 \bibliographystyle{splncs04}
 \bibliography{refs}
