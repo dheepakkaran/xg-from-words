@@ -1,0 +1,23 @@
+{
+ "n_shots": 8825,
+ "n_matches": 373,
+ "n_bootstrap": 2000,
+ "auc_ours": 0.7826,
+ "auc_statsbomb": 0.8118,
+ "recovery": 0.9065,
+ "recovery_ci95": [
+  0.8616,
+  0.9502
+ ],
+ "auc_gap": 0.0291,
+ "auc_gap_ci95": [
+  0.0151,
+  0.0436
+ ],
+ "p_gap_favours_statsbomb": 1.0,
+ "logloss_ours": 0.2711,
+ "logloss_statsbomb": 0.2555,
+ "brier_ours": 0.0764,
+ "brier_statsbomb": 0.0715,
+ "resampled_over": "matches"
+}

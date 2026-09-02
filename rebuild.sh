@@ -45,6 +45,13 @@ step "validation against StatsBomb, and the head to head"
 ./run.sh src/validate_xg.py
 ./run.sh src/head_to_head.py
 
+step "an interval on the headline, and where the disagreement lives"
+./run.sh src/recovery_ci.py
+./run.sh src/error_analysis.py
+
+step "the paper's figures, which read their values from the joined data"
+./run.sh paper/figures.py
+
 step "retrieval, which also builds the embeddings the ceiling needs"
 rm -f data/proc/shot_embeddings.npy
 ./run.sh src/retrieve.py

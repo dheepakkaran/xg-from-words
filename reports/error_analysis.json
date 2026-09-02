@@ -1,0 +1,171 @@
+{
+ "n_shots": 8825,
+ "min_n_per_field": 40,
+ "per_field": [
+  {
+   "field": "six_yard",
+   "n": 285,
+   "mean_abs_diff": 0.1713,
+   "bias": 0.0002
+  },
+  {
+   "field": "after_break",
+   "n": 64,
+   "mean_abs_diff": 0.1651,
+   "bias": 0.1147
+  },
+  {
+   "field": "from_through",
+   "n": 285,
+   "mean_abs_diff": 0.118,
+   "bias": -0.0039
+  },
+  {
+   "field": "long_range",
+   "n": 47,
+   "mean_abs_diff": 0.1139,
+   "bias": 0.1139
+  },
+  {
+   "field": "centre_box",
+   "n": 2896,
+   "mean_abs_diff": 0.078,
+   "bias": -0.0049
+  },
+  {
+   "field": "after_corner",
+   "n": 762,
+   "mean_abs_diff": 0.072,
+   "bias": 0.0389
+  },
+  {
+   "field": "from_cross",
+   "n": 1685,
+   "mean_abs_diff": 0.0604,
+   "bias": -0.0171
+  },
+  {
+   "field": "from_headed_pass",
+   "n": 286,
+   "mean_abs_diff": 0.0604,
+   "bias": 0.009
+  },
+  {
+   "field": "difficult_ang",
+   "n": 194,
+   "mean_abs_diff": 0.0561,
+   "bias": 0.0118
+  },
+  {
+   "field": "header",
+   "n": 1382,
+   "mean_abs_diff": 0.0529,
+   "bias": -0.0211
+  },
+  {
+   "field": "penalty",
+   "n": 80,
+   "mean_abs_diff": 0.052,
+   "bias": 0.052
+  },
+  {
+   "field": "assisted",
+   "n": 6771,
+   "mean_abs_diff": 0.0514,
+   "bias": -0.0039
+  },
+  {
+   "field": "right_foot",
+   "n": 4792,
+   "mean_abs_diff": 0.0508,
+   "bias": 0.0028
+  },
+  {
+   "field": "left_foot",
+   "n": 2623,
+   "mean_abs_diff": 0.0504,
+   "bias": -0.0011
+  },
+  {
+   "field": "side_box",
+   "n": 1493,
+   "mean_abs_diff": 0.0374,
+   "bias": -0.013
+  },
+  {
+   "field": "outside_box",
+   "n": 3511,
+   "mean_abs_diff": 0.0191,
+   "bias": 0.0018
+  }
+ ],
+ "closest": [
+  {
+   "text": "header from the centre of the box assisted by odion ighalo with a cross",
+   "ours": 0.057,
+   "statsbomb": 0.057,
+   "goal": 0,
+   "distance_m": 13.7
+  },
+  {
+   "text": "right footed shot from a difficult angle assisted by",
+   "ours": 0.072,
+   "statsbomb": 0.072,
+   "goal": 0,
+   "distance_m": 14.1
+  },
+  {
+   "text": "left footed shot from the centre of the box assisted by",
+   "ours": 0.153,
+   "statsbomb": 0.153,
+   "goal": 0,
+   "distance_m": 16.7
+  }
+ ],
+ "we_over": [
+  {
+   "text": "from very close range assisted by bacary sagna with a cross following a corner",
+   "ours": 0.819,
+   "statsbomb": 0.098,
+   "goal": 0,
+   "distance_m": 8.3
+  },
+  {
+   "text": "from very close range assisted by wahbi khazri with a cross following a set piece situation",
+   "ours": 0.732,
+   "statsbomb": 0.033,
+   "goal": 0,
+   "distance_m": 12.2
+  },
+  {
+   "text": "right footed shot",
+   "ours": 0.828,
+   "statsbomb": 0.192,
+   "goal": 1,
+   "distance_m": 10.6
+  }
+ ],
+ "we_under": [
+  {
+   "text": "left footed shot from the centre of the box assisted by",
+   "ours": 0.157,
+   "statsbomb": 0.93,
+   "goal": 1,
+   "distance_m": 13.4
+  },
+  {
+   "text": "left footed shot from the left side of the box assisted by gerard deulofeu with a through ball",
+   "ours": 0.102,
+   "statsbomb": 0.838,
+   "goal": 1,
+   "distance_m": 13.2
+  },
+  {
+   "text": "right footed shot from the left side of the box assisted by",
+   "ours": 0.048,
+   "statsbomb": 0.783,
+   "goal": 1,
+   "distance_m": 12.0
+  }
+ ]
+}

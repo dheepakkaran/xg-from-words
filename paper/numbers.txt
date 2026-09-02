@@ -226,3 +226,40 @@ PHRASE DRIFT, eng.1
      2023  share  1.07%   conv  89.7%  (n=107)
      2024  share  0.87%   conv  83.1%  (n=83)
      2025  share  1.01%   conv  82.8%  (n=93)
+==================================================================
+QUALITATIVE EXAMPLES for the paper
+
+--- closest agreement ---
+  ours 0.057  theirs 0.057  goal=0  dist=13.7
+    "header from the centre of the box assisted by odion ighalo with a cross"
+  ours 0.072  theirs 0.072  goal=0  dist=14.1
+    "right footed shot from a difficult angle assisted by"
+  ours 0.153  theirs 0.153  goal=0  dist=16.7
+    "left footed shot from the centre of the box assisted by"
+
+--- we over-estimate most ---
+  ours 0.819  theirs 0.098  goal=0  dist=8.3
+    "from very close range assisted by bacary sagna with a cross following a corner"
+  ours 0.732  theirs 0.033  goal=0  dist=12.2
+    "from very close range assisted by wahbi khazri with a cross following a set piece situation"
+  ours 0.828  theirs 0.192  goal=1  dist=10.6
+    "right footed shot"
+
+--- we under-estimate most ---
+  ours 0.157  theirs 0.930  goal=1  dist=13.4
+    "left footed shot from the centre of the box assisted by"
+  ours 0.102  theirs 0.838  goal=1  dist=13.2
+    "left footed shot from the left side of the box assisted by gerard deulofeu with a through ball"
+  ours 0.048  theirs 0.783  goal=1  dist=12.0
+    "right footed shot from the left side of the box assisted by"
+
+==================================================================
+where the disagreement lives: |diff| by field
+  six_yard         n=  285  mean|diff| 0.1713  bias +0.0002
+  after_break      n=   64  mean|diff| 0.1651  bias +0.1147
+  from_through     n=  285  mean|diff| 0.1180  bias -0.0039
+  long_range       n=   47  mean|diff| 0.1139  bias +0.1139
+  centre_box       n= 2896  mean|diff| 0.0780  bias -0.0049
+  after_corner     n=  762  mean|diff| 0.0720  bias +0.0389
+  from_cross       n= 1685  mean|diff| 0.0604  bias -0.0171
+  from_headed_pass n=  286  mean|diff| 0.0604  bias +0.0090

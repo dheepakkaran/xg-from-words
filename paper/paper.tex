@@ -71,22 +71,30 @@ shot was taken: a coordinate pair, a derived distance and angle, and
 increasingly the positions of the other players in
 frame~\cite{mead2023xg,cavus2022explainable}. That location is the expensive
 component. It is produced either by human annotators or by tracking cameras,
-and with the exception of a small number of open releases it is licensed rather
-than published.
+and with the exception of a small number of open releases~\cite{statsbomb2024open}
+it is licensed rather than published. Robberechts and
+Davis~\cite{robberechts2020data} make the cost explicit from the modelling
+side, showing how much data an xG model needs before it converges; the
+constraint we address is prior to theirs, in that the data may not be
+obtainable at all.
 
-Free-text commentary carries none of that cost. For each shot, a sentence of
-the following form is published live and without authentication:
+Free-text commentary carries none of that cost. For each shot a sentence is
+published live and without authentication, of the form shown at the top of
+Figure~\ref{fig:schematic}. Such sentences exist for many competitions for
+which open coordinate data does not and is unlikely to. They plainly encode
+part of what an xG model requires, and the question we address is what
+proportion.
 
-\begin{quote}
-\textit{``Attempt saved. Bukayo Saka (Arsenal) right footed shot from the
-centre of the box is saved in the bottom left corner. Assisted by Martin
-{\O}degaard with a through ball following a fast break.''}
-\end{quote}
-
-\noindent
-Such sentences are available for many competitions for which open coordinate
-data does not exist and is unlikely to. They plainly encode part of what an xG
-model requires, and the question we address is what proportion.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig1_schematic}
+\caption{The same shot as each side of the comparison receives it. The
+commentary sentence yields eighteen parsed indicators and no geometry; the
+StatsBomb release yields a location, a derived distance and angle, and the
+positions of the players in view. Neither side sees the other's
+representation, and both are scored against the same outcome.}
+\label{fig:schematic}
+\end{figure}
 
 We treat this as a measurement problem rather than a feasibility question,
 because the practical implication depends on the magnitude. Recovery of a small
@@ -208,7 +216,8 @@ Primeira Liga  & 306 & \num{7,000} & 821         & 11.7\% \\
 
 StatsBomb release Premier League 2015/16 as open
 data~\cite{statsbomb2024open}, including a shot location, a freeze frame of
-all players in view, and their own xG estimate for each shot. Joining this
+the players in view at the moment of the shot (median 13, range 1 to 19 across
+the release), and their own xG estimate for each shot. Joining this
 release to ESPN commentary for the same fixtures is, to our knowledge, the only
 available means of evaluating words and coordinates on identical shots.
 
@@ -264,13 +273,14 @@ had rejected.
 \subsection{Features}
 \label{sec:features}
 
-Eighteen fields are extracted by whitelist regular expression: six location
-zones (\texttt{six\_yard}, \texttt{centre\_box}, \texttt{side\_box},
-\texttt{outside\_box}, \texttt{long\_range}, \texttt{difficult\_ang}), three
-body parts, five build-up descriptors (\texttt{from\_cross},
-\texttt{from\_headed\_pass}, \texttt{from\_through}, \texttt{after\_corner},
-\texttt{after\_break}), \texttt{assisted}, \texttt{penalty}, and the minute of
-the match.
+Eighteen fields are extracted by whitelist regular expression. Six describe
+the location as a zone: the six-yard box, the centre of the box, the side of
+the box, outside the box, long range, and a difficult angle. Three give the
+body part, distinguishing a header from a shot with either foot. Five describe
+the build-up: a cross, a through ball, a headed pass, a corner, and a fast
+break. The remaining three record whether the shot was assisted, whether it
+was a penalty, and the minute of the match. The exact patterns are given in
+Appendix~\ref{app:extraction}.
 
 Table~\ref{tab:signal} reports the conversion rate associated with each field.
 The observed range spans roughly a factor of twenty, from 4.1\% for shots
@@ -295,29 +305,102 @@ centre of box    & 36.2 & 14.4\% & outside the box & 30.6 & 4.1\%  \\
 \end{tabular}
 \end{table}
 
-\subsection{Specification and evaluation protocol}
+\subsection{Specification}
 
-The model is a logistic regression on standardised features. We adopt this
-specification rather than a more flexible learner because eighteen
-predominantly binary fields offer limited scope for interaction effects, a
-choice Section~\ref{sec:ceiling} supports empirically.
+The model is a logistic regression on standardised features, estimated with
+scikit-learn~\cite{pedregosa2011sklearn}. We adopt this specification rather
+than a more flexible learner because eighteen predominantly binary fields offer
+limited scope for interaction effects, a choice Section~\ref{sec:ceiling}
+supports empirically against gradient-boosted
+trees~\cite{chen2016xgboost}.
 
-Two distinct fits are reported and should be distinguished:
+\section{Experimental Setup}
 
-\begin{itemize}
-\item the \emph{primary} fit, estimated on Premier League 2022/23--2024/25
-(\num{28,735} shots) and evaluated on the held-out 2025/26 season
-(\num{9,194} shots);
-\item the \emph{comparison} fit, estimated on Premier League
-2022/23--2025/26 (\num{37,929} shots) and evaluated on 2015/16, which is
-excluded from its estimation sample. This is the fit evaluated against
-StatsBomb.
-\end{itemize}
+\subsection{Splits}
+
+Two distinct fits are reported and should be distinguished. The \emph{primary}
+fit is estimated on Premier League 2022/23--2024/25 (\num{28,735} shots) and
+evaluated on the held-out 2025/26 season (\num{9,194} shots). The
+\emph{comparison} fit is estimated on Premier League 2022/23--2025/26
+(\num{37,929} shots) and evaluated on 2015/16, which is excluded from its
+estimation sample; this is the fit evaluated against StatsBomb. Splits are by
+season rather than at random, so that no shot from a match in an evaluation
+sample can influence the model through another shot in the same match.
 
 All estimation is restricted to the Premier League, following
 \cite{robberechts2020data} on pooling across sources. The remaining five
 competitions are held out entirely and used as a transfer test
 (Section~\ref{sec:transfer}).
+
+\subsection{Baselines}
+\label{sec:baselines}
+
+We compare against four baselines, each chosen to isolate one of the questions
+the paper asks.
+
+\paragraph{Base rate.} A constant prediction at the estimation-sample
+conversion rate, which fixes AUC at \num{0.500} by construction and gives the
+Brier score any informative model must beat.
+
+\paragraph{The reference coordinate model.} StatsBomb's own published xG for
+each shot, which uses the location, the derived geometry and the freeze frame.
+This is the upper reference for the recovery figure, and the only baseline that
+sees information the commentary sentence does not contain.
+
+\paragraph{Readers of the full sentence.} Two specifications given the entire
+stripped sentence rather than the extracted fields: TF-IDF over all 1--4 grams,
+and a MiniLM sentence embedding~\cite{reimers2019sbert}. These test whether the
+extraction, rather than the sentence, is what limits performance. A third
+variant concatenates the embedding with the extracted fields.
+
+\paragraph{A stronger learner on the same fields.} Gradient-boosted
+trees~\cite{chen2016xgboost} on the eighteen extracted fields, which tests
+whether the linear specification leaves interaction structure unused.
+
+We do not compare against Opta, Understat or Wyscout, whose xG values are not
+openly available per shot; their published pairwise agreement is used instead
+as a reference scale in Section~\ref{sec:band}.
+
+\subsection{Evaluation metrics}
+\label{sec:metrics}
+
+We report three quantities, which answer different questions and are not
+interchangeable.
+
+\paragraph{AUC} is the area under the receiver operating characteristic
+curve~\cite{hanley1982auc}, equal to the probability that a randomly chosen
+goal receives a higher estimate than a randomly chosen non-goal. It measures
+\emph{ranking} only and is invariant to any monotone transformation of the
+predictions, so a model may attain a high AUC while being badly calibrated.
+Chance is \num{0.500}.
+
+\paragraph{Brier score}~\cite{brier1950verification} is the mean squared
+difference between the predicted probability and the outcome. Unlike AUC it is
+minimised only by well-calibrated probabilities, which is why
+\cite{robberechts2020data} argue it is the appropriate primary metric for xG.
+Lower is better.
+
+\paragraph{Log loss} is the mean negative log-likelihood of the observed
+outcomes. It is also calibration-sensitive and penalises confident errors more
+sharply than the Brier score.
+
+We separate ranking from calibration throughout, because the central result of
+Section~\ref{sec:drift} is that the two behave differently under drift.
+
+\paragraph{Recovery.} The quantity of interest in
+Section~\ref{sec:headline} is the share of the reference model's
+discrimination above chance that the commentary model reproduces,
+\begin{equation}
+\rho = \frac{\mathrm{AUC}_{\text{text}} - 0.5}
+            {\mathrm{AUC}_{\text{coord}} - 0.5},
+\label{eq:recovery}
+\end{equation}
+which is a ratio of two statistics estimated on the same shots and therefore
+carries sampling error. We obtain a percentile interval by
+bootstrap~\cite{efron1979bootstrap} over \num{2,000} resamples, resampling
+\emph{matches} rather than shots: shots within a match share a fixture, two
+teams and one writer, so resampling shots independently would understate the
+variance.
 
 \section{Results}
 
@@ -334,30 +417,56 @@ Table~\ref{tab:headline} reports the central result. Both models are evaluated
 on the same \num{8,825} shots, labelled by StatsBomb.
 
 \begin{table}[t]
-\caption{Words against coordinates, \num{8,825} shots, Premier League 2015/16.}
+\caption{Words against coordinates, \num{8,825} shots, Premier League
+2015/16, labelled by StatsBomb. Metrics are defined in
+Section~\ref{sec:metrics}; the base rate is the estimation-sample conversion
+rate, so its AUC is \num{0.500} by construction.}
 \label{tab:headline}
 \centering
 \begin{tabular}{llrrr}
 \toprule
 Model & Input & AUC & Log loss & Brier \\
 \midrule
+Base rate & nothing & \num{0.5000} & \num{0.3283} & \num{0.0909} \\
 Commentary model & the commentary sentence & \num{0.7826} & \num{0.2711} & \num{0.0764} \\
-StatsBomb & coordinates, freeze frames, 16 player positions
+StatsBomb & location, geometry, freeze frame
 & \num{0.8118} & \num{0.2555} & \num{0.0715} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+Applying Equation~\ref{eq:recovery},
 \begin{equation}
-\frac{0.7826 - 0.5}{0.8118 - 0.5} = 0.906
+\rho = \frac{0.7826 - 0.5}{0.8118 - 0.5} = 0.906,
+\quad \text{95\% CI } [0.862,\, 0.950],
 \end{equation}
 
 \noindent
-The commentary model therefore recovers 90.6\% of the coordinate model's
-discrimination above chance. The two mean predictions agree to within
-\num{0.001}, at \num{0.0972} against \num{0.0982}, so the information the words
-omit does not enter as a systematic bias. Per-shot correlation is \num{0.735}
-(Spearman \num{0.628}), with a mean absolute difference of \num{0.052}.
+so the commentary model recovers roughly nine tenths of the coordinate model's
+discrimination above chance, and the interval is narrow enough to exclude both
+a small fraction and near-parity. The AUC gap itself is \num{0.0291} with a
+95\% interval of $[0.0151,\, 0.0436]$; StatsBomb is ahead in every one of the
+\num{2,000} match-level resamples, so the gap is real and not an artefact of
+this sample. What the interval establishes is its size.
+
+The two mean predictions agree to within \num{0.001}, at \num{0.0972} against
+\num{0.0982}, so the information the words omit does not enter as a systematic
+bias. Per-shot correlation is \num{0.735} (Spearman \num{0.628}), with a mean
+absolute difference of \num{0.052}. Figure~\ref{fig:reliability} shows that
+both models are close to calibrated across the range and are difficult to
+separate on that criterion.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.60\textwidth]{fig2_reliability}
+\caption{Reliability of both models on the \num{8,825} joined shots, in
+octiles of predicted probability. The two curves lie almost on top of one
+another and both track the diagonal, so the gap in Table~\ref{tab:headline} is
+a difference in ranking rather than in calibration. Identity is carried by the
+legend and the marker shapes, since the curves coincide too closely to label
+in place.}
+\label{fig:reliability}
+\end{figure}
 
 \subsection{Interpreting the recovery figure}
 \label{sec:band}
@@ -476,6 +585,64 @@ A plausible mechanism is specific to this setting: the commentary template is
 constructed identically across competitions, so the feature distribution is
 comparatively stable across them.
 
+\subsection{Error analysis}
+\label{sec:errors}
+
+Table~\ref{tab:headline} gives the size of the gap; this section locates it.
+Table~\ref{tab:errors} reports the mean absolute difference between the two
+estimates within each field, restricted to fields appearing on at least 40 of
+the joined shots.
+
+\begin{table}[t]
+\caption{Where the two estimates disagree, by parsed field, on the
+\num{8,825} joined shots. Bias is signed, ours minus StatsBomb's. Fields
+appearing on fewer than 40 shots are omitted.}
+\label{tab:errors}
+\centering
+\begin{tabular}{lrrr@{\hskip 1.6em}lrrr}
+\toprule
+Field & $n$ & mean $|\Delta|$ & bias & Field & $n$ & mean $|\Delta|$ & bias \\
+\midrule
+six yard box   &  285 & \num{0.171} & $+0.000$ & difficult angle & 194 & \num{0.056} & $+0.012$ \\
+fast break     &   64 & \num{0.165} & $+0.115$ & header    & \num{1,382} & \num{0.053} & $-0.021$ \\
+through ball   &  285 & \num{0.118} & $-0.004$ & penalty         &  80 & \num{0.052} & $+0.052$ \\
+long range     &   47 & \num{0.114} & $+0.114$ & assisted  & \num{6,771} & \num{0.051} & $-0.004$ \\
+centre of box  & \num{2,896} & \num{0.078} & $-0.005$ & right foot & \num{4,792} & \num{0.051} & $+0.003$ \\
+after corner   &  762 & \num{0.072} & $+0.039$ & left foot & \num{2,623} & \num{0.050} & $-0.001$ \\
+from cross     & \num{1,685} & \num{0.060} & $-0.017$ & side of box & \num{1,493} & \num{0.037} & $-0.013$ \\
+headed pass    &  286 & \num{0.060} & $+0.009$ & outside the box & \num{3,511} & \num{0.019} & $+0.002$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ordering is interpretable. Disagreement is smallest where the phrase is
+geometrically specific: ``outside the box'' at \num{0.019} constrains the
+location tightly enough that little is left for the coordinates to add. It is
+largest where the phrase is a judgement: ``from very close range'', which sets
+the six-yard-box indicator, disagrees by \num{0.171}, and ``following a fast
+break'' by \num{0.165}. Two fields also carry substantial signed bias, with the
+commentary model reading fast breaks \num{0.115} and long-range efforts
+\num{0.114} higher than StatsBomb does.
+
+Three examples make the mechanism concrete. Where the sentence is specific the
+estimates coincide to three decimals, as in \emph{``header from the centre of
+the box assisted by \dots with a cross''}, which both models place at
+\num{0.057}. Where it is not, the commentary model can be badly wrong in either
+direction. On \emph{``from very close range \dots following a corner''} it
+returns \num{0.819} against StatsBomb's \num{0.098}, the coordinates placing
+the shot \num{8.3}\,m out; and on \emph{``left footed shot from the centre of
+the box assisted by''} it returns \num{0.157} against \num{0.930}, since
+nothing in that sentence separates a tap-in from a twenty-yard effort within
+the same zone.
+
+This connects the two halves of the paper. The fields carrying the largest
+disagreement in Table~\ref{tab:errors} are the same two phrases whose meaning
+moves across seasons in Section~\ref{sec:drift}. Imprecise phrasing is
+simultaneously the least accurate feature and the least stable one, which is
+one mechanism rather than two independent findings: a phrase that admits
+interpretive latitude will be applied inconsistently within a season and
+differently between seasons.
+
 \section{Concept Drift in Text-Derived Features}
 \label{sec:drift}
 
@@ -529,14 +696,27 @@ Phrase & \% shots & conv. & \% shots & conv. & \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:drift} attributes the second factor to two phrases. Over the
-decade separating the two seasons, ``following a fast break'' became
-approximately 4.5 times more frequent while its conversion rate fell to a
-little over half its former value. A change of this magnitude in the
-underlying football is implausible on both counts simultaneously. The more
-parsimonious explanation is a change in how loosely the phrase is applied by
-whoever writes the feed, with the consequence that a model conditioned only on
-the words attributes higher quality to the shot than was warranted.
+Table~\ref{tab:drift} attributes the second factor to two phrases, and
+Figure~\ref{fig:drift} shows the movement season by season. Over the decade
+separating the two seasons, ``following a fast break'' became approximately 4.5
+times more frequent while its conversion rate fell to a little over half its
+former value. A change of this magnitude in the underlying football is
+implausible on both counts simultaneously. The more parsimonious explanation is
+a change in how loosely the phrase is applied by whoever writes the feed, with
+the consequence that a model conditioned only on the words attributes higher
+quality to the shot than was warranted.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig3_drift}
+\caption{Share of shots (top) and conversion rate (bottom) for three
+commentary phrases across the five Premier League seasons in the corpus. The
+two phrases requiring a judgement move in opposite directions on the two
+panels, becoming more frequent and less productive; ``penalty'', which admits
+no latitude, is flat on both. The axis is broken because 2016/17 to 2021/22 are
+not in the corpus.}
+\label{fig:drift}
+\end{figure}
 
 The control phrases are as informative as the two that move. ``Penalty'' admits
 no interpretive latitude and is unchanged, at 0.94\% of shots converting at
@@ -618,48 +798,51 @@ level within a season, and does not require re-estimation.
 
 \section{Limitations}
 
-\begin{itemize}
-\item \emph{A single reference model on a single season.} The headline
-comparison is against StatsBomb alone, on Premier League 2015/16. A second
-provider or a second season would strengthen it materially. The availability of
-open releases is the binding constraint.
+The headline comparison rests on a single reference model evaluated on a single
+season. StatsBomb's Premier League 2015/16 release is, to our knowledge, the
+only open dataset carrying both a per-shot coordinate xG and a matching public
+commentary feed, so a second provider or a second season would strengthen the
+result materially but is not presently obtainable. The provider-agreement
+comparison in Section~\ref{sec:band} is subject to the aggregation mismatch
+described there.
 
-\item \emph{Free kicks are excluded.} The phrase ``from a free kick'' leaked
-the outcome, converting 60 of 60, and the feature was removed rather than
-repaired. A specification that handled free kicks correctly would likely
-perform better.
+The feature set is incomplete in a way we chose rather than inherited. The
+phrase ``from a free kick'' converted 60 of 60 in our corpus, which is a leak
+rather than a finding, and we removed the feature instead of repairing it. A
+specification that separated the free kick from its outcome would very likely
+perform better, and the 90.6\% figure should be read as a lower bound in that
+respect. Relatedly, a small number of fixtures return an empty commentary feed
+and contribute nothing to the corpus; the rate is low but non-zero and is not
+currently instrumented, so we cannot report it.
 
-\item \emph{Matches without commentary are discarded without record.} A small
-number of fixtures return an empty feed and contribute nothing to the corpus.
-The rate is low but non-zero, and is not currently instrumented.
+We assert that commentary is published quickly enough for live estimation and
+have no measurement to support it. A scheduled observer exists, but on the day
+tested the cloud scheduler triggered 2 of 12 intervals and did not cover the
+kickoff, so the claim remains untested and is not relied on for any result
+reported here.
 
-\item \emph{Latency is not measured.} We assert that commentary is published
-quickly enough for live estimation without evidence. A scheduled matchday
-observer exists, but on the day tested the cloud scheduler triggered 2 of 12
-scheduled intervals and did not cover the kickoff.
+Finally, the novelty claim rests on an incomplete search. Our search of arXiv,
+OpenAlex and Crossref recovered 5 of 6 probe works known in advance, and not
+consistently the same five across runs. A subsequent search of grey literature,
+which located~\cite{ballard2020moneyball} and thereby changed what this paper
+claims, recovered 3 of 4 probes by name, and one major discussion forum refuses
+automated access, which is a plausible location for unpublished work of this
+kind. Both searches are recorded query by query in the accompanying
+repository. We have not searched licensed indexes, thesis repositories, or
+non-English sources, and a reader should treat the priority claim in
+Section~2 accordingly.
 
-\item \emph{The novelty claim rests on an incomplete search.} Our search of
-arXiv, OpenAlex and Crossref returned 5 of 6 recall probes, and not
-consistently the same five. A subsequent search of grey literature, which
-located~\cite{ballard2020moneyball}, returned 3 of 4 probes by name, and one
-major discussion forum refuses automated access, which is a plausible location
-for unpublished work of this kind. Both searches are recorded query by query in
-the repository. We have not searched licensed indexes, thesis repositories, or
-non-English sources.
-
-\item \emph{The provider-agreement comparison is approximate}, for the reasons
-given in Section~\ref{sec:band}.
-\end{itemize}
-
-\section{Conclusion}
+\section{Conclusion and Future Work}
 
 A model estimated from commentary sentences recovers 90.6\% of a coordinate
-expected-goals model's discrimination above chance, and agrees with it at the
-team-match level to approximately the degree that one commercial provider
-agrees with another. The residual gap is not attributable to the extraction
-step, since richer readers of the same sentence perform worse; it corresponds
-to information the sentence does not encode. The model transfers to five
-further competitions without re-estimation, which we attribute to the
+expected-goals model's discrimination above chance, with a bootstrap interval
+of $[86.2, 95.0]$, and agrees with it at the team-match level to approximately
+the degree that one commercial provider agrees with another. The residual gap
+is not attributable to the extraction step, since richer readers of the same
+sentence perform worse; it corresponds to information the sentence does not
+encode, and Section~\ref{sec:errors} shows it concentrated in phrases that
+describe a chance qualitatively rather than geometrically. The model transfers
+to five further competitions without re-estimation, which we attribute to the
 commentary template being constructed identically across them.
 
 The failure mode we identify lies in the calibrated level rather than the
@@ -667,11 +850,27 @@ ranking. Text-derived features drift where coordinate features do not, and the
 drift is confined to phrases whose application requires a judgement by the
 annotator, while unambiguous phrases are unchanged over a decade. A single
 intercept, refitted within the season on shots already played, corrects the
-level without affecting the ranking.
+level without affecting the ranking. That the same phrases carry both the
+largest disagreement with the coordinates and the largest movement across
+seasons suggests these are two consequences of one property of the feature
+rather than two separate problems.
+
+Three directions follow. First, the drift correction here is a single global
+intercept, which is the coarsest available remedy; a per-phrase correction
+that shrinks the coefficient on a term in proportion to the instability of its
+recent usage would target the mechanism rather than its aggregate effect, and
+could be estimated within a season by the same procedure. Second, the
+commentary template is Opta's, and this paper cannot separate what is true of
+commentary in general from what is true of one provider's house style; a
+second feed, or a non-English one, would establish which. Third, the result
+suggests a general question about text-derived features beyond football:
+wherever a model reads a human-authored description, the descriptive vocabulary
+is itself a non-stationary instrument, and the separation of stable ranking
+from drifting level may be the appropriate way to report such models.
 
 For competitions with no prospect of open coordinate data, which comprise the
-large majority, this is the difference between an available xG estimate and
-none.
+large majority, the practical consequence is the difference between an
+available xG estimate and none.
 
 \begin{credits}
 \subsubsection{\ackname}
@@ -682,21 +881,142 @@ received.
 The author declares no competing interests.
 \end{credits}
 
+\section*{Ethics Statement}
+
+The commentary corpus is collected from a public endpoint that requires no
+authentication and serves text already published to readers of the site.
+Requests were issued serially with a single connection and no attempt was made
+to circumvent rate limiting or access controls. The data contains the names of
+professional footballers acting in their professional capacity, which are
+already a matter of public record, and no other personal information; no
+attempt is made to infer anything about individuals beyond the outcome of a
+shot. The corpus is not redistributed, and the accompanying repository
+contains the collection code rather than the collected text.
+
+We note one asymmetry worth stating plainly. The argument of this paper is
+that a free text feed substitutes for a licensed data product. That is
+advantageous for researchers and practitioners without budgets, which is the
+motivation, but the feed exists because a commercial provider constructs it,
+and the substitution is not costless to whoever paid for the annotation.
+
+\section*{Use of AI Assistants}
+
+AI coding assistants were used throughout this work: for implementation, for
+exploratory analysis, for literature and grey-literature search, and for
+drafting and revising this manuscript. All quantitative results were produced
+by code in the accompanying repository and verified against its test suite
+rather than reported from model output, and every citation was checked against
+the arXiv or Crossref API before inclusion. The author is responsible for the
+content, including the claims, the limitations, and any remaining errors.
+
 \section*{Reproducibility}
 
 Every quantity reported in this paper is produced by a single script in the
 accompanying repository~\cite{xgfromwords2026}, which executes the pipeline in
-dependency order from collection through to the final tables. The repository
-also contains a test suite of 50 tests. These include behavioural guards
-against outcome leakage, a check that the walk-forward correction of
+dependency order from collection through to the final tables and figures. The
+figures read their values from the joined data at render time rather than
+carrying them as literals. The repository also contains a test suite of 55
+tests. These include behavioural guards against outcome
+leakage~\cite{kaufman2012leakage}, a check that the walk-forward correction of
 Section~\ref{sec:drift} uses no observation from after the block it is applied
 to, an assertion that the intercept shift leaves AUC unchanged, and a
 dependency graph that fails if any derived artefact predates the inputs from
-which it was built. The literature and grey-literature searches on which the novelty claim of
-Section~2 rests are recorded in the repository query by query, together with
-the recall probes discussed in the limitations.
+which it was built. The literature and grey-literature searches on which the
+priority claim of Section~2 rests are recorded query by query, together with
+the recall probes reported in the limitations.
 
 \bibliographystyle{splncs04}
 \bibliography{refs}
+
+\appendix
+
+\section{Extraction}
+\label{app:extraction}
+
+Fields are set by whitelist regular expression over the stripped sentence.
+Every pattern is listed in \texttt{src/shots.py} in the accompanying
+repository; the substantive design decisions are these.
+
+Only spans matching a chance-describing pattern are retained, and everything
+else in the sentence is discarded. The retained families are the location
+phrases (\emph{from the centre of the box}, \emph{from the left side of the
+box}, \emph{from outside the box}, \emph{from very close range}, \emph{from a
+difficult angle}, \emph{from long range}), the body-part phrases
+(\emph{right footed shot}, \emph{left footed shot}, \emph{header}), the
+assist phrases (\emph{assisted by \dots with a cross}, \emph{\dots with a
+through ball}, \emph{\dots with a headed pass}, \emph{\dots with an aerial
+pass}), and the pattern-of-play phrases (\emph{following a corner},
+\emph{following a fast break}, \emph{following a set piece situation}).
+
+Nine fields describe the shot itself rather than its build-up:
+\texttt{header}, \texttt{left\_foot}, \texttt{right\_foot},
+\texttt{six\_yard}, \texttt{centre\_box}, \texttt{side\_box},
+\texttt{outside\_box}, \texttt{long\_range} and \texttt{difficult\_ang}. These
+are read only from the text preceding the token \texttt{assisted by}, which is
+the repair for leak (4) of Section~\ref{sec:leak}: the phrase ``headed pass''
+describes the assist and had been setting the \texttt{header} indicator on
+\num{1,636} shots.
+
+Free kicks are absent, as described in the limitations.
+
+\section{Estimation}
+\label{app:estimation}
+
+The primary model is a scikit-learn pipeline of \texttt{StandardScaler}
+followed by \texttt{LogisticRegression} with \texttt{max\_iter=2000} and the
+default $\ell_2$ penalty at $C=1$. Standardisation matters only because
+\texttt{minute} runs from 0 to 95 while the other seventeen fields are binary;
+it does not change the fit materially. No hyperparameter search was performed
+and none of the reported numbers depends on one.
+
+The comparison against gradient-boosted trees in Table~\ref{tab:ceiling} uses
+XGBoost~\cite{chen2016xgboost} at its defaults. The TF-IDF baseline uses
+1--4 grams with \texttt{min\_df=5} and sublinear term frequency; the embedding
+baseline uses \texttt{all-MiniLM-L6-v2}~\cite{reimers2019sbert}.
+
+The in-season correction of Section~\ref{sec:drift} solves for the additive
+intercept shift $\delta$ satisfying
+\begin{equation}
+\frac{1}{|B|}\sum_{i \in B}
+  \sigma\!\left(z_i + \delta\right) = \frac{1}{|B|}\sum_{i \in B} y_i ,
+\end{equation}
+where $z_i$ is the model's logit for shot $i$, $\sigma$ the logistic function,
+and $B$ the set of shots played before the block being scored. The left side is
+monotone in $\delta$, so it is solved by 60 bisections on $[-5, 5]$, which is
+well inside floating-point precision. Blocks are 500 shots and the warm-up is
+500 shots.
+
+\section{Phrase drift, all seasons}
+\label{app:drift}
+
+Table~\ref{tab:appdrift} gives the season-by-season values summarised in
+Figure~\ref{fig:drift}.
+
+\begin{table}[h]
+\caption{Share of shots and conversion rate by season, Premier League. The
+corpus contains 2015/16 and 2022/23 onwards.}
+\label{tab:appdrift}
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+& 2015/16 & 2022/23 & 2023/24 & 2024/25 & 2025/26 \\
+\midrule
+\multicolumn{6}{l}{\emph{share of shots} (\%)} \\
+six yard box       & 3.22 & 4.25 & 4.84 & 4.83 & 5.96 \\
+following a fast break & 0.73 & 1.91 & 2.31 & 3.26 & 3.30 \\
+centre of the box  & 32.84 & 36.56 & 36.07 & 35.86 & 36.44 \\
+penalty            & 0.94 & 1.08 & 1.07 & 0.87 & 1.01 \\
+\midrule
+\multicolumn{6}{l}{\emph{conversion rate} (\%)} \\
+six yard box       & 43.5 & 39.1 & 43.3 & 40.7 & 35.8 \\
+following a fast break & 49.3 & 47.2 & 34.9 & 36.1 & 28.4 \\
+centre of the box  & 14.2 & 14.1 & 15.6 & 14.5 & 13.2 \\
+penalty            & 83.1 & 74.7 & 89.7 & 83.1 & 82.8 \\
+\midrule
+shots              & \num{9,502} & \num{9,205} & \num{10,022} & \num{9,508} & \num{9,194} \\
+overall conversion (\%) & 10.5 & 11.8 & 12.4 & 11.7 & 11.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \end{document}

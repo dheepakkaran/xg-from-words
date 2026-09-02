@@ -14,6 +14,23 @@ latexmk -pdf paper.tex
 Needs `llncs.cls` and `splncs04.bst` (both in TeX Live). Overleaf has them
 built in if you would rather not build locally.
 
+## Figures
+
+`figures.py` builds all three. They read their values from
+`data/proc/xg_validation.parquet` at render time rather than carrying numbers
+as literals -- the first draft of Figure 1 had invented coordinates and an
+invented commentary line in it, which is not a thing a paper may contain. It
+now shows a real shot, Ramsey for Arsenal against Manchester United, found by
+its StatsBomb location.
+
+Colour is decoration in these figures and never identity. The palette was
+checked against the data-viz validator and passes, but grayscale is a stricter
+constraint than any check it runs: two of the three hues are 0.045 apart in
+relative luminance, which prints as gray 142 against gray 152. Every series
+therefore carries a marker shape, a line style and a label as well. Remove the
+colour and the figures still read, which is the only test that matters for a
+printed proceedings.
+
 ## Provenance
 
 `numbers.txt` is every figure in the paper, dumped from the artefacts it came

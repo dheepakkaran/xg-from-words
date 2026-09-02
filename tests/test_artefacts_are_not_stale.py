@@ -46,6 +46,15 @@ GRAPH = {
     "docs/scorecard.json": ["src/scorecard.py", "models/xg.json",
                             "models/xg.shift.json"],
     "writing/cover.png": ["writing/cover.py", "docs/data.json"],
+    "reports/recovery_ci.json": ["src/recovery_ci.py",
+                                 "data/proc/xg_validation.parquet"],
+    "reports/error_analysis.json": ["src/error_analysis.py", "src/xg.py",
+                                    "data/proc/xg_validation.parquet"],
+    "paper/fig1_schematic.pdf": ["paper/figures.py",
+                                 "data/proc/xg_validation.parquet"],
+    "paper/fig2_reliability.pdf": ["paper/figures.py",
+                                   "data/proc/xg_validation.parquet"],
+    "paper/fig3_drift.pdf": ["paper/figures.py", "data/proc/shots.parquet"],
 }
 
 # Enough slack that a rebuild finishing seconds apart is not flagged, and that
