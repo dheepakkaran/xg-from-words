@@ -148,3 +148,26 @@ def test_walk_forward_reproduces_from_the_corpus():
     e = R.walk_forward(model, cur)
     assert e["uncorrected_over_pct"] > MIN_UNCORRECTED
     assert abs(e["recalibrated_over_pct"]) < MAX_RECALIBRATED
+
+
+def test_wallclock_is_not_a_publish_timestamp():
+    """The archive cannot answer the latency question, and the reason is
+    measurable rather than asserted.
+
+    `wallclock` looks like it records when ESPN published a commentary line,
+    which would make 3,577 archived matches a free latency measurement. It
+    does not: it is the event time, reconstructed as the actual kickoff plus
+    the match clock. This guards the claim in the paper's limitations, and it
+    guards against someone later reading src/publish.py's lag field as
+    publish latency -- which an earlier version of its own docstring did.
+    """
+    p = os.path.join(ROOT, "reports", "wallclock_check.json")
+    if not os.path.exists(p):
+        pytest.skip("reports/wallclock_check.json not built")
+    d = json.load(open(p))
+    assert d["matches_checked"] >= 100
+    # A published timestamp scatters. This one does not.
+    assert d["within_match_sd_seconds"]["median"] < 2.0
+    assert d["share_below_sd_threshold"] > 0.9
+    # Two or three adjacent integers is rounding, not variance.
+    assert d["distinct_residual_values_per_match"]["median"] <= 6

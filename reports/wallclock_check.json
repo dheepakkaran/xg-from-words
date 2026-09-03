@@ -1,0 +1,21 @@
+{
+ "matches_checked": 250,
+ "items_per_match_median": 33,
+ "within_match_sd_seconds": {
+  "median": 0.524,
+  "p95": 1.171,
+  "max": 5.8
+ },
+ "distinct_residual_values_per_match": {
+  "median": 3,
+  "max": 6
+ },
+ "kickoff_offset_seconds": {
+  "median": 60.2,
+  "p5": 8.3,
+  "p95": 279.6
+ },
+ "share_below_sd_threshold": 0.988,
+ "sd_threshold_seconds": 2.0,
+ "verdict": "wallclock is the event time, derived as actual kickoff plus match clock. It is not a publish timestamp and cannot measure latency."
+}

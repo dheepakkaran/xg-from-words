@@ -49,6 +49,9 @@ step "an interval on the headline, and where the disagreement lives"
 ./run.sh src/recovery_ci.py
 ./run.sh src/error_analysis.py
 
+step "whether the archive can answer the latency question (it cannot)"
+./run.sh src/wallclock_check.py
+
 step "the paper's figures, which read their values from the joined data"
 ./run.sh paper/figures.py
 

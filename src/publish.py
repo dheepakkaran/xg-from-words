@@ -76,7 +76,21 @@ def kickoff_soon(now, minutes=KICKOFF_WINDOW):
 
 
 def newest_lag(summary, now):
-    """Seconds since ESPN stamped their most recent commentary line."""
+    """Seconds since the most recent event ESPN are serving commentary for.
+
+    Not publish latency, and the earlier version of this docstring said it was.
+    `wallclock` is the event time, reconstructed as the actual kickoff plus the
+    match clock -- src/wallclock_check.py measures its within-match standard
+    deviation at a median of 0.52s across 250 matches, which is rounding rather
+    than a process with variance, so the field is arithmetic and not an
+    observation.
+
+    What this returns is therefore publish latency *plus* however long it has
+    been since anything happened, and during a quiet spell the second term
+    dominates. The statistic to read off a matchday is the **minimum** across
+    polls: only there is the second term squeezed towards zero. Polling more
+    often than the gap between events tightens the bound.
+    """
     stamps = [(e.get("play") or {}).get("wallclock")
               for e in summary.get("commentary", [])]
     stamps = [dt.datetime.fromisoformat(s.replace("Z", "+00:00"))

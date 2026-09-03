@@ -815,10 +815,22 @@ and contribute nothing to the corpus; the rate is low but non-zero and is not
 currently instrumented, so we cannot report it.
 
 We assert that commentary is published quickly enough for live estimation and
-have no measurement to support it. A scheduled observer exists, but on the day
-tested the cloud scheduler triggered 2 of 12 intervals and did not cover the
-kickoff, so the claim remains untested and is not relied on for any result
-reported here.
+have no measurement to support it. The obvious shortcut does not work. Each
+archived commentary item carries a \texttt{wallclock} field, and if that
+recorded publication time then the \num{3,577} stored matches would already
+contain the answer. It does not: within a single match the residual between
+that field and the match clock has a median standard deviation of
+\num{0.52}\,s across 250 matches, with 98.8\% of matches below \num{2}\,s
+and a median of three distinct integer values per match. That is the signature
+of second-level rounding on a constant, so the field is the event time
+reconstructed as the actual kickoff plus the match clock, and the constant is
+the kickoff delay, whose median is \num{60}\,s. Publication time is not
+retained anywhere, so the measurement requires live observation, and the
+statistic must be the minimum of the observed delay across polls rather than
+its mean, since any single reading also contains the interval since the last
+event. A scheduled observer exists but on the day tested the cloud scheduler
+triggered 2 of 12 intervals and did not cover the kickoff. The claim remains
+untested and is not relied on for any result reported here.
 
 Finally, the novelty claim rests on an incomplete search. Our search of arXiv,
 OpenAlex and Crossref recovered 5 of 6 probe works known in advance, and not

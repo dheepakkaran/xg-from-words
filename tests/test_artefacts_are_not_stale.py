@@ -48,6 +48,8 @@ GRAPH = {
     "writing/cover.png": ["writing/cover.py", "docs/data.json"],
     "reports/recovery_ci.json": ["src/recovery_ci.py",
                                  "data/proc/xg_validation.parquet"],
+    "reports/wallclock_check.json": ["src/wallclock_check.py",
+                                     "data/fixtures.json"],
     "reports/error_analysis.json": ["src/error_analysis.py", "src/xg.py",
                                     "data/proc/xg_validation.parquet"],
     "paper/fig1_schematic.pdf": ["paper/figures.py",
