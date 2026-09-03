@@ -56,7 +56,8 @@ whole pipeline with `../rebuild.sh`.
       Education
 - [ ] Link the ORCID in arXiv account settings once the account exists, so the
       preprint carries a verified identifier
-- [ ] Confirm the affiliation line
+- [x] Affiliation: Dept. of Electrical and Computer Engineering,
+      College of Engineering, Northeastern University
 - [ ] arXiv needs an endorsement for a first submission in `cs.LG` — a
       `northeastern.edu` address may clear it automatically; you find out on
       registration
