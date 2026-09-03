@@ -25,9 +25,12 @@ from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-# LNCS text width is 122mm. A figure wider than that is scaled down and takes
-# its fonts with it, so everything is drawn at final size.
-W = 4.80
+# IEEEtran conference is two columns: a column is 3.5in and the full text
+# block is 7.16in. Figures are drawn at their final printed size so the 8pt
+# labels match the 10pt body text instead of being scaled with the image.
+# WIDE is for figure*, COL for a single column.
+WIDE, COL = 7.00, 3.42
+W = WIDE
 INK, MUTED, FAINT = "#0b0b0b", "#52514e", "#c9c8c3"
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 
@@ -88,7 +91,7 @@ def fig_schematic(path):
                       "assisted", "penalty") if r[f] == 1]
     FREEZE = 15                # 5 teammates, 10 opponents, one a goalkeeper
 
-    fig, ax = plt.subplots(figsize=(W, 2.70))
+    fig, ax = plt.subplots(figsize=(WIDE, 2.50))
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
     quote = " ".join(str(r.text_raw).split())
@@ -99,33 +102,39 @@ def fig_schematic(path):
          size=6.9, mono=False, italic=True, fill="#fcfcfb")
     assert quote.startswith("Attempt missed. Aaron Ramsey"), quote[:40]
 
-    ax.text(0.245, 0.780, "this work: parsed from the sentence", ha="center",
+    ax.text(0.245, 0.735, "this work: parsed from the sentence", ha="center",
             va="center", fontsize=6.8, color=MUTED)
-    ax.text(0.755, 0.780, "StatsBomb: hand-collected", ha="center",
+    ax.text(0.755, 0.735, "StatsBomb: hand-collected", ha="center",
             va="center", fontsize=6.8, color=MUTED)
-    _arrow(ax, 0.245, 0.762, 0.245, 0.730)
-    _arrow(ax, 0.755, 0.762, 0.755, 0.730)
+    _arrow(ax, 0.245, 0.795, 0.245, 0.762)
+    _arrow(ax, 0.755, 0.795, 0.755, 0.762)
+    _arrow(ax, 0.245, 0.708, 0.245, 0.625)
+    _arrow(ax, 0.755, 0.708, 0.755, 0.625)
 
-    left = "\n".join(f"{f:<13s}= 1" for f in on)
-    left += f"\nminute       = {int(r.minute)}\n"
-    left += f"({18 - len(on) - 1} others   = 0)"
-    _box(ax, 0.01, 0.300, 0.47, 0.425, left)
-    _box(ax, 0.52, 0.300, 0.47, 0.425,
-         f"x        = {r.sb_x:.1f}\ny        = {r.sb_y:.1f}\n"
-         f"distance = {dist:.1f} m\nangle    = {ang:.2f} rad\n"
-         f"body     = right foot\ntechnique= volley\n"
-         f"freeze frame: {FREEZE}", fill="#fcfcfb")
+    # Two columns inside each box: a 7in figure* with a single narrow column
+    # of text is mostly whitespace, and the seven-line version overflowed.
+    lft = [f"{f:<13s}= 1" for f in on] + [f"{'minute':<13s}= {int(r.minute)}"]
+    rgt = [f"{'x':<9s}= {r.sb_x:.1f}", f"{'y':<9s}= {r.sb_y:.1f}",
+           f"{'distance':<9s}= {dist:.1f} m", f"{'angle':<9s}= {ang:.2f} rad",
+           ""]
+    lft2 = [f"{18 - len(on) - 1} others = 0", "", "", "", ""]
+    rgt2 = ["body      = right foot", "technique = volley",
+            f"freeze frame = {FREEZE} players", ""]
+    _box(ax, 0.01, 0.315, 0.47, 0.300,
+         "\n".join(f"{a}   {b}" for a, b in zip(lft, lft2)))
+    _box(ax, 0.52, 0.315, 0.47, 0.300,
+         "\n".join(f"{a}   {b}" for a, b in zip(rgt, rgt2)), fill="#fcfcfb")
 
-    _arrow(ax, 0.245, 0.295, 0.245, 0.232)
-    _arrow(ax, 0.755, 0.295, 0.755, 0.232)
+    _arrow(ax, 0.245, 0.310, 0.245, 0.247)
+    _arrow(ax, 0.755, 0.310, 0.755, 0.247)
 
-    _box(ax, 0.075, 0.100, 0.34, 0.130,
+    _box(ax, 0.075, 0.105, 0.34, 0.130,
          f"$\\widehat{{xG}} = {r.our_xg:.3f}$",
          size=9, mono=False, center=True, weight="bold")
-    _box(ax, 0.585, 0.100, 0.34, 0.130, f"$xG = {r.sb_xg:.3f}$",
+    _box(ax, 0.585, 0.105, 0.34, 0.130, f"$xG = {r.sb_xg:.3f}$",
          size=9, mono=False, center=True, fill="#fcfcfb")
-    _arrow(ax, 0.425, 0.165, 0.580, 0.165, style="<->")
-    ax.text(0.5025, 0.142, f"{abs(r.our_xg - r.sb_xg):.3f}", ha="center",
+    _arrow(ax, 0.425, 0.170, 0.580, 0.170, style="<->")
+    ax.text(0.5025, 0.147, f"{abs(r.our_xg - r.sb_xg):.3f}", ha="center",
             va="top", fontsize=6.6, color=MUTED)
 
     ax.text(0.5, 0.030,
@@ -139,7 +148,7 @@ def fig_schematic(path):
 def fig_reliability(path):
     d = pd.read_parquet(os.path.join(ROOT, "data", "proc",
                                      "xg_validation.parquet"))
-    fig, ax = plt.subplots(figsize=(W * 0.60, 2.0))
+    fig, ax = plt.subplots(figsize=(COL, 2.35))
     hi = 0.45
     ax.plot([0, hi], [0, hi], linewidth=0.6, color=FAINT, zorder=1)
     ax.text(hi - 0.015, hi - 0.055, "perfect calibration", fontsize=6.6,
@@ -183,11 +192,10 @@ def fig_drift(path):
             ("fast break", "after_break", ORANGE, "s", "--"),
             ("penalty", "penalty", AQUA, "^", ":")]
 
-    # Stacked rather than side by side: two panels across 122mm leaves about
-    # 0.30in per season tick, and a "22/23" label at 7pt is 0.28in wide, so
-    # the labels collided. Full width per panel fixes it and leaves room for
-    # the end-of-line labels.
-    fig, axes = plt.subplots(2, 1, figsize=(W, 3.30), sharex=True)
+    # Stacked rather than side by side, and single-column: two panels across
+    # one 3.42in column leaves about 0.2in per season tick against a 0.28in
+    # label, so they collided. Stacking gives each panel the full column.
+    fig, axes = plt.subplots(2, 1, figsize=(COL, 3.05), sharex=True)
     for ax, what in zip(axes, ("share", "conv")):
         for label, f, c, mk, ls in spec:
             ys = [100 * d[d.season == s][f].mean() if what == "share"

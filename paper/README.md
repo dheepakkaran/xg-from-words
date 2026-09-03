@@ -1,9 +1,16 @@
 # The paper
 
-Springer LNCS (`llncs`), 12 pages. arXiv imposes no format of its own; LNCS is
-used because the natural venue for this work is **MLSA @ ECML/PKDD**, which is
-where Robberechts and Davis published the paper this one builds on, and because
-it renders correctly on arXiv as-is.
+IEEE conference format (`IEEEtran`, `[conference]`), two columns, 10 pages
+including the appendix. arXiv imposes no format of its own, so this is a free
+choice; IEEE is the more widely recognised of the two and does not look out of
+place beside anything.
+
+The previous draft was Springer LNCS, single-column, and the conversion was
+not only a class change. Six tables that fit a 122mm LNCS measure overflow a
+3.5in IEEE column, and the figures had to be redrawn at IEEE dimensions -- the
+schematic at 7.00in for `figure*`, the other two at 3.42in for a single
+column -- because rescaling a figure takes its label sizes with it. That
+history is in the git log if the LNCS version is ever wanted back.
 
 ## Build
 
@@ -11,7 +18,7 @@ it renders correctly on arXiv as-is.
 latexmk -pdf paper.tex
 ```
 
-Needs `llncs.cls` and `splncs04.bst` (both in TeX Live). Overleaf has them
+Needs `IEEEtran.cls` and `IEEEtran.bst`, both in TeX Live. Overleaf has them
 built in if you would rather not build locally.
 
 ## Figures

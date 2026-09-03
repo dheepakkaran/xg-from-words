@@ -1,4 +1,5 @@
-\documentclass[runningheads]{llncs}
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -6,62 +7,52 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{url}
+\usepackage{cite}
 \usepackage[hidelinks]{hyperref}
-\usepackage{xcolor}
 
 \newcommand{\num}[1]{\mbox{#1}}
 
 \begin{document}
 
-\title{How Much of an Expected Goals Model Is in the Words?}
-\subtitle{Recovering shot quality from free-text match commentary}
+\title{How Much of an Expected Goals Model Is in the Words?\\
+\large Recovering shot quality from free-text match commentary}
 
-\author{Dheepak Karan Elumalai Santhakumari\orcidID{0009-0007-2152-8401}}
-\authorrunning{D. K. Elumalai Santhakumari}
-\institute{Northeastern University, Boston MA, USA\\
-\email{elumalaisanthakuma.d@northeastern.edu}}
+\author{\IEEEauthorblockN{Dheepak Karan Elumalai Santhakumari}
+\IEEEauthorblockA{\textit{Khoury College of Computer Sciences} \\
+\textit{Northeastern University}\\
+Boston, MA, USA \\
+elumalaisanthakuma.d@northeastern.edu \\
+ORCID 0009-0007-2152-8401}}
 
 \maketitle
 
 \begin{abstract}
 Expected goals (xG) models are estimated from shot coordinates, which are
-collected by human annotators or tracking cameras and are, outside a small
-number of open releases, sold rather than published. Free-text match commentary
-is subject to neither constraint: it is available without a key, it is
-published for many competitions that have no open coordinate data, and it
-describes each shot in a single sentence. We ask how much of a coordinate-based
-xG model can be recovered when that sentence is the only input.
-
-We parse \num{87,980} shots from ESPN commentary across six European
-competitions into eighteen binary and ordinal fields, estimate a logistic
-regression on three Premier League seasons, and evaluate it on a held-out
-fourth, obtaining an AUC of \num{0.7709}. To compare words against coordinates
-directly, we join \num{8,825} shots to StatsBomb's open Premier League 2015/16
-release, for which both a commentary sentence and a hand-collected coordinate
-xG exist for the same shot. The text model attains an AUC of \num{0.7826}
-against StatsBomb's \num{0.8118}, recovering 90.6\% of the coordinate model's
-discrimination above chance. Aggregated to the team-match, the two estimates
-correlate at $r=\num{0.869}$, which falls within the range reported between
-commercial providers. Substituting the full sentence for the extracted fields
-reduces AUC by \num{0.010}, indicating that the extraction is not the binding
-constraint and that the residual gap reflects information the sentence does not
-contain.
-
-We then characterise a failure mode particular to text-derived features.
-Consistent with Robberechts and Davis, a decade-stale model loses only
-\num{0.0068} AUC and transfers between leagues without cost, so the induced
-ranking is stable. The predicted level is not: the model over-estimates the
-held-out season by 11.9\%, which decomposes into a 5.7\% decline in the league
-goal rate and a 5.9\% shift in the distribution of parsed phrases. Two phrases
-account for the second component, while unambiguous phrases such as
-``penalty'' are unchanged. Re-estimation on more recent data does not correct
-this, whereas refitting a single intercept on shots already played reduces the
-error to 2.9\% while leaving the ranking unaltered. The instability is
-confined to phrases whose application requires a judgement by the annotator.
-
-\keywords{Expected goals \and Football analytics \and Text as features \and
-Concept drift \and Calibration}
+collected by human annotators or tracking cameras and, outside a small number
+of open releases, licensed rather than published. Free-text match commentary is
+available without a key and describes each shot in a single sentence. We ask
+how much of a coordinate-based xG model survives when that sentence is the only
+input. Parsing \num{87,980} shots from ESPN commentary across six European
+competitions into eighteen fields, a logistic regression attains an AUC of
+\num{0.7709} on a held-out Premier League season. On \num{8,825} shots joined
+to StatsBomb's open 2015/16 release, for which both a sentence and a coordinate
+xG exist for the same shot, the text model reaches \num{0.7826} against
+\num{0.8118}, recovering 90.6\% (95\% CI 86.2--95.0) of the coordinate model's
+discrimination above chance; per team-match the two correlate at
+$r=\num{0.869}$, within the range reported between commercial providers.
+Substituting the full sentence for the extracted fields costs \num{0.010} AUC,
+so the extraction is not the binding constraint. We further show that
+text-derived features drift in level but not in ranking. The model
+over-estimates the held-out season by 11.9\%, which we localise to two phrases
+requiring a judgement by the annotator while unambiguous phrases are unchanged
+over a decade, and a single in-season intercept refit reduces the error to
+2.9\% without affecting the ranking.
 \end{abstract}
+
+\begin{IEEEkeywords}
+expected goals, football analytics, text as features, concept drift,
+calibration
+\end{IEEEkeywords}
 
 \section{Introduction}
 
@@ -85,7 +76,7 @@ which open coordinate data does not and is unlikely to. They plainly encode
 part of what an xG model requires, and the question we address is what
 proportion.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig1_schematic}
 \caption{The same shot as each side of the comparison receives it. The
@@ -94,7 +85,7 @@ StatsBomb release yields a location, a derived distance and angle, and the
 positions of the players in view. Neither side sees the other's
 representation, and both are scored against the same outcome.}
 \label{fig:schematic}
-\end{figure}
+\end{figure*}
 
 We treat this as a measurement problem rather than a feasibility question,
 because the practical implication depends on the magnitude. Recovery of a small
@@ -291,16 +282,17 @@ described as coming from outside the box to 82.7\% for penalties.
 (2022/23--2025/26). Overall rate 11.8\%.}
 \label{tab:signal}
 \centering
-\begin{tabular}{lrr@{\hskip 2em}lrr}
+\footnotesize
+\begin{tabular}{lrr@{\hskip 0.9em}lrr}
 \toprule
 Field & \% shots & Goals & Field & \% shots & Goals \\
 \midrule
 penalty          & 1.0  & 82.7\% & from cross      & 18.6 & 10.7\% \\
 six yard box     & 5.0  & 39.6\% & assisted        & 75.9 & 10.7\% \\
-after fast break & 2.7  & 35.5\% & header          & 18.2 & 10.5\% \\
+fast break       & 2.7  & 35.5\% & header          & 18.2 & 10.5\% \\
 through ball     & 3.5  & 25.7\% & difficult angle & 2.5  & 8.1\%  \\
 after corner     & 9.8  & 16.4\% & side of box     & 18.5 & 5.6\%  \\
-centre of box    & 36.2 & 14.4\% & outside the box & 30.6 & 4.1\%  \\
+centre of box    & 36.2 & 14.4\% & outside box     & 30.6 & 4.1\%  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -423,14 +415,14 @@ Section~\ref{sec:metrics}; the base rate is the estimation-sample conversion
 rate, so its AUC is \num{0.500} by construction.}
 \label{tab:headline}
 \centering
+\footnotesize
 \begin{tabular}{llrrr}
 \toprule
 Model & Input & AUC & Log loss & Brier \\
 \midrule
-Base rate & nothing & \num{0.5000} & \num{0.3283} & \num{0.0909} \\
-Commentary model & the commentary sentence & \num{0.7826} & \num{0.2711} & \num{0.0764} \\
-StatsBomb & location, geometry, freeze frame
-& \num{0.8118} & \num{0.2555} & \num{0.0715} \\
+Base rate & --- & \num{0.5000} & \num{0.3283} & \num{0.0909} \\
+Commentary & sentence & \num{0.7826} & \num{0.2711} & \num{0.0764} \\
+StatsBomb & coordinates & \num{0.8118} & \num{0.2555} & \num{0.0715} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -458,7 +450,7 @@ separate on that criterion.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.60\textwidth]{fig2_reliability}
+\includegraphics[width=\columnwidth]{fig2_reliability}
 \caption{Reliability of both models on the \num{8,825} joined shots, in
 octiles of predicted probability. The two curves lie almost on top of one
 another and both track the diagonal, so the gap in Table~\ref{tab:headline} is
@@ -558,14 +550,16 @@ if the model transfers. We applied the Premier League fit to five further
 competitions without re-estimation or tuning (Table~\ref{tab:transfer}).
 
 \begin{table}[t]
-\caption{The Premier League fit applied to five further competitions without re-estimation.}
+\caption{The Premier League fit applied to five further competitions
+without re-estimation. $^{\dagger}$the estimation league.}
 \label{tab:transfer}
 \centering
+\footnotesize
 \begin{tabular}{lrrrr}
 \toprule
 Competition & Shots & Goal rate & AUC & Mean xG \\
 \midrule
-Premier League \emph{(estimation sample)} & \num{9,194} & 11.3\% & \num{0.7709} & \num{0.127} \\
+Premier League$^{\dagger}$ & \num{9,194} & 11.3\% & \num{0.7709} & \num{0.127} \\
 La Liga        & \num{9,240} & 11.1\% & \num{0.7730} & \num{0.119} \\
 Ligue 1        & \num{7,391} & 11.7\% & \num{0.7807} & \num{0.122} \\
 Bundesliga     & \num{7,853} & 12.6\% & \num{0.7795} & \num{0.125} \\
@@ -593,12 +587,13 @@ Table~\ref{tab:errors} reports the mean absolute difference between the two
 estimates within each field, restricted to fields appearing on at least 40 of
 the joined shots.
 
-\begin{table}[t]
+\begin{table*}[t]
 \caption{Where the two estimates disagree, by parsed field, on the
 \num{8,825} joined shots. Bias is signed, ours minus StatsBomb's. Fields
 appearing on fewer than 40 shots are omitted.}
 \label{tab:errors}
 \centering
+\footnotesize
 \begin{tabular}{lrrr@{\hskip 1.6em}lrrr}
 \toprule
 Field & $n$ & mean $|\Delta|$ & bias & Field & $n$ & mean $|\Delta|$ & bias \\
@@ -613,7 +608,7 @@ from cross     & \num{1,685} & \num{0.060} & $-0.017$ & side of box & \num{1,493
 headed pass    &  286 & \num{0.060} & $+0.009$ & outside the box & \num{3,511} & \num{0.019} & $+0.002$ \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The ordering is interpretable. Disagreement is smallest where the phrase is
 geometrically specific: ``outside the box'' at \num{0.019} constrains the
@@ -657,22 +652,22 @@ follows.
 \toprule
 & & Factor \\
 \midrule
-league goal rate, 2022/23 $\rightarrow$ 2025/26
-  & $0.1199 \rightarrow 0.1134$ & $\times\,1.057$ \\
-mean prediction vs.\ its own training rate
-  & $0.1199 \rightarrow 0.1270$ & $\times\,1.059$ \\
+league goal rate & $0.1199 \to 0.1134$ & $\times\,1.057$ \\
+mean prediction & $0.1199 \to 0.1270$ & $\times\,1.059$ \\
 \midrule
-\textbf{observed over-estimate} & & $\mathbf{1.119}$ \\
+observed over-estimate & & $1.119$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The first factor reflects a decline in the league's conversion rate. The second
-requires explanation. The mean prediction of a logistic regression on its own
-estimation sample equals the sample base rate by construction, so a mean of
-\num{0.1270} on 2025/26 implies that the parsed features of those shots are
-more favourable than those of the shots on which the model was estimated, while
-the shots themselves produced fewer goals.
+\noindent
+The first row is the decline in the league's conversion rate between the
+estimation window and the held-out season. The second requires explanation.
+The mean prediction of a logistic regression on its own estimation sample
+equals the sample base rate by construction, so a mean of \num{0.1270} on
+2025/26 implies that the parsed features of those shots are more favourable
+than those of the shots on which the model was estimated, while the shots
+themselves produced fewer goals.
 
 \subsection{Localising the shift to individual phrases}
 
@@ -681,17 +676,20 @@ the shots themselves produced fewer goals.
 Premier League 2015/16 against 2025/26.}
 \label{tab:drift}
 \centering
-\begin{tabular}{lrrrrr}
+\footnotesize
+\begin{tabular}{lrrrr}
 \toprule
-& \multicolumn{2}{c}{2015/16} & \multicolumn{2}{c}{2025/26} & \\
+& \multicolumn{2}{c}{2015/16} & \multicolumn{2}{c}{2025/26} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}
-Phrase & \% shots & conv. & \% shots & conv. & \\
+Phrase & \% shots & conv. & \% shots & conv. \\
 \midrule
-``six yard box''        & 3.22 & 43.5\% & 5.96 & 35.8\% & shifts \\
-``following a fast break'' & 0.73 & 49.3\% & 3.30 & 28.4\% & shifts \\
+\multicolumn{5}{l}{\emph{requires a judgement}} \\
+``six yard box''      & 3.22 & 43.5\% & 5.96 & 35.8\% \\
+``following a fast break'' & 0.73 & 49.3\% & 3.30 & 28.4\% \\
 \midrule
-``centre of the box''   & 32.84 & 14.2\% & 36.44 & 13.2\% & stable \\
-``penalty''             & 0.94 & 83.1\% & 1.01 & 82.8\% & stable \\
+\multicolumn{5}{l}{\emph{does not}} \\
+``centre of the box'' & 32.84 & 14.2\% & 36.44 & 13.2\% \\
+``penalty''           & 0.94 & 83.1\% & 1.01 & 82.8\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -708,7 +706,7 @@ quality to the shot than was warranted.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{fig3_drift}
+\includegraphics[width=\columnwidth]{fig3_drift}
 \caption{Share of shots (top) and conversion rate (bottom) for three
 commentary phrases across the five Premier League seasons in the corpus. The
 two phrases requiring a judgement move in opposite directions on the two
@@ -872,14 +870,10 @@ For competitions with no prospect of open coordinate data, which comprise the
 large majority, the practical consequence is the difference between an
 available xG estimate and none.
 
-\begin{credits}
-\subsubsection{\ackname}
-This work uses StatsBomb open data and a public ESPN endpoint. No funding was
-received.
+\section*{Acknowledgment}
 
-\subsubsection{\discintname}
-The author declares no competing interests.
-\end{credits}
+This work uses StatsBomb open data and a public ESPN endpoint. No funding was
+received, and the author declares no competing interests.
 
 \section*{Ethics Statement}
 
@@ -925,10 +919,10 @@ which it was built. The literature and grey-literature searches on which the
 priority claim of Section~2 rests are recorded query by query, together with
 the recall probes reported in the limitations.
 
-\bibliographystyle{splncs04}
+\bibliographystyle{IEEEtran}
 \bibliography{refs}
 
-\appendix
+\appendices
 
 \section{Extraction}
 \label{app:extraction}
@@ -992,23 +986,24 @@ well inside floating-point precision. Blocks are 500 shots and the warm-up is
 Table~\ref{tab:appdrift} gives the season-by-season values summarised in
 Figure~\ref{fig:drift}.
 
-\begin{table}[h]
+\begin{table*}[t]
 \caption{Share of shots and conversion rate by season, Premier League. The
 corpus contains 2015/16 and 2022/23 onwards.}
 \label{tab:appdrift}
 \centering
+\footnotesize
 \begin{tabular}{lrrrrr}
 \toprule
 & 2015/16 & 2022/23 & 2023/24 & 2024/25 & 2025/26 \\
 \midrule
 \multicolumn{6}{l}{\emph{share of shots} (\%)} \\
-six yard box       & 3.22 & 4.25 & 4.84 & 4.83 & 5.96 \\
+six yard box & 3.22 & 4.25 & 4.84 & 4.83 & 5.96 \\
 following a fast break & 0.73 & 1.91 & 2.31 & 3.26 & 3.30 \\
 centre of the box  & 32.84 & 36.56 & 36.07 & 35.86 & 36.44 \\
 penalty            & 0.94 & 1.08 & 1.07 & 0.87 & 1.01 \\
 \midrule
 \multicolumn{6}{l}{\emph{conversion rate} (\%)} \\
-six yard box       & 43.5 & 39.1 & 43.3 & 40.7 & 35.8 \\
+six yard box & 43.5 & 39.1 & 43.3 & 40.7 & 35.8 \\
 following a fast break & 49.3 & 47.2 & 34.9 & 36.1 & 28.4 \\
 centre of the box  & 14.2 & 14.1 & 15.6 & 14.5 & 13.2 \\
 penalty            & 83.1 & 74.7 & 89.7 & 83.1 & 82.8 \\
@@ -1017,6 +1012,6 @@ shots              & \num{9,502} & \num{9,205} & \num{10,022} & \num{9,508} & \n
 overall conversion (\%) & 10.5 & 11.8 & 12.4 & 11.7 & 11.3 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \end{document}
