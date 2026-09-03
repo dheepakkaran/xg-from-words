@@ -14,7 +14,7 @@
 
 \begin{document}
 
-\title{How Much of an Expected Goals Model Is in the Words?\\
+\title{How Much of an Expected Goals Model\\Is in the Words?\\[2pt]
 \large Recovering shot quality from free-text match commentary}
 
 \author{\IEEEauthorblockN{Dheepak Karan Elumalai Santhakumari}
@@ -120,14 +120,15 @@ script~\cite{xgfromwords2026}.
 \end{enumerate}
 
 \section{Related Work}
+\label{sec:related}
 
-\paragraph{Coordinate-based xG.}
+\paragraph{Coordinate-based xG}
 Expected goals models have been studied for roughly two decades. Recent work
 addresses explainability~\cite{cavus2022explainable}, player and position
 correction~\cite{scholtes2024bayesxg}, and downstream
 validity~\cite{mead2023xg}. In each case shot location is taken as given.
 
-\paragraph{Data requirements.}
+\paragraph{Data requirements}
 Robberechts and Davis~\cite{robberechts2020data} examine what data an xG model
 requires. They report that a basic logistic specification converges at
 approximately \num{6,000} shots, that estimation on less recent data incurs
@@ -139,7 +140,7 @@ staleness and transfer results replicate theirs on a different feature source,
 and our drift result is interpretable only against the coordinate-side
 baseline they establish.
 
-\paragraph{Language and football.}
+\paragraph{Language and football}
 Text has been used to forecast match events from event
 sequences~\cite{mendesneves2024forecasting}, and to render an xG model's
 coefficients as natural-language explanations of individual
@@ -147,7 +148,7 @@ shots~\cite{rahimian2025wordalisations}. The latter proceeds in the opposite
 direction to the present work, mapping a fitted model onto words rather than
 words onto a model. The two are complementary rather than equivalent.
 
-\paragraph{Prior use of commentary as input.}
+\paragraph{Prior use of commentary as input}
 An unpublished public repository~\cite{ballard2020moneyball} scrapes Premier
 League match commentary and states that shot position can be inferred from the
 commentary text, from which goal-conversion rates by shot category are derived.
@@ -157,13 +158,13 @@ held-out evaluation, no comparison against a reference xG model, and no AUC,
 log loss or Brier score. The contribution claimed here is therefore the
 measurement rather than the representation.
 
-\paragraph{Agreement between providers.}
+\paragraph{Agreement between providers}
 Published comparisons of Opta, Understat, StatsBomb and Wyscout report
 match-level xG correlations between \num{0.86} and \num{0.96} depending on the
 pair~\cite{pythonfootball2024providers}. We use these figures as the reference
 scale for our own agreement with StatsBomb in Section~\ref{sec:band}.
 
-\paragraph{Feature sets in public models.}
+\paragraph{Feature sets in public models}
 American Soccer Analysis publish their xG specification~\cite{asa2015xg3},
 comprising distance, available goal mouth, whether the shot was headed,
 whether it followed a cross or through ball, and pattern of play including
@@ -330,22 +331,22 @@ competitions are held out entirely and used as a transfer test
 We compare against four baselines, each chosen to isolate one of the questions
 the paper asks.
 
-\paragraph{Base rate.} A constant prediction at the estimation-sample
+\paragraph{Base rate} A constant prediction at the estimation-sample
 conversion rate, which fixes AUC at \num{0.500} by construction and gives the
 Brier score any informative model must beat.
 
-\paragraph{The reference coordinate model.} StatsBomb's own published xG for
+\paragraph{The reference coordinate model} StatsBomb's own published xG for
 each shot, which uses the location, the derived geometry and the freeze frame.
 This is the upper reference for the recovery figure, and the only baseline that
 sees information the commentary sentence does not contain.
 
-\paragraph{Readers of the full sentence.} Two specifications given the entire
+\paragraph{Readers of the full sentence} Two specifications given the entire
 stripped sentence rather than the extracted fields: TF-IDF over all 1--4 grams,
 and a MiniLM sentence embedding~\cite{reimers2019sbert}. These test whether the
 extraction, rather than the sentence, is what limits performance. A third
 variant concatenates the embedding with the extracted fields.
 
-\paragraph{A stronger learner on the same fields.} Gradient-boosted
+\paragraph{A stronger learner on the same fields} Gradient-boosted
 trees~\cite{chen2016xgboost} on the eighteen extracted fields, which tests
 whether the linear specification leaves interaction structure unused.
 
@@ -379,7 +380,7 @@ sharply than the Brier score.
 We separate ranking from calibration throughout, because the central result of
 Section~\ref{sec:drift} is that the two behave differently under drift.
 
-\paragraph{Recovery.} The quantity of interest in
+\paragraph{Recovery} The quantity of interest in
 Section~\ref{sec:headline} is the share of the reference model's
 discrimination above chance that the commentary model reproduces,
 \begin{equation}
@@ -828,7 +829,7 @@ automated access, which is a plausible location for unpublished work of this
 kind. Both searches are recorded query by query in the accompanying
 repository. We have not searched licensed indexes, thesis repositories, or
 non-English sources, and a reader should treat the priority claim in
-Section~2 accordingly.
+Section~\ref{sec:related} accordingly.
 
 \section{Conclusion and Future Work}
 
@@ -916,7 +917,7 @@ Section~\ref{sec:drift} uses no observation from after the block it is applied
 to, an assertion that the intercept shift leaves AUC unchanged, and a
 dependency graph that fails if any derived artefact predates the inputs from
 which it was built. The literature and grey-literature searches on which the
-priority claim of Section~2 rests are recorded query by query, together with
+priority claim of Section~\ref{sec:related} rests are recorded query by query, together with
 the recall probes reported in the limitations.
 
 \bibliographystyle{IEEEtran}

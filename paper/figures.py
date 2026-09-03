@@ -70,13 +70,18 @@ def fig_schematic(path):
     """What each side of the comparison is given, for a single real shot.
 
     Every value here is read from the joined data rather than written into the
-    figure. The first draft of this figure carried invented coordinates and an
-    invented commentary line, which is not a thing a paper may contain.
+    figure. An earlier draft carried invented coordinates and an invented
+    commentary line, which is not a thing a paper may contain.
 
-    The shot is Aaron Ramsey for Arsenal against Manchester United, 33 minutes,
-    identified by its StatsBomb location. It is chosen because it exercises
-    four of the eighteen fields and because the two estimates land within 0.007
-    of each other, which is the ordinary case rather than a flattering one.
+    The shot is Aaron Ramsey for Arsenal against Manchester United, 33
+    minutes, identified by its StatsBomb location. It is chosen because it
+    exercises five of the eighteen fields and because the two estimates land
+    within 0.007 of each other, which is the ordinary case rather than a
+    flattering one.
+
+    Layout is a two-column grid: every box sits on GL/GR with the same width,
+    so the four boxes and the two arrows line up. The first version inset the
+    lower boxes and the misalignment was visible.
     """
     d = pd.read_parquet(os.path.join(ROOT, "data", "proc",
                                      "xg_validation.parquet"))
@@ -90,56 +95,58 @@ def fig_schematic(path):
                       "from_through", "after_corner", "after_break",
                       "assisted", "penalty") if r[f] == 1]
     FREEZE = 15                # 5 teammates, 10 opponents, one a goalkeeper
+    assert len(on) == 4, on
 
-    fig, ax = plt.subplots(figsize=(WIDE, 2.50))
+    H = 2.58
+    GL, GR, BW = 0.010, 0.520, 0.470       # the grid every box sits on
+    CL, CR = GL + BW / 2, GR + BW / 2      # column centres, for the arrows
+
+    fig, ax = plt.subplots(figsize=(WIDE, H))
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
     quote = " ".join(str(r.text_raw).split())
-    _box(ax, 0.01, 0.805, 0.98, 0.175,
-         "\u201cAttempt missed. Aaron Ramsey (Arsenal) right footed shot from\n"
-         "the centre of the box is close, but misses to the left. Assisted by\n"
-         "Alexis S\u00e1nchez with a through ball.\u201d",
-         size=6.9, mono=False, italic=True, fill="#fcfcfb")
     assert quote.startswith("Attempt missed. Aaron Ramsey"), quote[:40]
+    _box(ax, GL, 0.830, GR + BW - GL, 0.150,
+         "\u201cAttempt missed. Aaron Ramsey (Arsenal) right footed shot from the "
+         "centre of the box is close,\nbut misses to the left. Assisted by "
+         "Alexis S\u00e1nchez with a through ball.\u201d",
+         size=6.9, mono=False, italic=True, fill="#fcfcfb", center=True)
 
-    ax.text(0.245, 0.735, "this work: parsed from the sentence", ha="center",
-            va="center", fontsize=6.8, color=MUTED)
-    ax.text(0.755, 0.735, "StatsBomb: hand-collected", ha="center",
-            va="center", fontsize=6.8, color=MUTED)
-    _arrow(ax, 0.245, 0.795, 0.245, 0.762)
-    _arrow(ax, 0.755, 0.795, 0.755, 0.762)
-    _arrow(ax, 0.245, 0.708, 0.245, 0.625)
-    _arrow(ax, 0.755, 0.708, 0.755, 0.625)
+    for cx, txt in ((CL, "this work: parsed from the sentence"),
+                    (CR, "StatsBomb: hand-collected")):
+        ax.text(cx, 0.755, txt, ha="center", va="center", fontsize=6.6,
+                color=MUTED)
+        _arrow(ax, cx, 0.825, cx, 0.788)
+        _arrow(ax, cx, 0.722, cx, 0.685)
 
-    # Two columns inside each box: a 7in figure* with a single narrow column
-    # of text is mostly whitespace, and the seven-line version overflowed.
-    lft = [f"{f:<13s}= 1" for f in on] + [f"{'minute':<13s}= {int(r.minute)}"]
+    # Two balanced columns inside each box. A single column of six lines
+    # overflowed the box; one column of five with a lone entry beside it read
+    # as a stray.
+    lft = [f"{on[0]:<13s}= 1", f"{on[1]:<13s}= 1", f"{on[2]:<13s}= 1",
+           f"{on[3]:<13s}= 1"]
+    lft2 = [f"{'minute':<10s}= {int(r.minute)}",
+            f"{18 - len(on) - 1} others  = 0", "", ""]
     rgt = [f"{'x':<9s}= {r.sb_x:.1f}", f"{'y':<9s}= {r.sb_y:.1f}",
-           f"{'distance':<9s}= {dist:.1f} m", f"{'angle':<9s}= {ang:.2f} rad",
-           ""]
-    lft2 = [f"{18 - len(on) - 1} others = 0", "", "", "", ""]
-    rgt2 = ["body      = right foot", "technique = volley",
-            f"freeze frame = {FREEZE} players", ""]
-    _box(ax, 0.01, 0.315, 0.47, 0.300,
-         "\n".join(f"{a}   {b}" for a, b in zip(lft, lft2)))
-    _box(ax, 0.52, 0.315, 0.47, 0.300,
-         "\n".join(f"{a}   {b}" for a, b in zip(rgt, rgt2)), fill="#fcfcfb")
+           f"{'distance':<9s}= {dist:.1f} m", f"{'angle':<9s}= {ang:.2f} rad"]
+    rgt2 = [f"{'body':<10s}= right foot", f"{'technique':<10s}= volley",
+            f"{FREEZE} players in frame", ""]
+    _box(ax, GL, 0.420, BW, 0.260,
+         "\n".join(f"{a}    {b}".rstrip() for a, b in zip(lft, lft2)))
+    _box(ax, GR, 0.420, BW, 0.260,
+         "\n".join(f"{a}    {b}".rstrip() for a, b in zip(rgt, rgt2)),
+         fill="#fcfcfb")
 
-    _arrow(ax, 0.245, 0.310, 0.245, 0.247)
-    _arrow(ax, 0.755, 0.310, 0.755, 0.247)
+    for cx in (CL, CR):
+        _arrow(ax, cx, 0.415, cx, 0.352)
 
-    _box(ax, 0.075, 0.105, 0.34, 0.130,
-         f"$\\widehat{{xG}} = {r.our_xg:.3f}$",
-         size=9, mono=False, center=True, weight="bold")
-    _box(ax, 0.585, 0.105, 0.34, 0.130, f"$xG = {r.sb_xg:.3f}$",
-         size=9, mono=False, center=True, fill="#fcfcfb")
-    _arrow(ax, 0.425, 0.170, 0.580, 0.170, style="<->")
-    ax.text(0.5025, 0.147, f"{abs(r.our_xg - r.sb_xg):.3f}", ha="center",
-            va="top", fontsize=6.6, color=MUTED)
-
-    ax.text(0.5, 0.030,
-            "Over 8,825 such shots the estimates correlate at 0.735 per shot, "
-            "0.869 per team-match.",
+    _box(ax, GL, 0.198, BW, 0.150, f"$\\widehat{{xG}} = {r.our_xg:.3f}$",
+         size=9.5, mono=False, center=True, weight="bold")
+    _box(ax, GR, 0.198, BW, 0.150, f"$xG = {r.sb_xg:.3f}$",
+         size=9.5, mono=False, center=True, fill="#fcfcfb")
+    ax.text(0.5, 0.075,
+            f"The two estimates differ by {abs(r.our_xg - r.sb_xg):.3f} here. "
+            "Over 8,825 such shots they correlate at 0.735 per shot "
+            "and 0.869 per team-match.",
             ha="center", va="center", fontsize=6.9, color=INK)
     fig.savefig(path); plt.close(fig)
     print(f"  wrote {os.path.relpath(path, ROOT)}")
@@ -148,12 +155,13 @@ def fig_schematic(path):
 def fig_reliability(path):
     d = pd.read_parquet(os.path.join(ROOT, "data", "proc",
                                      "xg_validation.parquet"))
-    fig, ax = plt.subplots(figsize=(COL, 2.35))
-    hi = 0.45
+    fig, ax = plt.subplots(figsize=(COL, 2.25))
+    hi = 0.42
     ax.plot([0, hi], [0, hi], linewidth=0.6, color=FAINT, zorder=1)
-    ax.text(hi - 0.015, hi - 0.055, "perfect calibration", fontsize=6.6,
-            color=MUTED, rotation=45, ha="right", va="center",
-            rotation_mode="anchor")
+    # below the diagonal rather than on it: at the corner the rotated text was
+    # clipped by the axis edge, and on the diagonal it sat over the curves.
+    ax.text(0.345, 0.265, "perfect calibration", fontsize=6.4, color=MUTED,
+            rotation=45, ha="center", va="center", rotation_mode="anchor")
 
     for label, col, c, mk, ls in (("this work", "our_xg", BLUE, "o", "-"),
                                   ("StatsBomb", "sb_xg", ORANGE, "s", "--")):
@@ -169,8 +177,9 @@ def fig_reliability(path):
     ax.set_xlim(0, hi); ax.set_ylim(0, hi)
     ax.set_xticks([0, 0.1, 0.2, 0.3, 0.4])
     ax.set_yticks([0, 0.1, 0.2, 0.3, 0.4])
-    ax.legend(frameon=False, loc="upper left", handlelength=2.2,
-              borderpad=0.1, labelspacing=0.35)
+    ax.legend(frameon=False, loc="upper left", handlelength=2.0,
+              borderpad=0.0, labelspacing=0.3,
+              bbox_to_anchor=(-0.02, 1.03))
     fig.savefig(path); plt.close(fig)
     print(f"  wrote {os.path.relpath(path, ROOT)}")
 
@@ -221,9 +230,10 @@ def fig_drift(path):
             ax.plot([xb, xb + 0.012], [-0.020, 0.020],
                     transform=ax.get_xaxis_transform(), clip_on=False,
                     color=MUTED, linewidth=0.6, zorder=5)
-    axes[0].legend(frameon=False, loc="center left", handlelength=2.2,
-                   borderpad=0.1, labelspacing=0.3,
-                   bbox_to_anchor=(0.02, 0.62))
+    # No legend. Every line is labelled at its right-hand end, which carries
+    # identity more strongly than a legend box does and does not depend on
+    # colour; the legend duplicated those labels and collided with the top
+    # panel's own series while hiding its 2015/16 marker.
     fig.subplots_adjust(hspace=0.14)
     fig.savefig(path); plt.close(fig)
     print(f"  wrote {os.path.relpath(path, ROOT)}")
