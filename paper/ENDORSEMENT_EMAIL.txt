@@ -1,0 +1,90 @@
+ENDORSEMENT REQUEST - what to do
+================================
+
+STEP 1
+On the arXiv page, click "request endorsement".
+arXiv gives you a SIX-CHARACTER CODE. Copy it.
+
+STEP 2
+Find someone who can endorse for cs.LG. arXiv's rule is that they
+need at least 3 papers in that archive within a five-year window,
+so in practice: any professor who has recent arXiv papers in
+cs.LG, cs.AI, cs.CL or cs.CV.
+
+How to check before you email them:
+  - google "<professor name> arxiv"
+  - open their arXiv author page
+  - look for cs.LG or cs.AI in the subject line of recent papers
+
+Ask, in this order:
+  1. A professor whose course you have taken
+  2. Your academic advisor
+  3. Any ECE or Khoury professor doing machine learning
+
+STEP 3
+Send the email below. Replace [CODE] and [NAME].
+
+
+-------------------- COPY FROM HERE --------------------
+
+Subject: arXiv endorsement request - cs.LG - Dheepak Karan (MS, ECE)
+
+Dear Professor [NAME],
+
+I am an MS student in Electrical and Computer Engineering at
+Northeastern. I have a preprint ready to post to arXiv and, as a
+first-time submitter to cs.LG, I need an endorsement. I would be
+grateful if you would consider providing one.
+
+Endorsement code: [CODE]
+Link: https://arxiv.org/auth/endorse?x=[CODE]
+
+The paper asks how much of a coordinate-based expected goals model
+in football can be recovered when the only input is the free-text
+match commentary. On 8,825 shots for which both a commentary
+sentence and StatsBomb's own coordinate xG exist, a model reading
+only the sentence recovers 90.6% of the coordinate model's
+discrimination above chance (95% CI 86.2-95.0). It also reports a
+failure mode specific to text-derived features: the ranking is
+stable across a decade while the calibrated level is not, and the
+drift localises to two commentary phrases that require a judgement
+from whoever writes them.
+
+Title: How Much of an Expected Goals Model Is in the Words?
+       Recovering Shot Quality from Free-Text Match Commentary
+
+Code, data pipeline and 57 tests:
+https://github.com/dheepakkaran/xg-from-words
+
+I have attached the PDF. I appreciate that endorsing is not a
+review and carries no responsibility for the content, but I did not
+want to ask without giving you enough to judge whether the work is
+appropriate for the archive.
+
+If cs.LG is not an archive you endorse for, or if you would rather
+not, I completely understand.
+
+Thank you for your time.
+
+Dheepak Karan Elumalai Santhakumari
+MS, Electrical and Computer Engineering
+Northeastern University
+elumalaisanthakuma.d@northeastern.edu
+ORCID 0009-0007-2152-8401
+
+-------------------- COPY TO HERE --------------------
+
+
+ATTACH
+------
+/Users/dheepakkaran/Desktop/1/xg-from-words/paper/paper.pdf
+
+
+NOTES
+-----
+- Endorsing is not co-authorship, not a review, and carries no
+  liability. Say so in the email; many people do not know this.
+- The submission stays saved on arXiv while you wait. Nothing is
+  lost. Find it again at https://arxiv.org/user
+- Ask two or three people at once. It costs nothing and one may
+  simply be away.
