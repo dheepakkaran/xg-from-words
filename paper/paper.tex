@@ -103,7 +103,7 @@ a StatsBomb coordinate xG are available, a model given only the sentence
 recovers 90.6\% of the coordinate model's discrimination above chance
 (Section~\ref{sec:headline}).
 \item We calibrate that figure against the agreement observed between
-commercial providers, which is the only external scale available for it
+commercial providers, which is the external scale we found for it
 (Section~\ref{sec:band}).
 \item We establish that the extraction is not the binding constraint. Models
 given the full sentence, including all 1--4 grams and a sentence embedding,
@@ -152,8 +152,9 @@ words onto a model. The two are complementary rather than equivalent.
 An unpublished public repository~\cite{ballard2020moneyball} scrapes Premier
 League match commentary and states that shot position can be inferred from the
 commentary text, from which goal-conversion rates by shot category are derived.
-To our knowledge this is the earliest use of commentary text as a shot-quality
-input, and it precedes the present work. It reports no fitted model, no
+It is the earliest such use we located, and it precedes the present work; our
+search would not reliably have found an earlier one, so we claim only that the
+idea is not ours. It reports no fitted model, no
 held-out evaluation, no comparison against a reference xG model, and no AUC,
 log loss or Brier score. The contribution claimed here is therefore the
 measurement rather than the representation.
@@ -174,6 +175,7 @@ the field set a commentary sentence yields, which provides independent support
 for the choice of features in Section~\ref{sec:features}.
 
 \section{Data}
+\label{sec:data}
 
 \subsection{Commentary}
 
@@ -210,8 +212,12 @@ StatsBomb release Premier League 2015/16 as open
 data~\cite{statsbomb2024open}, including a shot location, a freeze frame of
 the players in view at the moment of the shot (median 13, range 1 to 19 across
 the release), and their own xG estimate for each shot. Joining this
-release to ESPN commentary for the same fixtures is, to our knowledge, the only
-available means of evaluating words and coordinates on identical shots.
+release to ESPN commentary for the same fixtures puts words and coordinates on
+identical shots. We use Premier League 2015/16 because ESPN commentary for it
+was already collected; StatsBomb also release La Liga 2015/16 to 2020/21,
+Ligue 1 2021/22 and 2022/23, Bundesliga 2023/24, Serie A 2015/16 and Premier
+League 2003/04, all of which ESPN also cover, so further validation sets are
+obtainable and this one is not the only possible comparison.
 
 The join is deliberately conservative. A shot is paired only when the fixture,
 the team and the minute all agree, and an unmatched shot is discarded rather
@@ -790,20 +796,27 @@ text-derived model is not, and the instability we observe is confined to
 phrases requiring annotator judgement. Coordinates are measurements and do not
 drift; phrases are authored and do.
 
-To our knowledge this is the first characterisation of concept drift in
-text-derived features for sports data. It carries a practical implication: a
-system conditioned on commentary phrasing requires periodic correction of the
-level within a season, and does not require re-estimation.
+We are not aware of an existing characterisation of this effect in
+text-derived sports features, but we did not search the concept-drift
+literature systematically for it and make no priority claim. The practical
+implication stands regardless: a system conditioned on commentary phrasing
+requires periodic correction of the level within a season, and does not
+require re-estimation.
 
 \section{Limitations}
 
 The headline comparison rests on a single reference model evaluated on a single
-season. StatsBomb's Premier League 2015/16 release is, to our knowledge, the
-only open dataset carrying both a per-shot coordinate xG and a matching public
-commentary feed, so a second provider or a second season would strengthen the
-result materially but is not presently obtainable. The provider-agreement
-comparison in Section~\ref{sec:band} is subject to the aggregation mismatch
-described there.
+season, and this is a limitation of scope rather than of availability.
+StatsBomb's open releases include six further seasons that ESPN also cover, as
+listed in Section~\ref{sec:data}, so replicating the comparison on a second
+league and a second era requires only further collection and would strengthen
+the result materially. We report one season because that is what we collected,
+not because it is all there is. A second \emph{provider} is a different
+matter: no other vendor publishes per-shot xG openly, so the reference model
+here is necessarily StatsBomb's. The provider-agreement comparison in
+Section~\ref{sec:band} is subject to the aggregation mismatch described
+there, and rests on a figure published in a practitioner blog rather than a
+peer-reviewed source.
 
 The feature set is incomplete in a way we chose rather than inherited. The
 phrase ``from a free kick'' converted 60 of 60 in our corpus, which is a leak
@@ -879,9 +892,10 @@ wherever a model reads a human-authored description, the descriptive vocabulary
 is itself a non-stationary instrument, and the separation of stable ranking
 from drifting level may be the appropriate way to report such models.
 
-For competitions with no prospect of open coordinate data, which comprise the
-large majority, the practical consequence is the difference between an
-available xG estimate and none.
+StatsBomb's open releases, the largest such collection, cover 25
+competitions; there are several hundred professional leagues. For a competition
+outside that set, and with no prospect of entering it, the practical
+consequence is the difference between an available xG estimate and none.
 
 \section*{Acknowledgment}
 
@@ -922,7 +936,7 @@ Every quantity reported in this paper is produced by a single script in the
 accompanying repository~\cite{xgfromwords2026}, which executes the pipeline in
 dependency order from collection through to the final tables and figures. The
 figures read their values from the joined data at render time rather than
-carrying them as literals. The repository also contains a test suite of 55
+carrying them as literals. The repository also contains a test suite of 57
 tests. These include behavioural guards against outcome
 leakage~\cite{kaufman2012leakage}, a check that the walk-forward correction of
 Section~\ref{sec:drift} uses no observation from after the block it is applied
