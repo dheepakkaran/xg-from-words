@@ -1,0 +1,67 @@
+ARXIV SUBMISSION - COPY AND PASTE FROM HERE
+============================================
+
+UPLOAD THIS ONE FILE
+--------------------
+/Users/dheepakkaran/Desktop/1/xg-from-words/paper/arxiv.tar.gz
+
+
+TITLE
+-----
+How Much of an Expected Goals Model Is in the Words? Recovering Shot
+Quality from Free-Text Match Commentary
+
+
+AUTHOR
+------
+Dheepak Karan Elumalai Santhakumari
+
+ORCID: 0009-0007-2152-8401
+
+
+ABSTRACT
+--------
+Expected goals (xG) models are estimated from shot coordinates, which
+are collected by human annotators or tracking cameras and, outside a
+small number of open releases, licensed rather than published. Free-text
+match commentary is available without a key and describes each shot in a
+single sentence. We ask how much of a coordinate-based xG model survives
+when that sentence is the only input. Parsing 87,980 shots from ESPN
+commentary across six European competitions into eighteen fields, a
+logistic regression attains an AUC of 0.7709 on a held-out Premier
+League season. On 8,825 shots joined to StatsBomb's open 2015/16
+release, for which both a sentence and a coordinate xG exist for the
+same shot, the text model reaches 0.7826 against 0.8118, recovering
+90.6% (95% CI 86.2-95.0) of the coordinate model's discrimination above
+chance; per team-match the two correlate at r = 0.869, within the range
+reported between commercial providers. Substituting the full sentence
+for the extracted fields costs 0.010 AUC, so the extraction is not the
+binding constraint. We further show that text-derived features drift in
+level but not in ranking. The model over-estimates the held-out season
+by 11.9%, which we localise to two phrases requiring a judgement by the
+annotator while unambiguous phrases are unchanged over a decade, and a
+single in-season intercept refit reduces the error to 2.9% without
+affecting the ranking.
+
+
+CATEGORIES
+----------
+Primary    : stat.AP   (Statistics - Applications)
+Cross-list : cs.LG     (Machine Learning)
+
+
+COMMENTS  (the optional box on the metadata page)
+--------
+10 pages, 3 figures, 9 tables. Code, data pipeline and test suite at
+https://github.com/dheepakkaran/xg-from-words
+
+
+LICENCE
+-------
+Pick: arXiv.org perpetual, non-exclusive license
+
+
+AFTER SUBMITTING
+----------------
+arXiv puts it "on hold" for moderation. It usually appears within one
+or two working days. You get an email with the arXiv ID.
