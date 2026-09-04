@@ -46,8 +46,12 @@ affecting the ranking.
 
 CATEGORIES
 ----------
-Primary    : stat.AP   (Statistics - Applications)
-Cross-list : cs.LG     (Machine Learning)
+Primary    : cs.LG     (Machine Learning)
+Cross-list : stat.AP   (Statistics - Applications)
+
+The account already has the "cs" group enabled, so cs.LG needs no
+extra setup. Both fit the paper; this order is the one with fewer
+steps.
 
 
 COMMENTS  (the optional box on the metadata page)
