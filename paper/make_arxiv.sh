@@ -22,7 +22,11 @@ rm -rf arxiv arxiv.tar.gz
 mkdir arxiv
 cp paper.tex paper.bbl fig1_schematic.pdf fig2_reliability.pdf \
    fig3_drift.pdf arxiv/
-tar -czf arxiv.tar.gz -C arxiv .
+# COPYFILE_DISABLE stops macOS tar writing an AppleDouble ._file beside every
+# entry that carries extended attributes; arXiv would list those as extraneous
+# files. Naming the files rather than "." also drops the ./ directory entry.
+COPYFILE_DISABLE=1 tar -czf arxiv.tar.gz -C arxiv \
+  paper.tex paper.bbl fig1_schematic.pdf fig2_reliability.pdf fig3_drift.pdf
 
 echo "== verifying in an empty directory, with no bibtex =="
 T=$(mktemp -d)
@@ -40,5 +44,16 @@ if [ "$BAD" != "0" ]; then
   echo "  FAILED -- the package would upload with broken citations" >&2
   exit 1
 fi
+echo
+echo "== the upload, as arXiv will see it =="
+tar -tzf arxiv.tar.gz | sed "s/^/  /"
+JUNK=$(tar -tzf arxiv.tar.gz | grep -cE "(^|/)[._]|DS_Store" || true)
+echo "  macOS metadata entries: $JUNK"
+if [ "$JUNK" != "0" ]; then
+  echo "  FAILED -- extraneous files in the upload" >&2
+  exit 1
+fi
+
+echo
 echo "  arxiv.tar.gz is ready to upload"
 ls -la arxiv.tar.gz
