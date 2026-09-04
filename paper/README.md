@@ -38,6 +38,25 @@ therefore carries a marker shape, a line style and a label as well. Remove the
 colour and the figures still read, which is the only test that matters for a
 printed proceedings.
 
+## Submitting to arXiv
+
+```sh
+./paper/make_arxiv.sh
+```
+
+Builds `arxiv.tar.gz` and then proves it by extracting it into an empty
+directory and compiling there **without running bibtex**, which is what arXiv
+does. If the citations would come out as `[?]` the script fails instead of
+letting you find out after submitting.
+
+The package is `paper.tex`, `paper.bbl` and the three figure PDFs. `refs.bib`
+is deliberately not in it: arXiv compiles against the `.bbl` you upload and
+never runs bibtex, so shipping the `.bib` without the `.bbl` is the standard
+way to publish a paper full of `[?]`. `IEEEtran.cls` and `IEEEtran.bst` are
+already on arXiv and are not shipped either.
+
+Both outputs are gitignored -- run the script, do not commit the tarball.
+
 ## Provenance
 
 `numbers.txt` is every figure in the paper, dumped from the artefacts it came
