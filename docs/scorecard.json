@@ -1,14 +1,14 @@
 {
- "refreshed": "2026-09-04T22:34:30+00:00",
+ "refreshed": "2026-09-05T09:19:10+00:00",
  "close_threshold": 0.15,
  "tally": {
-  "matches": 20,
+  "matches": 21,
   "right": 11,
-  "wrong": 4,
+  "wrong": 5,
   "drawn": 4,
   "too close to call": 1,
-  "decisive": 15,
-  "hit_rate": 0.733
+  "decisive": 16,
+  "hit_rate": 0.688
  },
  "matches": [
   {
@@ -330,6 +330,22 @@
    "favoured": "Arsenal",
    "verdict": "right",
    "shots": 14
+  },
+  {
+   "event_id": "401879288",
+   "kickoff": "2026-09-04T19:00Z",
+   "home": "Ipswich Town",
+   "away": "Liverpool",
+   "score": "0-2",
+   "goals": [
+    0,
+    2
+   ],
+   "our_home": 0.92,
+   "our_away": 0.68,
+   "favoured": "Ipswich Town",
+   "verdict": "wrong",
+   "shots": 24
   }
  ]
 }

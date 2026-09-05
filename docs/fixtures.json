@@ -1,19 +1,9 @@
 {
  "league": "eng.1",
- "refreshed": "2026-09-04T09:55:03+00:00",
- "played": 20,
- "upcoming": 360,
+ "refreshed": "2026-09-05T09:19:10+00:00",
+ "played": 21,
+ "upcoming": 359,
  "next": [
-  {
-   "event_id": "401879288",
-   "kickoff": "2026-09-04T19:00Z",
-   "home": "Ipswich Town",
-   "away": "Liverpool",
-   "home_short": "Ipswich",
-   "away_short": "Liverpool",
-   "completed": false,
-   "score": null
-  },
   {
    "event_id": "401879286",
    "kickoff": "2026-09-05T11:30Z",
@@ -61,6 +51,16 @@
    "away": "Coventry City",
    "home_short": "Man City",
    "away_short": "Coventry",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401878780",
+   "kickoff": "2026-09-05T14:00Z",
+   "home": "Nottingham Forest",
+   "away": "Tottenham Hotspur",
+   "home_short": "Nottm Forest",
+   "away_short": "Spurs",
    "completed": false,
    "score": null
   }
@@ -273,8 +273,8 @@
    "away": "Liverpool",
    "home_short": "Ipswich",
    "away_short": "Liverpool",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "0-2"
   },
   {
    "event_id": "401879286",
