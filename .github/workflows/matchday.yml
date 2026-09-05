@@ -74,17 +74,35 @@ jobs:
         if: always()
         run: python src/scorecard.py --since 2026-08-01
 
+      # No stash. The previous version stashed the live files, pulled with
+      # --autostash, and popped -- and `git pull ... || true` swallowed a
+      # failed rebase, which left the autostash unpopped. The explicit pop
+      # then applied the wrong stash and wrote conflict markers into
+      # docs/scorecard.json, which the next run committed. Copy the files
+      # aside, reset hard to origin, copy them back: nothing to conflict.
       - name: commit the season scorecard
         if: always()
         run: |
+          python -c "import json; json.load(open('docs/scorecard.json'))" || {
+            echo "::error::docs/scorecard.json is not valid JSON"; exit 1; }
           git config user.name  "Dheepak Karan"
           git config user.email "elusanthi16@gmail.com"
-          git stash push -- docs/live.json reports/latency.jsonl 2>/dev/null || true
-          git pull --rebase --autostash origin main || true
+          mkdir -p /tmp/keep/docs /tmp/keep/reports
+          cp docs/scorecard.json /tmp/keep/docs/
+          cp docs/live.json /tmp/keep/docs/ 2>/dev/null || true
+          cp reports/latency.jsonl /tmp/keep/reports/ 2>/dev/null || true
+          git fetch origin main
+          git checkout -f -B main origin/main
+          cp /tmp/keep/docs/scorecard.json docs/
+          cp /tmp/keep/docs/live.json docs/ 2>/dev/null || true
+          cp /tmp/keep/reports/latency.jsonl reports/ 2>/dev/null || true
           git add docs/scorecard.json
-          git diff --cached --quiet || git commit -m "score finished matches"
-          git push origin HEAD:main || true
-          git stash pop 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "scorecard unchanged"
+          else
+            git commit -m "score finished matches"
+            git push origin HEAD:main
+          fi
 
       - name: publish to the live-data branch
         if: always()
@@ -92,6 +110,8 @@ jobs:
           if [ ! -s docs/live.json ]; then echo "nothing to publish"; exit 0; fi
           git config user.name  "Dheepak Karan"
           git config user.email "elusanthi16@gmail.com"
+          python -c "import json; json.load(open('docs/live.json'))" || {
+            echo "::error::docs/live.json is not valid JSON"; exit 1; }
           git fetch origin live-data --depth 1 2>/dev/null || true
           git checkout -B live-data
           git add -f docs/live.json reports/latency.jsonl
