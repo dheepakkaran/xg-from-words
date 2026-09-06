@@ -1,66 +1,66 @@
 {
  "league": "eng.1",
- "refreshed": "2026-09-05T09:19:10+00:00",
- "played": 21,
- "upcoming": 359,
+ "refreshed": "2026-09-06T09:38:52+00:00",
+ "played": 28,
+ "upcoming": 352,
  "next": [
   {
-   "event_id": "401879286",
-   "kickoff": "2026-09-05T11:30Z",
-   "home": "Newcastle United",
-   "away": "AFC Bournemouth",
-   "home_short": "Newcastle",
-   "away_short": "Bournemouth",
+   "event_id": "401879291",
+   "kickoff": "2026-09-06T13:00Z",
+   "home": "Everton",
+   "away": "Manchester United",
+   "home_short": "Everton",
+   "away_short": "Man United",
    "completed": false,
    "score": null
   },
   {
-   "event_id": "401879311",
-   "kickoff": "2026-09-05T14:00Z",
-   "home": "Brentford",
-   "away": "Sunderland",
-   "home_short": "Brentford",
-   "away_short": "Sunderland",
+   "event_id": "401879292",
+   "kickoff": "2026-09-06T15:30Z",
+   "home": "Arsenal",
+   "away": "Chelsea",
+   "home_short": "Arsenal",
+   "away_short": "Chelsea",
    "completed": false,
    "score": null
   },
   {
-   "event_id": "401879290",
-   "kickoff": "2026-09-05T14:00Z",
-   "home": "Brighton & Hove Albion",
-   "away": "Leeds United",
-   "home_short": "Brighton",
-   "away_short": "Leeds",
+   "event_id": "401879285",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "AFC Bournemouth",
+   "away": "Brentford",
+   "home_short": "Bournemouth",
+   "away_short": "Brentford",
    "completed": false,
    "score": null
   },
   {
-   "event_id": "401879289",
-   "kickoff": "2026-09-05T14:00Z",
-   "home": "Fulham",
-   "away": "Crystal Palace",
-   "home_short": "Fulham",
-   "away_short": "C Palace",
+   "event_id": "401879284",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Aston Villa",
+   "away": "Nottingham Forest",
+   "home_short": "Aston Villa",
+   "away_short": "Nottm Forest",
    "completed": false,
    "score": null
   },
   {
-   "event_id": "401879287",
-   "kickoff": "2026-09-05T14:00Z",
-   "home": "Manchester City",
-   "away": "Coventry City",
-   "home_short": "Man City",
-   "away_short": "Coventry",
+   "event_id": "401879283",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Chelsea",
+   "away": "Hull City",
+   "home_short": "Chelsea",
+   "away_short": "Hull",
    "completed": false,
    "score": null
   },
   {
-   "event_id": "401878780",
-   "kickoff": "2026-09-05T14:00Z",
-   "home": "Nottingham Forest",
-   "away": "Tottenham Hotspur",
-   "home_short": "Nottm Forest",
-   "away_short": "Spurs",
+   "event_id": "401879281",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Crystal Palace",
+   "away": "Ipswich Town",
+   "home_short": "C Palace",
+   "away_short": "Ipswich",
    "completed": false,
    "score": null
   }
@@ -283,8 +283,8 @@
    "away": "AFC Bournemouth",
    "home_short": "Newcastle",
    "away_short": "Bournemouth",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "2-2"
   },
   {
    "event_id": "401879311",
@@ -293,8 +293,8 @@
    "away": "Sunderland",
    "home_short": "Brentford",
    "away_short": "Sunderland",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "1-1"
   },
   {
    "event_id": "401879290",
@@ -303,8 +303,8 @@
    "away": "Leeds United",
    "home_short": "Brighton",
    "away_short": "Leeds",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "1-1"
   },
   {
    "event_id": "401879289",
@@ -313,8 +313,8 @@
    "away": "Crystal Palace",
    "home_short": "Fulham",
    "away_short": "C Palace",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "2-3"
   },
   {
    "event_id": "401879287",
@@ -323,8 +323,8 @@
    "away": "Coventry City",
    "home_short": "Man City",
    "away_short": "Coventry",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "1-0"
   },
   {
    "event_id": "401878780",
@@ -333,8 +333,8 @@
    "away": "Tottenham Hotspur",
    "home_short": "Nottm Forest",
    "away_short": "Spurs",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "0-0"
   },
   {
    "event_id": "401878781",
@@ -343,8 +343,8 @@
    "away": "Aston Villa",
    "home_short": "Hull",
    "away_short": "Aston Villa",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "0-0"
   },
   {
    "event_id": "401879291",
