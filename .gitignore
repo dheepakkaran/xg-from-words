@@ -25,3 +25,8 @@ data/qdrant/
 !reports/latency.jsonl
 
 # The rendered paste page is generated; regenerate with writing/to_medium.py
+
+# LaTeX runs from the repo root leave these behind
+*.log
+*.aux
+*.out
