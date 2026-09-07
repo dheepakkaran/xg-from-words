@@ -1,14 +1,14 @@
 {
- "refreshed": "2026-09-06T23:12:36+00:00",
+ "refreshed": "2026-09-07T10:42:14+00:00",
  "close_threshold": 0.15,
  "tally": {
-  "matches": 28,
-  "right": 12,
+  "matches": 30,
+  "right": 13,
   "wrong": 6,
-  "drawn": 8,
+  "drawn": 9,
   "too close to call": 2,
-  "decisive": 18,
-  "hit_rate": 0.667
+  "decisive": 19,
+  "hit_rate": 0.684
  },
  "matches": [
   {
@@ -458,6 +458,38 @@
    "favoured": "Aston Villa",
    "verdict": "drawn",
    "shots": 24
+  },
+  {
+   "event_id": "401879291",
+   "kickoff": "2026-09-06T13:00Z",
+   "home": "Everton",
+   "away": "Manchester United",
+   "score": "2-2",
+   "goals": [
+    2,
+    2
+   ],
+   "our_home": 1.29,
+   "our_away": 0.74,
+   "favoured": "Everton",
+   "verdict": "drawn",
+   "shots": 32
+  },
+  {
+   "event_id": "401879292",
+   "kickoff": "2026-09-06T15:30Z",
+   "home": "Arsenal",
+   "away": "Chelsea",
+   "score": "2-1",
+   "goals": [
+    2,
+    1
+   ],
+   "our_home": 2.21,
+   "our_away": 0.62,
+   "favoured": "Arsenal",
+   "verdict": "right",
+   "shots": 29
   }
  ]
 }

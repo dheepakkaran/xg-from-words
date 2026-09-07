@@ -1,29 +1,9 @@
 {
  "league": "eng.1",
- "refreshed": "2026-09-06T09:38:52+00:00",
- "played": 28,
- "upcoming": 352,
+ "refreshed": "2026-09-07T10:42:13+00:00",
+ "played": 30,
+ "upcoming": 350,
  "next": [
-  {
-   "event_id": "401879291",
-   "kickoff": "2026-09-06T13:00Z",
-   "home": "Everton",
-   "away": "Manchester United",
-   "home_short": "Everton",
-   "away_short": "Man United",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879292",
-   "kickoff": "2026-09-06T15:30Z",
-   "home": "Arsenal",
-   "away": "Chelsea",
-   "home_short": "Arsenal",
-   "away_short": "Chelsea",
-   "completed": false,
-   "score": null
-  },
   {
    "event_id": "401879285",
    "kickoff": "2026-09-12T14:00Z",
@@ -61,6 +41,26 @@
    "away": "Ipswich Town",
    "home_short": "C Palace",
    "away_short": "Ipswich",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879279",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Liverpool",
+   "away": "Fulham",
+   "home_short": "Liverpool",
+   "away_short": "Fulham",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879277",
+   "kickoff": "2026-09-12T16:30Z",
+   "home": "Tottenham Hotspur",
+   "away": "Everton",
+   "home_short": "Spurs",
+   "away_short": "Everton",
    "completed": false,
    "score": null
   }
@@ -353,8 +353,8 @@
    "away": "Manchester United",
    "home_short": "Everton",
    "away_short": "Man United",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "2-2"
   },
   {
    "event_id": "401879292",
@@ -363,8 +363,8 @@
    "away": "Chelsea",
    "home_short": "Arsenal",
    "away_short": "Chelsea",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "2-1"
   },
   {
    "event_id": "401879285",
