@@ -1,6 +1,6 @@
 {
  "league": "eng.1",
- "refreshed": "2026-09-10T10:01:26+00:00",
+ "refreshed": "2026-09-11T09:59:09+00:00",
  "played": 30,
  "upcoming": 350,
  "next": [
@@ -1668,31 +1668,11 @@
   },
   {
    "event_id": "401878737",
-   "kickoff": "2026-12-26T15:00Z",
+   "kickoff": "2026-12-26T12:30Z",
    "home": "Aston Villa",
    "away": "Leeds United",
    "home_short": "Aston Villa",
    "away_short": "Leeds",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401878736",
-   "kickoff": "2026-12-26T15:00Z",
-   "home": "Coventry City",
-   "away": "Chelsea",
-   "home_short": "Coventry",
-   "away_short": "Chelsea",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401878735",
-   "kickoff": "2026-12-26T15:00Z",
-   "home": "Crystal Palace",
-   "away": "Arsenal",
-   "home_short": "C Palace",
-   "away_short": "Arsenal",
    "completed": false,
    "score": null
   },
@@ -1717,42 +1697,12 @@
    "score": null
   },
   {
-   "event_id": "401878733",
-   "kickoff": "2026-12-26T15:00Z",
-   "home": "Hull City",
-   "away": "Liverpool",
-   "home_short": "Hull",
-   "away_short": "Liverpool",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401879196",
    "kickoff": "2026-12-26T15:00Z",
    "home": "Ipswich Town",
    "away": "Brentford",
    "home_short": "Ipswich",
    "away_short": "Brentford",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879195",
-   "kickoff": "2026-12-26T15:00Z",
-   "home": "Manchester United",
-   "away": "Nottingham Forest",
-   "home_short": "Man United",
-   "away_short": "Nottm Forest",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401878732",
-   "kickoff": "2026-12-26T15:00Z",
-   "home": "Newcastle United",
-   "away": "Manchester City",
-   "home_short": "Newcastle",
-   "away_short": "Man City",
    "completed": false,
    "score": null
   },
@@ -1767,18 +1717,88 @@
    "score": null
   },
   {
-   "event_id": "401879194",
-   "kickoff": "2026-12-30T20:00Z",
-   "home": "Aston Villa",
+   "event_id": "401878733",
+   "kickoff": "2026-12-26T17:30Z",
+   "home": "Hull City",
    "away": "Liverpool",
-   "home_short": "Aston Villa",
+   "home_short": "Hull",
    "away_short": "Liverpool",
    "completed": false,
    "score": null
   },
   {
+   "event_id": "401878732",
+   "kickoff": "2026-12-26T20:00Z",
+   "home": "Newcastle United",
+   "away": "Manchester City",
+   "home_short": "Newcastle",
+   "away_short": "Man City",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401878736",
+   "kickoff": "2026-12-27T14:00Z",
+   "home": "Coventry City",
+   "away": "Chelsea",
+   "home_short": "Coventry",
+   "away_short": "Chelsea",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879195",
+   "kickoff": "2026-12-27T16:30Z",
+   "home": "Manchester United",
+   "away": "Nottingham Forest",
+   "home_short": "Man United",
+   "away_short": "Nottm Forest",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401878735",
+   "kickoff": "2026-12-27T19:00Z",
+   "home": "Crystal Palace",
+   "away": "Arsenal",
+   "home_short": "C Palace",
+   "away_short": "Arsenal",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879190",
+   "kickoff": "2026-12-29T19:30Z",
+   "home": "Hull City",
+   "away": "Leeds United",
+   "home_short": "Hull",
+   "away_short": "Leeds",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879186",
+   "kickoff": "2026-12-29T19:30Z",
+   "home": "Tottenham Hotspur",
+   "away": "Brighton & Hove Albion",
+   "home_short": "Spurs",
+   "away_short": "Brighton",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879192",
+   "kickoff": "2026-12-29T20:15Z",
+   "home": "Everton",
+   "away": "Manchester City",
+   "home_short": "Everton",
+   "away_short": "Man City",
+   "completed": false,
+   "score": null
+  },
+  {
    "event_id": "401878730",
-   "kickoff": "2026-12-30T20:00Z",
+   "kickoff": "2026-12-30T19:30Z",
    "home": "Coventry City",
    "away": "Brentford",
    "home_short": "Coventry",
@@ -1788,7 +1808,7 @@
   },
   {
    "event_id": "401879193",
-   "kickoff": "2026-12-30T20:00Z",
+   "kickoff": "2026-12-30T19:30Z",
    "home": "Crystal Palace",
    "away": "AFC Bournemouth",
    "home_short": "C Palace",
@@ -1797,18 +1817,8 @@
    "score": null
   },
   {
-   "event_id": "401879192",
-   "kickoff": "2026-12-30T20:00Z",
-   "home": "Everton",
-   "away": "Manchester City",
-   "home_short": "Everton",
-   "away_short": "Man City",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401879191",
-   "kickoff": "2026-12-30T20:00Z",
+   "kickoff": "2026-12-30T19:30Z",
    "home": "Fulham",
    "away": "Arsenal",
    "home_short": "Fulham",
@@ -1817,28 +1827,8 @@
    "score": null
   },
   {
-   "event_id": "401879190",
-   "kickoff": "2026-12-30T20:00Z",
-   "home": "Hull City",
-   "away": "Leeds United",
-   "home_short": "Hull",
-   "away_short": "Leeds",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879189",
-   "kickoff": "2026-12-30T20:00Z",
-   "home": "Ipswich Town",
-   "away": "Chelsea",
-   "home_short": "Ipswich",
-   "away_short": "Chelsea",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401879188",
-   "kickoff": "2026-12-30T20:00Z",
+   "kickoff": "2026-12-30T19:30Z",
    "home": "Manchester United",
    "away": "Sunderland",
    "home_short": "Man United",
@@ -1848,7 +1838,7 @@
   },
   {
    "event_id": "401879187",
-   "kickoff": "2026-12-30T20:00Z",
+   "kickoff": "2026-12-30T19:30Z",
    "home": "Newcastle United",
    "away": "Nottingham Forest",
    "home_short": "Newcastle",
@@ -1857,22 +1847,42 @@
    "score": null
   },
   {
-   "event_id": "401879186",
-   "kickoff": "2026-12-30T20:00Z",
-   "home": "Tottenham Hotspur",
-   "away": "Brighton & Hove Albion",
-   "home_short": "Spurs",
-   "away_short": "Brighton",
+   "event_id": "401879194",
+   "kickoff": "2026-12-30T20:15Z",
+   "home": "Aston Villa",
+   "away": "Liverpool",
+   "home_short": "Aston Villa",
+   "away_short": "Liverpool",
    "completed": false,
    "score": null
   },
   {
-   "event_id": "401878729",
-   "kickoff": "2027-01-02T15:00Z",
-   "home": "AFC Bournemouth",
-   "away": "Aston Villa",
-   "home_short": "Bournemouth",
-   "away_short": "Aston Villa",
+   "event_id": "401879189",
+   "kickoff": "2026-12-30T20:15Z",
+   "home": "Ipswich Town",
+   "away": "Chelsea",
+   "home_short": "Ipswich",
+   "away_short": "Chelsea",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879182",
+   "kickoff": "2027-01-01T20:00Z",
+   "home": "Leeds United",
+   "away": "Everton",
+   "home_short": "Leeds",
+   "away_short": "Everton",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401878728",
+   "kickoff": "2027-01-02T12:30Z",
+   "home": "Brighton & Hove Albion",
+   "away": "Manchester United",
+   "home_short": "Brighton",
+   "away_short": "Man United",
    "completed": false,
    "score": null
   },
@@ -1897,52 +1907,12 @@
    "score": null
   },
   {
-   "event_id": "401878728",
-   "kickoff": "2027-01-02T15:00Z",
-   "home": "Brighton & Hove Albion",
-   "away": "Manchester United",
-   "home_short": "Brighton",
-   "away_short": "Man United",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879183",
-   "kickoff": "2027-01-02T15:00Z",
-   "home": "Chelsea",
-   "away": "Newcastle United",
-   "home_short": "Chelsea",
-   "away_short": "Newcastle",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879182",
-   "kickoff": "2027-01-02T15:00Z",
-   "home": "Leeds United",
-   "away": "Everton",
-   "home_short": "Leeds",
-   "away_short": "Everton",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401879181",
    "kickoff": "2027-01-02T15:00Z",
    "home": "Liverpool",
    "away": "Coventry City",
    "home_short": "Liverpool",
    "away_short": "Coventry",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879180",
-   "kickoff": "2027-01-02T15:00Z",
-   "home": "Manchester City",
-   "away": "Tottenham Hotspur",
-   "home_short": "Man City",
-   "away_short": "Spurs",
    "completed": false,
    "score": null
   },
@@ -1967,8 +1937,38 @@
    "score": null
   },
   {
+   "event_id": "401878729",
+   "kickoff": "2027-01-02T17:30Z",
+   "home": "AFC Bournemouth",
+   "away": "Aston Villa",
+   "home_short": "Bournemouth",
+   "away_short": "Aston Villa",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879183",
+   "kickoff": "2027-01-03T14:00Z",
+   "home": "Chelsea",
+   "away": "Newcastle United",
+   "home_short": "Chelsea",
+   "away_short": "Newcastle",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879180",
+   "kickoff": "2027-01-03T16:30Z",
+   "home": "Manchester City",
+   "away": "Tottenham Hotspur",
+   "home_short": "Man City",
+   "away_short": "Spurs",
+   "completed": false,
+   "score": null
+  },
+  {
    "event_id": "401879177",
-   "kickoff": "2027-01-06T20:00Z",
+   "kickoff": "2027-01-05T19:30Z",
    "home": "Arsenal",
    "away": "Brentford",
    "home_short": "Arsenal",
@@ -1978,7 +1978,7 @@
   },
   {
    "event_id": "401879176",
-   "kickoff": "2027-01-06T20:00Z",
+   "kickoff": "2027-01-05T19:30Z",
    "home": "Brighton & Hove Albion",
    "away": "AFC Bournemouth",
    "home_short": "Brighton",
@@ -1987,18 +1987,8 @@
    "score": null
   },
   {
-   "event_id": "401879175",
-   "kickoff": "2027-01-06T20:00Z",
-   "home": "Crystal Palace",
-   "away": "Chelsea",
-   "home_short": "C Palace",
-   "away_short": "Chelsea",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401879174",
-   "kickoff": "2027-01-06T20:00Z",
+   "kickoff": "2027-01-05T19:30Z",
    "home": "Everton",
    "away": "Aston Villa",
    "home_short": "Everton",
@@ -2007,48 +1997,8 @@
    "score": null
   },
   {
-   "event_id": "401879173",
-   "kickoff": "2027-01-06T20:00Z",
-   "home": "Fulham",
-   "away": "Tottenham Hotspur",
-   "home_short": "Fulham",
-   "away_short": "Spurs",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879172",
-   "kickoff": "2027-01-06T20:00Z",
-   "home": "Ipswich Town",
-   "away": "Coventry City",
-   "home_short": "Ipswich",
-   "away_short": "Coventry",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879171",
-   "kickoff": "2027-01-06T20:00Z",
-   "home": "Leeds United",
-   "away": "Manchester City",
-   "home_short": "Leeds",
-   "away_short": "Man City",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879170",
-   "kickoff": "2027-01-06T20:00Z",
-   "home": "Manchester United",
-   "away": "Newcastle United",
-   "home_short": "Man United",
-   "away_short": "Newcastle",
-   "completed": false,
-   "score": null
-  },
-  {
    "event_id": "401879169",
-   "kickoff": "2027-01-06T20:00Z",
+   "kickoff": "2027-01-05T19:30Z",
    "home": "Nottingham Forest",
    "away": "Hull City",
    "home_short": "Nottm Forest",
@@ -2058,11 +2008,61 @@
   },
   {
    "event_id": "401878727",
-   "kickoff": "2027-01-06T20:00Z",
+   "kickoff": "2027-01-05T20:15Z",
    "home": "Sunderland",
    "away": "Liverpool",
    "home_short": "Sunderland",
    "away_short": "Liverpool",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879175",
+   "kickoff": "2027-01-06T19:30Z",
+   "home": "Crystal Palace",
+   "away": "Chelsea",
+   "home_short": "C Palace",
+   "away_short": "Chelsea",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879173",
+   "kickoff": "2027-01-06T19:30Z",
+   "home": "Fulham",
+   "away": "Tottenham Hotspur",
+   "home_short": "Fulham",
+   "away_short": "Spurs",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879172",
+   "kickoff": "2027-01-06T19:30Z",
+   "home": "Ipswich Town",
+   "away": "Coventry City",
+   "home_short": "Ipswich",
+   "away_short": "Coventry",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879171",
+   "kickoff": "2027-01-06T20:15Z",
+   "home": "Leeds United",
+   "away": "Manchester City",
+   "home_short": "Leeds",
+   "away_short": "Man City",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879170",
+   "kickoff": "2027-01-07T20:00Z",
+   "home": "Manchester United",
+   "away": "Newcastle United",
+   "home_short": "Man United",
+   "away_short": "Newcastle",
    "completed": false,
    "score": null
   },
