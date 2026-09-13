@@ -1,14 +1,14 @@
 {
- "refreshed": "2026-09-12T23:26:03+00:00",
+ "refreshed": "2026-09-13T10:36:02+00:00",
  "close_threshold": 0.15,
  "tally": {
-  "matches": 30,
-  "right": 13,
-  "wrong": 6,
-  "drawn": 9,
-  "too close to call": 2,
-  "decisive": 19,
-  "hit_rate": 0.684
+  "matches": 37,
+  "right": 15,
+  "wrong": 7,
+  "drawn": 12,
+  "too close to call": 3,
+  "decisive": 22,
+  "hit_rate": 0.682
  },
  "matches": [
   {
@@ -490,6 +490,118 @@
    "favoured": "Arsenal",
    "verdict": "right",
    "shots": 29
+  },
+  {
+   "event_id": "401879285",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "AFC Bournemouth",
+   "away": "Brentford",
+   "score": "2-2",
+   "goals": [
+    2,
+    2
+   ],
+   "our_home": 1.34,
+   "our_away": 0.64,
+   "favoured": "AFC Bournemouth",
+   "verdict": "drawn",
+   "shots": 28
+  },
+  {
+   "event_id": "401879284",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Aston Villa",
+   "away": "Nottingham Forest",
+   "score": "1-2",
+   "goals": [
+    1,
+    2
+   ],
+   "our_home": 0.83,
+   "our_away": 2.52,
+   "favoured": "Nottingham Forest",
+   "verdict": "right",
+   "shots": 29
+  },
+  {
+   "event_id": "401879283",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Chelsea",
+   "away": "Hull City",
+   "score": "2-2",
+   "goals": [
+    2,
+    2
+   ],
+   "our_home": 0.93,
+   "our_away": 0.92,
+   "favoured": null,
+   "verdict": "too close to call",
+   "shots": 25
+  },
+  {
+   "event_id": "401879281",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Crystal Palace",
+   "away": "Ipswich Town",
+   "score": "2-3",
+   "goals": [
+    2,
+    3
+   ],
+   "our_home": 0.8,
+   "our_away": 1.86,
+   "favoured": "Ipswich Town",
+   "verdict": "right",
+   "shots": 23
+  },
+  {
+   "event_id": "401879279",
+   "kickoff": "2026-09-12T14:00Z",
+   "home": "Liverpool",
+   "away": "Fulham",
+   "score": "0-0",
+   "goals": [
+    0,
+    0
+   ],
+   "our_home": 1.49,
+   "our_away": 0.75,
+   "favoured": "Liverpool",
+   "verdict": "drawn",
+   "shots": 24
+  },
+  {
+   "event_id": "401879277",
+   "kickoff": "2026-09-12T16:30Z",
+   "home": "Tottenham Hotspur",
+   "away": "Everton",
+   "score": "0-0",
+   "goals": [
+    0,
+    0
+   ],
+   "our_home": 0.74,
+   "our_away": 1.1,
+   "favoured": "Everton",
+   "verdict": "drawn",
+   "shots": 26
+  },
+  {
+   "event_id": "401878779",
+   "kickoff": "2026-09-12T19:00Z",
+   "home": "Sunderland",
+   "away": "Arsenal",
+   "score": "0-2",
+   "goals": [
+    0,
+    2
+   ],
+   "our_home": 2.73,
+   "our_away": 1.74,
+   "favoured": "Sunderland",
+   "verdict": "wrong",
+   "shots": 23
   }
  ]
 }
