@@ -1,14 +1,14 @@
 {
- "refreshed": "2026-09-13T23:37:01+00:00",
+ "refreshed": "2026-09-14T10:57:20+00:00",
  "close_threshold": 0.15,
  "tally": {
-  "matches": 37,
-  "right": 15,
-  "wrong": 7,
+  "matches": 39,
+  "right": 16,
+  "wrong": 8,
   "drawn": 12,
   "too close to call": 3,
-  "decisive": 22,
-  "hit_rate": 0.682
+  "decisive": 24,
+  "hit_rate": 0.667
  },
  "matches": [
   {
@@ -602,6 +602,38 @@
    "favoured": "Sunderland",
    "verdict": "wrong",
    "shots": 23
+  },
+  {
+   "event_id": "401879282",
+   "kickoff": "2026-09-13T13:00Z",
+   "home": "Coventry City",
+   "away": "Brighton & Hove Albion",
+   "score": "0-5",
+   "goals": [
+    0,
+    5
+   ],
+   "our_home": 1.6,
+   "our_away": 3.01,
+   "favoured": "Brighton & Hove Albion",
+   "verdict": "right",
+   "shots": 36
+  },
+  {
+   "event_id": "401879278",
+   "kickoff": "2026-09-13T15:30Z",
+   "home": "Manchester United",
+   "away": "Manchester City",
+   "score": "0-1",
+   "goals": [
+    0,
+    1
+   ],
+   "our_home": 0.89,
+   "our_away": 0.43,
+   "favoured": "Manchester United",
+   "verdict": "wrong",
+   "shots": 22
   }
  ]
 }

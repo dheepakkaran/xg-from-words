@@ -1,29 +1,9 @@
 {
  "league": "eng.1",
- "refreshed": "2026-09-13T10:35:59+00:00",
- "played": 37,
- "upcoming": 343,
+ "refreshed": "2026-09-14T10:57:19+00:00",
+ "played": 39,
+ "upcoming": 341,
  "next": [
-  {
-   "event_id": "401879282",
-   "kickoff": "2026-09-13T13:00Z",
-   "home": "Coventry City",
-   "away": "Brighton & Hove Albion",
-   "home_short": "Coventry",
-   "away_short": "Brighton",
-   "completed": false,
-   "score": null
-  },
-  {
-   "event_id": "401879278",
-   "kickoff": "2026-09-13T15:30Z",
-   "home": "Manchester United",
-   "away": "Manchester City",
-   "home_short": "Man United",
-   "away_short": "Man City",
-   "completed": false,
-   "score": null
-  },
   {
    "event_id": "401879280",
    "kickoff": "2026-09-14T19:00Z",
@@ -61,6 +41,26 @@
    "away": "Arsenal",
    "home_short": "Brighton",
    "away_short": "Arsenal",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401878778",
+   "kickoff": "2026-09-19T14:00Z",
+   "home": "Everton",
+   "away": "Ipswich Town",
+   "home_short": "Everton",
+   "away_short": "Ipswich",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879271",
+   "kickoff": "2026-09-19T14:00Z",
+   "home": "Newcastle United",
+   "away": "Hull City",
+   "home_short": "Newcastle",
+   "away_short": "Hull",
    "completed": false,
    "score": null
   }
@@ -443,8 +443,8 @@
    "away": "Brighton & Hove Albion",
    "home_short": "Coventry",
    "away_short": "Brighton",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "0-5"
   },
   {
    "event_id": "401879278",
@@ -453,8 +453,8 @@
    "away": "Manchester City",
    "home_short": "Man United",
    "away_short": "Man City",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "0-1"
   },
   {
    "event_id": "401879280",
