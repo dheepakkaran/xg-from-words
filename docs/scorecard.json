@@ -1,14 +1,14 @@
 {
- "refreshed": "2026-09-14T23:31:43+00:00",
+ "refreshed": "2026-09-15T10:24:54+00:00",
  "close_threshold": 0.15,
  "tally": {
-  "matches": 39,
-  "right": 16,
+  "matches": 40,
+  "right": 17,
   "wrong": 8,
   "drawn": 12,
   "too close to call": 3,
-  "decisive": 24,
-  "hit_rate": 0.667
+  "decisive": 25,
+  "hit_rate": 0.68
  },
  "matches": [
   {
@@ -634,6 +634,22 @@
    "favoured": "Manchester United",
    "verdict": "wrong",
    "shots": 22
+  },
+  {
+   "event_id": "401879280",
+   "kickoff": "2026-09-14T19:00Z",
+   "home": "Leeds United",
+   "away": "Newcastle United",
+   "score": "4-1",
+   "goals": [
+    4,
+    1
+   ],
+   "our_home": 2.19,
+   "our_away": 0.66,
+   "favoured": "Leeds United",
+   "verdict": "right",
+   "shots": 23
   }
  ]
 }

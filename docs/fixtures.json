@@ -1,19 +1,9 @@
 {
  "league": "eng.1",
- "refreshed": "2026-09-14T10:57:19+00:00",
- "played": 39,
- "upcoming": 341,
+ "refreshed": "2026-09-15T10:24:54+00:00",
+ "played": 40,
+ "upcoming": 340,
  "next": [
-  {
-   "event_id": "401879280",
-   "kickoff": "2026-09-14T19:00Z",
-   "home": "Leeds United",
-   "away": "Newcastle United",
-   "home_short": "Leeds",
-   "away_short": "Newcastle",
-   "completed": false,
-   "score": null
-  },
   {
    "event_id": "401879275",
    "kickoff": "2026-09-18T19:00Z",
@@ -61,6 +51,16 @@
    "away": "Hull City",
    "home_short": "Newcastle",
    "away_short": "Hull",
+   "completed": false,
+   "score": null
+  },
+  {
+   "event_id": "401879270",
+   "kickoff": "2026-09-19T16:30Z",
+   "home": "Nottingham Forest",
+   "away": "Coventry City",
+   "home_short": "Nottm Forest",
+   "away_short": "Coventry",
    "completed": false,
    "score": null
   }
@@ -463,8 +463,8 @@
    "away": "Newcastle United",
    "home_short": "Leeds",
    "away_short": "Newcastle",
-   "completed": false,
-   "score": null
+   "completed": true,
+   "score": "4-1"
   },
   {
    "event_id": "401879275",
