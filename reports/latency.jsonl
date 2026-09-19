@@ -1,0 +1,344 @@
+{"polled_at": "2026-09-19T14:01:20+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "1'", "status": "STATUS_FIRST_HALF", "lag_seconds": null}
+{"polled_at": "2026-09-19T14:02:20+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "2'", "status": "STATUS_FIRST_HALF", "lag_seconds": null}
+{"polled_at": "2026-09-19T14:02:20+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "2'", "status": "STATUS_FIRST_HALF", "lag_seconds": null}
+{"polled_at": "2026-09-19T14:02:20+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "2'", "status": "STATUS_FIRST_HALF", "lag_seconds": null}
+{"polled_at": "2026-09-19T14:03:20+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "3'", "status": "STATUS_FIRST_HALF", "lag_seconds": 106.4}
+{"polled_at": "2026-09-19T14:03:20+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "3'", "status": "STATUS_FIRST_HALF", "lag_seconds": 185.4}
+{"polled_at": "2026-09-19T14:03:20+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "3'", "status": "STATUS_FIRST_HALF", "lag_seconds": null}
+{"polled_at": "2026-09-19T14:04:20+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "4'", "status": "STATUS_FIRST_HALF", "lag_seconds": 133.6}
+{"polled_at": "2026-09-19T14:04:20+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "4'", "status": "STATUS_FIRST_HALF", "lag_seconds": 245.6}
+{"polled_at": "2026-09-19T14:04:20+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "4'", "status": "STATUS_FIRST_HALF", "lag_seconds": null}
+{"polled_at": "2026-09-19T14:05:20+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "5'", "status": "STATUS_FIRST_HALF", "lag_seconds": 193.9}
+{"polled_at": "2026-09-19T14:05:20+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "5'", "status": "STATUS_FIRST_HALF", "lag_seconds": 63.9}
+{"polled_at": "2026-09-19T14:05:20+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "5'", "status": "STATUS_FIRST_HALF", "lag_seconds": 174.9}
+{"polled_at": "2026-09-19T14:06:21+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "6'", "status": "STATUS_FIRST_HALF", "lag_seconds": 227.1}
+{"polled_at": "2026-09-19T14:06:21+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "6'", "status": "STATUS_FIRST_HALF", "lag_seconds": 124.1}
+{"polled_at": "2026-09-19T14:06:21+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "6'", "status": "STATUS_FIRST_HALF", "lag_seconds": 254.1}
+{"polled_at": "2026-09-19T14:07:21+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "7'", "status": "STATUS_FIRST_HALF", "lag_seconds": 287.2}
+{"polled_at": "2026-09-19T14:07:21+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "7'", "status": "STATUS_FIRST_HALF", "lag_seconds": 141.2}
+{"polled_at": "2026-09-19T14:07:21+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "7'", "status": "STATUS_FIRST_HALF", "lag_seconds": 184.2}
+{"polled_at": "2026-09-19T14:08:21+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "8'", "status": "STATUS_FIRST_HALF", "lag_seconds": 203.5}
+{"polled_at": "2026-09-19T14:08:21+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "8'", "status": "STATUS_FIRST_HALF", "lag_seconds": 98.5}
+{"polled_at": "2026-09-19T14:08:21+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "8'", "status": "STATUS_FIRST_HALF", "lag_seconds": 108.5}
+{"polled_at": "2026-09-19T14:09:21+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "9'", "status": "STATUS_FIRST_HALF", "lag_seconds": 158.8}
+{"polled_at": "2026-09-19T14:09:21+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "9'", "status": "STATUS_FIRST_HALF", "lag_seconds": 263.8}
+{"polled_at": "2026-09-19T14:09:21+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "9'", "status": "STATUS_FIRST_HALF", "lag_seconds": 120.8}
+{"polled_at": "2026-09-19T14:10:22+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "10'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 219.1}
+{"polled_at": "2026-09-19T14:10:22+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "10'", "status": "STATUS_FIRST_HALF", "lag_seconds": 324.1}
+{"polled_at": "2026-09-19T14:10:22+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "10'", "status": "STATUS_FIRST_HALF", "lag_seconds": 181.1}
+{"polled_at": "2026-09-19T14:11:22+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "11'", "status": "STATUS_FIRST_HALF", "lag_seconds": 63.3}
+{"polled_at": "2026-09-19T14:11:22+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "11'", "status": "STATUS_FIRST_HALF", "lag_seconds": 384.3}
+{"polled_at": "2026-09-19T14:11:22+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "11'", "status": "STATUS_FIRST_HALF", "lag_seconds": 188.3}
+{"polled_at": "2026-09-19T14:12:22+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "12'", "status": "STATUS_FIRST_HALF", "lag_seconds": 119.6}
+{"polled_at": "2026-09-19T14:12:22+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "12'", "status": "STATUS_FIRST_HALF", "lag_seconds": 123.6}
+{"polled_at": "2026-09-19T14:12:22+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "12'", "status": "STATUS_FIRST_HALF", "lag_seconds": 248.6}
+{"polled_at": "2026-09-19T14:13:22+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "13'", "status": "STATUS_FIRST_HALF", "lag_seconds": 178.8}
+{"polled_at": "2026-09-19T14:13:22+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "13'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 183.8}
+{"polled_at": "2026-09-19T14:13:22+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "13'", "status": "STATUS_FIRST_HALF", "lag_seconds": 146.8}
+{"polled_at": "2026-09-19T14:14:23+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "14'", "status": "STATUS_FIRST_HALF", "lag_seconds": 239.1}
+{"polled_at": "2026-09-19T14:14:23+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "14'", "status": "STATUS_FIRST_HALF", "lag_seconds": 244.1}
+{"polled_at": "2026-09-19T14:14:23+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "14'", "status": "STATUS_FIRST_HALF", "lag_seconds": 207.1}
+{"polled_at": "2026-09-19T14:15:23+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "15'", "status": "STATUS_FIRST_HALF", "lag_seconds": 299.5}
+{"polled_at": "2026-09-19T14:15:23+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "15'", "status": "STATUS_FIRST_HALF", "lag_seconds": 304.5}
+{"polled_at": "2026-09-19T14:15:23+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "15'", "status": "STATUS_FIRST_HALF", "lag_seconds": 178.5}
+{"polled_at": "2026-09-19T14:16:23+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "16'", "status": "STATUS_FIRST_HALF", "lag_seconds": 359.7}
+{"polled_at": "2026-09-19T14:16:23+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "16'", "status": "STATUS_FIRST_HALF", "lag_seconds": 364.7}
+{"polled_at": "2026-09-19T14:16:23+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "16'", "status": "STATUS_FIRST_HALF", "lag_seconds": 238.7}
+{"polled_at": "2026-09-19T14:17:23+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "17'", "status": "STATUS_FIRST_HALF", "lag_seconds": 420.0}
+{"polled_at": "2026-09-19T14:17:23+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "17'", "status": "STATUS_FIRST_HALF", "lag_seconds": 122.0}
+{"polled_at": "2026-09-19T14:17:23+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "17'", "status": "STATUS_FIRST_HALF", "lag_seconds": 299.0}
+{"polled_at": "2026-09-19T14:18:24+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "18'", "status": "STATUS_FIRST_HALF", "lag_seconds": 480.3}
+{"polled_at": "2026-09-19T14:18:24+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "18'", "status": "STATUS_FIRST_HALF", "lag_seconds": 181.3}
+{"polled_at": "2026-09-19T14:18:24+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "18'", "status": "STATUS_FIRST_HALF", "lag_seconds": 135.3}
+{"polled_at": "2026-09-19T14:19:24+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "19'", "status": "STATUS_FIRST_HALF", "lag_seconds": 540.4}
+{"polled_at": "2026-09-19T14:19:24+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "19'", "status": "STATUS_FIRST_HALF", "lag_seconds": 241.4}
+{"polled_at": "2026-09-19T14:19:24+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "19'", "status": "STATUS_FIRST_HALF", "lag_seconds": 195.4}
+{"polled_at": "2026-09-19T14:20:24+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "20'", "status": "STATUS_FIRST_HALF", "lag_seconds": 79.8}
+{"polled_at": "2026-09-19T14:20:24+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "20'", "status": "STATUS_FIRST_HALF", "lag_seconds": 94.8}
+{"polled_at": "2026-09-19T14:20:24+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "20'", "status": "STATUS_FIRST_HALF", "lag_seconds": 78.8}
+{"polled_at": "2026-09-19T14:21:24+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "21'", "status": "STATUS_FIRST_HALF", "lag_seconds": 101.0}
+{"polled_at": "2026-09-19T14:21:24+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "21'", "status": "STATUS_FIRST_HALF", "lag_seconds": 85.0}
+{"polled_at": "2026-09-19T14:21:24+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "21'", "status": "STATUS_FIRST_HALF", "lag_seconds": 79.0}
+{"polled_at": "2026-09-19T14:22:25+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "22'", "status": "STATUS_FIRST_HALF", "lag_seconds": 161.3}
+{"polled_at": "2026-09-19T14:22:25+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "22'", "status": "STATUS_FIRST_HALF", "lag_seconds": 101.3}
+{"polled_at": "2026-09-19T14:22:25+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "22'", "status": "STATUS_FIRST_HALF", "lag_seconds": 62.3}
+{"polled_at": "2026-09-19T14:23:25+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "23'", "status": "STATUS_FIRST_HALF", "lag_seconds": 221.6}
+{"polled_at": "2026-09-19T14:23:25+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "23'", "status": "STATUS_FIRST_HALF", "lag_seconds": 161.6}
+{"polled_at": "2026-09-19T14:23:25+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "23'", "status": "STATUS_FIRST_HALF", "lag_seconds": 123.6}
+{"polled_at": "2026-09-19T14:24:25+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "24'", "status": "STATUS_FIRST_HALF", "lag_seconds": 282.8}
+{"polled_at": "2026-09-19T14:24:25+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "24'", "status": "STATUS_FIRST_HALF", "lag_seconds": 73.8}
+{"polled_at": "2026-09-19T14:24:25+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "24'", "status": "STATUS_FIRST_HALF", "lag_seconds": 183.8}
+{"polled_at": "2026-09-19T14:25:26+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "25'", "status": "STATUS_FIRST_HALF", "lag_seconds": 343.1}
+{"polled_at": "2026-09-19T14:25:26+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "25'", "status": "STATUS_FIRST_HALF", "lag_seconds": 135.1}
+{"polled_at": "2026-09-19T14:25:26+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "25'", "status": "STATUS_FIRST_HALF", "lag_seconds": 180.1}
+{"polled_at": "2026-09-19T14:26:26+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "26'", "status": "STATUS_FIRST_HALF", "lag_seconds": 403.3}
+{"polled_at": "2026-09-19T14:26:26+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "26'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 240.3}
+{"polled_at": "2026-09-19T14:26:26+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "26'", "status": "STATUS_FIRST_HALF", "lag_seconds": 195.3}
+{"polled_at": "2026-09-19T14:27:26+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "27'", "status": "STATUS_FIRST_HALF", "lag_seconds": 81.7}
+{"polled_at": "2026-09-19T14:27:26+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "27'", "status": "STATUS_FIRST_HALF", "lag_seconds": 56.7}
+{"polled_at": "2026-09-19T14:27:26+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "28'", "status": "STATUS_FIRST_HALF", "lag_seconds": 255.7}
+{"polled_at": "2026-09-19T14:28:26+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "28'", "status": "STATUS_FIRST_HALF", "lag_seconds": 141.9}
+{"polled_at": "2026-09-19T14:28:26+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "29'", "status": "STATUS_FIRST_HALF", "lag_seconds": 91.9}
+{"polled_at": "2026-09-19T14:28:26+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "28'", "status": "STATUS_FIRST_HALF", "lag_seconds": 116.9}
+{"polled_at": "2026-09-19T14:29:27+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "29'", "status": "STATUS_FIRST_HALF", "lag_seconds": 197.2}
+{"polled_at": "2026-09-19T14:29:27+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "30'", "status": "STATUS_FIRST_HALF", "lag_seconds": 152.2}
+{"polled_at": "2026-09-19T14:29:27+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "29'", "status": "STATUS_FIRST_HALF", "lag_seconds": 177.2}
+{"polled_at": "2026-09-19T14:30:27+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "30'", "status": "STATUS_FIRST_HALF", "lag_seconds": 257.4}
+{"polled_at": "2026-09-19T14:30:27+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "31'", "status": "STATUS_FIRST_HALF", "lag_seconds": 99.4}
+{"polled_at": "2026-09-19T14:30:27+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "30'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 237.4}
+{"polled_at": "2026-09-19T14:31:27+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "31'", "status": "STATUS_FIRST_HALF", "lag_seconds": 147.7}
+{"polled_at": "2026-09-19T14:31:27+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "32'", "status": "STATUS_FIRST_HALF", "lag_seconds": 98.7}
+{"polled_at": "2026-09-19T14:31:27+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "31'", "status": "STATUS_FIRST_HALF", "lag_seconds": 297.7}
+{"polled_at": "2026-09-19T14:32:27+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "32'", "status": "STATUS_FIRST_HALF", "lag_seconds": 113.9}
+{"polled_at": "2026-09-19T14:32:27+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "33'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 157.9}
+{"polled_at": "2026-09-19T14:32:27+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "32'", "status": "STATUS_FIRST_HALF", "lag_seconds": 99.9}
+{"polled_at": "2026-09-19T14:33:28+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "33'", "status": "STATUS_FIRST_HALF", "lag_seconds": 122.1}
+{"polled_at": "2026-09-19T14:33:28+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "34'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 218.1}
+{"polled_at": "2026-09-19T14:33:28+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "33'", "status": "STATUS_FIRST_HALF", "lag_seconds": 160.1}
+{"polled_at": "2026-09-19T14:34:28+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "34'", "status": "STATUS_FIRST_HALF", "lag_seconds": 92.4}
+{"polled_at": "2026-09-19T14:34:28+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "35'", "status": "STATUS_FIRST_HALF", "lag_seconds": 103.4}
+{"polled_at": "2026-09-19T14:34:28+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "34'", "status": "STATUS_FIRST_HALF", "lag_seconds": 117.4}
+{"polled_at": "2026-09-19T14:35:28+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "35'", "status": "STATUS_FIRST_HALF", "lag_seconds": 58.6}
+{"polled_at": "2026-09-19T14:35:28+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "36'", "status": "STATUS_FIRST_HALF", "lag_seconds": 163.6}
+{"polled_at": "2026-09-19T14:35:28+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "35'", "status": "STATUS_FIRST_HALF", "lag_seconds": 177.6}
+{"polled_at": "2026-09-19T14:36:28+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "36'", "status": "STATUS_FIRST_HALF", "lag_seconds": 118.9}
+{"polled_at": "2026-09-19T14:36:28+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "37'", "status": "STATUS_FIRST_HALF", "lag_seconds": 223.9}
+{"polled_at": "2026-09-19T14:36:28+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "36'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 87.9}
+{"polled_at": "2026-09-19T14:37:29+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "37'", "status": "STATUS_FIRST_HALF", "lag_seconds": 130.1}
+{"polled_at": "2026-09-19T14:37:29+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "37'", "status": "STATUS_FIRST_HALF", "lag_seconds": 284.1}
+{"polled_at": "2026-09-19T14:37:29+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "37'", "status": "STATUS_FIRST_HALF", "lag_seconds": 148.1}
+{"polled_at": "2026-09-19T14:38:29+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "38'", "status": "STATUS_FIRST_HALF", "lag_seconds": 190.3}
+{"polled_at": "2026-09-19T14:38:29+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "38'", "status": "STATUS_FIRST_HALF", "lag_seconds": 344.3}
+{"polled_at": "2026-09-19T14:38:29+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "38'", "status": "STATUS_FIRST_HALF", "lag_seconds": 208.3}
+{"polled_at": "2026-09-19T14:39:29+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "39'", "status": "STATUS_FIRST_HALF", "lag_seconds": 106.6}
+{"polled_at": "2026-09-19T14:39:29+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "39'", "status": "STATUS_FIRST_HALF", "lag_seconds": 404.6}
+{"polled_at": "2026-09-19T14:39:29+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "39'", "status": "STATUS_FIRST_HALF", "lag_seconds": 268.6}
+{"polled_at": "2026-09-19T14:40:30+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "40'", "status": "STATUS_FIRST_HALF", "lag_seconds": 167.0}
+{"polled_at": "2026-09-19T14:40:30+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "41'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 132.0}
+{"polled_at": "2026-09-19T14:40:30+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "40'", "status": "STATUS_FIRST_HALF", "lag_seconds": 65.0}
+{"polled_at": "2026-09-19T14:41:30+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "41'", "status": "STATUS_FIRST_HALF", "lag_seconds": 227.2}
+{"polled_at": "2026-09-19T14:41:30+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "42'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 146.2}
+{"polled_at": "2026-09-19T14:41:30+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "41'", "status": "STATUS_FIRST_HALF", "lag_seconds": 125.2}
+{"polled_at": "2026-09-19T14:42:30+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "42'", "status": "STATUS_FIRST_HALF", "lag_seconds": 287.5}
+{"polled_at": "2026-09-19T14:42:30+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "43'", "status": "STATUS_FIRST_HALF", "lag_seconds": 206.5}
+{"polled_at": "2026-09-19T14:42:30+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "42'", "status": "STATUS_FIRST_HALF", "lag_seconds": 98.5}
+{"polled_at": "2026-09-19T14:43:30+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "43'", "status": "STATUS_FIRST_HALF", "lag_seconds": 347.8}
+{"polled_at": "2026-09-19T14:43:30+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "43'", "status": "STATUS_FIRST_HALF", "lag_seconds": 65.8}
+{"polled_at": "2026-09-19T14:43:30+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "43'", "status": "STATUS_FIRST_HALF", "lag_seconds": 158.8}
+{"polled_at": "2026-09-19T14:44:30+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "44'", "status": "STATUS_FIRST_HALF", "lag_seconds": 151.0}
+{"polled_at": "2026-09-19T14:44:30+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "44'", "status": "STATUS_FIRST_HALF", "lag_seconds": 127.0}
+{"polled_at": "2026-09-19T14:44:30+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "44'", "status": "STATUS_FIRST_HALF", "lag_seconds": 219.0}
+{"polled_at": "2026-09-19T14:45:31+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'", "status": "STATUS_FIRST_HALF", "lag_seconds": 211.3}
+{"polled_at": "2026-09-19T14:45:31+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+1'", "status": "STATUS_FIRST_HALF", "lag_seconds": 187.3}
+{"polled_at": "2026-09-19T14:45:31+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'", "status": "STATUS_FIRST_HALF", "lag_seconds": 279.3}
+{"polled_at": "2026-09-19T14:46:31+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+1'", "status": "STATUS_FIRST_HALF", "lag_seconds": 271.4}
+{"polled_at": "2026-09-19T14:46:31+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+2'", "status": "STATUS_FIRST_HALF", "lag_seconds": 247.4}
+{"polled_at": "2026-09-19T14:46:31+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+1'", "status": "STATUS_FIRST_HALF", "lag_seconds": 167.4}
+{"polled_at": "2026-09-19T14:47:31+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 222.7}
+{"polled_at": "2026-09-19T14:47:31+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+2'", "status": "STATUS_FIRST_HALF", "lag_seconds": 142.7}
+{"polled_at": "2026-09-19T14:47:31+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+3'", "status": "STATUS_FIRST_HALF", "lag_seconds": 307.7}
+{"polled_at": "2026-09-19T14:48:31+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 282.9}
+{"polled_at": "2026-09-19T14:48:31+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+3'", "status": "STATUS_FIRST_HALF", "lag_seconds": 104.9}
+{"polled_at": "2026-09-19T14:48:31+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_FIRST_HALF", "lag_seconds": 172.9}
+{"polled_at": "2026-09-19T14:49:32+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+4'", "status": "STATUS_FIRST_HALF", "lag_seconds": 85.1}
+{"polled_at": "2026-09-19T14:49:32+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 343.1}
+{"polled_at": "2026-09-19T14:49:32+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 233.1}
+{"polled_at": "2026-09-19T14:50:32+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_FIRST_HALF", "lag_seconds": 144.4}
+{"polled_at": "2026-09-19T14:50:32+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 403.4}
+{"polled_at": "2026-09-19T14:50:32+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 293.4}
+{"polled_at": "2026-09-19T14:51:32+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 204.6}
+{"polled_at": "2026-09-19T14:51:32+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 463.6}
+{"polled_at": "2026-09-19T14:51:32+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 353.6}
+{"polled_at": "2026-09-19T14:52:32+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 264.8}
+{"polled_at": "2026-09-19T14:52:32+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 523.8}
+{"polled_at": "2026-09-19T14:52:32+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 413.8}
+{"polled_at": "2026-09-19T14:53:33+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 325.2}
+{"polled_at": "2026-09-19T14:53:33+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 584.2}
+{"polled_at": "2026-09-19T14:53:33+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 474.2}
+{"polled_at": "2026-09-19T14:54:33+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 385.5}
+{"polled_at": "2026-09-19T14:54:33+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 644.5}
+{"polled_at": "2026-09-19T14:54:33+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 534.5}
+{"polled_at": "2026-09-19T14:55:33+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 445.8}
+{"polled_at": "2026-09-19T14:55:33+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 704.8}
+{"polled_at": "2026-09-19T14:55:33+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 594.8}
+{"polled_at": "2026-09-19T14:56:34+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 506.1}
+{"polled_at": "2026-09-19T14:56:34+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 765.1}
+{"polled_at": "2026-09-19T14:56:34+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 655.1}
+{"polled_at": "2026-09-19T14:57:34+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 566.3}
+{"polled_at": "2026-09-19T14:57:34+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 825.3}
+{"polled_at": "2026-09-19T14:57:34+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 715.3}
+{"polled_at": "2026-09-19T14:58:34+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 626.6}
+{"polled_at": "2026-09-19T14:58:34+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 885.6}
+{"polled_at": "2026-09-19T14:58:34+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 775.6}
+{"polled_at": "2026-09-19T14:59:34+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 686.8}
+{"polled_at": "2026-09-19T14:59:34+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 945.8}
+{"polled_at": "2026-09-19T14:59:34+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 835.8}
+{"polled_at": "2026-09-19T15:00:35+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 747.2}
+{"polled_at": "2026-09-19T15:00:35+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 1006.2}
+{"polled_at": "2026-09-19T15:00:35+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 896.2}
+{"polled_at": "2026-09-19T15:01:35+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 807.5}
+{"polled_at": "2026-09-19T15:01:35+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 1066.5}
+{"polled_at": "2026-09-19T15:01:35+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 956.5}
+{"polled_at": "2026-09-19T15:02:35+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 867.7}
+{"polled_at": "2026-09-19T15:02:35+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "45'+2'", "status": "STATUS_HALFTIME", "lag_seconds": 1126.7}
+{"polled_at": "2026-09-19T15:02:35+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 1016.7}
+{"polled_at": "2026-09-19T15:03:35+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 927.9}
+{"polled_at": "2026-09-19T15:03:35+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "45'+3'", "status": "STATUS_HALFTIME", "lag_seconds": 1076.9}
+{"polled_at": "2026-09-19T15:03:35+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "46'", "status": "STATUS_SECOND_HALF", "lag_seconds": 1186.9}
+{"polled_at": "2026-09-19T15:04:36+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 988.1}
+{"polled_at": "2026-09-19T15:04:36+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "47'", "status": "STATUS_SECOND_HALF", "lag_seconds": 95.1}
+{"polled_at": "2026-09-19T15:04:36+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "47'", "status": "STATUS_SECOND_HALF", "lag_seconds": 80.1}
+{"polled_at": "2026-09-19T15:05:36+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 1048.4}
+{"polled_at": "2026-09-19T15:05:36+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "48'", "status": "STATUS_SECOND_HALF", "lag_seconds": 114.4}
+{"polled_at": "2026-09-19T15:05:36+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "48'", "status": "STATUS_SECOND_HALF", "lag_seconds": 140.4}
+{"polled_at": "2026-09-19T15:06:36+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "45'+6'", "status": "STATUS_HALFTIME", "lag_seconds": 1108.6}
+{"polled_at": "2026-09-19T15:06:36+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "49'", "status": "STATUS_SECOND_HALF", "lag_seconds": 174.6}
+{"polled_at": "2026-09-19T15:06:36+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "48'", "status": "STATUS_SECOND_HALF", "lag_seconds": 200.6}
+{"polled_at": "2026-09-19T15:07:36+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "46'", "status": "STATUS_SECOND_HALF", "lag_seconds": 100.8}
+{"polled_at": "2026-09-19T15:07:36+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "50'", "status": "STATUS_SECOND_HALF", "lag_seconds": 234.8}
+{"polled_at": "2026-09-19T15:07:36+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "49'", "status": "STATUS_SECOND_HALF", "lag_seconds": 260.8}
+{"polled_at": "2026-09-19T15:08:36+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "47'", "status": "STATUS_SECOND_HALF", "lag_seconds": 137.0}
+{"polled_at": "2026-09-19T15:08:36+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "51'", "status": "STATUS_SECOND_HALF", "lag_seconds": 88.0}
+{"polled_at": "2026-09-19T15:08:36+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "51'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 58.0}
+{"polled_at": "2026-09-19T15:09:37+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "48'", "status": "STATUS_SECOND_HALF", "lag_seconds": 197.2}
+{"polled_at": "2026-09-19T15:09:37+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "52'", "status": "STATUS_SECOND_HALF", "lag_seconds": 148.2}
+{"polled_at": "2026-09-19T15:09:37+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "52'", "status": "STATUS_SECOND_HALF", "lag_seconds": 118.2}
+{"polled_at": "2026-09-19T15:10:37+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "50'", "status": "STATUS_SECOND_HALF", "lag_seconds": 258.5}
+{"polled_at": "2026-09-19T15:10:37+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "53'", "status": "STATUS_SECOND_HALF", "lag_seconds": 87.5}
+{"polled_at": "2026-09-19T15:10:37+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "53'", "status": "STATUS_SECOND_HALF", "lag_seconds": 208.5}
+{"polled_at": "2026-09-19T15:11:37+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "50'", "status": "STATUS_SECOND_HALF", "lag_seconds": 129.7}
+{"polled_at": "2026-09-19T15:11:37+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "53'", "status": "STATUS_SECOND_HALF", "lag_seconds": 147.7}
+{"polled_at": "2026-09-19T15:11:37+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "54'", "status": "STATUS_SECOND_HALF", "lag_seconds": 268.7}
+{"polled_at": "2026-09-19T15:12:38+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "51'", "status": "STATUS_SECOND_HALF", "lag_seconds": 190.2}
+{"polled_at": "2026-09-19T15:12:38+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "54'", "status": "STATUS_SECOND_HALF", "lag_seconds": 208.2}
+{"polled_at": "2026-09-19T15:12:38+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "55'", "status": "STATUS_SECOND_HALF", "lag_seconds": 329.2}
+{"polled_at": "2026-09-19T15:13:38+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "52'", "status": "STATUS_SECOND_HALF", "lag_seconds": 250.4}
+{"polled_at": "2026-09-19T15:13:38+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "56'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 120.4}
+{"polled_at": "2026-09-19T15:13:38+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "56'", "status": "STATUS_SECOND_HALF", "lag_seconds": 389.4}
+{"polled_at": "2026-09-19T15:14:38+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "54'", "status": "STATUS_SECOND_HALF", "lag_seconds": 72.6}
+{"polled_at": "2026-09-19T15:14:38+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "57'", "status": "STATUS_SECOND_HALF", "lag_seconds": 141.6}
+{"polled_at": "2026-09-19T15:14:38+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "58'", "status": "STATUS_SECOND_HALF", "lag_seconds": 449.6}
+{"polled_at": "2026-09-19T15:15:38+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "54'", "status": "STATUS_SECOND_HALF", "lag_seconds": 132.9}
+{"polled_at": "2026-09-19T15:15:38+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "57'", "status": "STATUS_SECOND_HALF", "lag_seconds": 104.9}
+{"polled_at": "2026-09-19T15:15:38+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "58'", "status": "STATUS_SECOND_HALF", "lag_seconds": 93.9}
+{"polled_at": "2026-09-19T15:16:39+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "58'", "status": "STATUS_SECOND_HALF", "lag_seconds": 122.1}
+{"polled_at": "2026-09-19T15:16:39+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "55'", "status": "STATUS_SECOND_HALF", "lag_seconds": 193.1}
+{"polled_at": "2026-09-19T15:16:39+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "59'", "status": "STATUS_SECOND_HALF", "lag_seconds": 112.1}
+{"polled_at": "2026-09-19T15:17:39+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "56'", "status": "STATUS_SECOND_HALF", "lag_seconds": 134.3}
+{"polled_at": "2026-09-19T15:17:39+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "60'", "status": "STATUS_SECOND_HALF", "lag_seconds": 182.3}
+{"polled_at": "2026-09-19T15:17:39+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "60'", "status": "STATUS_SECOND_HALF", "lag_seconds": 72.3}
+{"polled_at": "2026-09-19T15:18:39+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "58'", "status": "STATUS_SECOND_HALF", "lag_seconds": 101.6}
+{"polled_at": "2026-09-19T15:18:39+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "61'", "status": "STATUS_SECOND_HALF", "lag_seconds": 61.6}
+{"polled_at": "2026-09-19T15:18:39+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "62'", "status": "STATUS_SECOND_HALF", "lag_seconds": 138.6}
+{"polled_at": "2026-09-19T15:19:39+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "59'", "status": "STATUS_SECOND_HALF", "lag_seconds": 161.8}
+{"polled_at": "2026-09-19T15:19:39+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "62'", "status": "STATUS_IN_PROGRESS", "lag_seconds": 121.8}
+{"polled_at": "2026-09-19T15:19:39+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "63'", "status": "STATUS_SECOND_HALF", "lag_seconds": 198.8}
+{"polled_at": "2026-09-19T15:20:40+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "59'", "status": "STATUS_SECOND_HALF", "lag_seconds": 222.1}
+{"polled_at": "2026-09-19T15:20:40+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "62'", "status": "STATUS_SECOND_HALF", "lag_seconds": 125.1}
+{"polled_at": "2026-09-19T15:20:40+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "63'", "status": "STATUS_SECOND_HALF", "lag_seconds": 259.1}
+{"polled_at": "2026-09-19T15:21:40+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "60'", "status": "STATUS_SECOND_HALF", "lag_seconds": 91.5}
+{"polled_at": "2026-09-19T15:21:40+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "64'", "status": "STATUS_SECOND_HALF", "lag_seconds": 210.5}
+{"polled_at": "2026-09-19T15:21:40+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "64'", "status": "STATUS_SECOND_HALF", "lag_seconds": 57.5}
+{"polled_at": "2026-09-19T15:22:40+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "61'", "status": "STATUS_SECOND_HALF", "lag_seconds": 151.6}
+{"polled_at": "2026-09-19T15:22:40+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "65'", "status": "STATUS_SECOND_HALF", "lag_seconds": 115.6}
+{"polled_at": "2026-09-19T15:22:40+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "65'", "status": "STATUS_SECOND_HALF", "lag_seconds": 117.6}
+{"polled_at": "2026-09-19T15:23:40+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "62'", "status": "STATUS_SECOND_HALF", "lag_seconds": 211.8}
+{"polled_at": "2026-09-19T15:23:40+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "65'", "status": "STATUS_SECOND_HALF", "lag_seconds": 175.8}
+{"polled_at": "2026-09-19T15:23:40+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "66'", "status": "STATUS_SECOND_HALF", "lag_seconds": 67.8}
+{"polled_at": "2026-09-19T15:24:41+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "63'", "status": "STATUS_SECOND_HALF", "lag_seconds": 272.0}
+{"polled_at": "2026-09-19T15:24:41+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "66'", "status": "STATUS_SECOND_HALF", "lag_seconds": 236.0}
+{"polled_at": "2026-09-19T15:24:41+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "67'", "status": "STATUS_SECOND_HALF", "lag_seconds": 129.0}
+{"polled_at": "2026-09-19T15:25:41+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "64'", "status": "STATUS_SECOND_HALF", "lag_seconds": 141.3}
+{"polled_at": "2026-09-19T15:25:41+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "67'", "status": "STATUS_SECOND_HALF", "lag_seconds": 63.3}
+{"polled_at": "2026-09-19T15:25:41+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "68'", "status": "STATUS_SECOND_HALF", "lag_seconds": 150.3}
+{"polled_at": "2026-09-19T15:26:41+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "65'", "status": "STATUS_SECOND_HALF", "lag_seconds": 99.5}
+{"polled_at": "2026-09-19T15:26:41+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "68'", "status": "STATUS_SECOND_HALF", "lag_seconds": 123.5}
+{"polled_at": "2026-09-19T15:26:41+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "69'", "status": "STATUS_SECOND_HALF", "lag_seconds": 166.5}
+{"polled_at": "2026-09-19T15:27:41+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "66'", "status": "STATUS_SECOND_HALF", "lag_seconds": 64.7}
+{"polled_at": "2026-09-19T15:27:41+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "69'", "status": "STATUS_SECOND_HALF", "lag_seconds": 134.7}
+{"polled_at": "2026-09-19T15:27:41+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "70'", "status": "STATUS_SECOND_HALF", "lag_seconds": 226.7}
+{"polled_at": "2026-09-19T15:28:41+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "70'", "status": "STATUS_SECOND_HALF", "lag_seconds": 195.0}
+{"polled_at": "2026-09-19T15:28:41+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "71'", "status": "STATUS_SECOND_HALF", "lag_seconds": 72.0}
+{"polled_at": "2026-09-19T15:28:41+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "67'", "status": "STATUS_SECOND_HALF", "lag_seconds": 125.0}
+{"polled_at": "2026-09-19T15:29:42+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "71'", "status": "STATUS_SECOND_HALF", "lag_seconds": 65.2}
+{"polled_at": "2026-09-19T15:29:42+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "68'", "status": "STATUS_SECOND_HALF", "lag_seconds": 122.2}
+{"polled_at": "2026-09-19T15:29:42+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "72'", "status": "STATUS_SECOND_HALF", "lag_seconds": 96.2}
+{"polled_at": "2026-09-19T15:30:42+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "72'", "status": "STATUS_SECOND_HALF", "lag_seconds": 115.4}
+{"polled_at": "2026-09-19T15:30:42+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "69'", "status": "STATUS_SECOND_HALF", "lag_seconds": 111.4}
+{"polled_at": "2026-09-19T15:30:42+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "73'", "status": "STATUS_SECOND_HALF", "lag_seconds": 81.4}
+{"polled_at": "2026-09-19T15:31:42+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "73'", "status": "STATUS_SECOND_HALF", "lag_seconds": 175.6}
+{"polled_at": "2026-09-19T15:31:42+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "70'", "status": "STATUS_SECOND_HALF", "lag_seconds": 171.6}
+{"polled_at": "2026-09-19T15:31:42+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "74'", "status": "STATUS_SECOND_HALF", "lag_seconds": 142.6}
+{"polled_at": "2026-09-19T15:32:42+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "74'", "status": "STATUS_SECOND_HALF", "lag_seconds": 98.8}
+{"polled_at": "2026-09-19T15:32:42+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "71'", "status": "STATUS_SECOND_HALF", "lag_seconds": 231.8}
+{"polled_at": "2026-09-19T15:32:42+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "75'", "status": "STATUS_SECOND_HALF", "lag_seconds": 202.8}
+{"polled_at": "2026-09-19T15:33:43+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "75'", "status": "STATUS_SECOND_HALF", "lag_seconds": 160.0}
+{"polled_at": "2026-09-19T15:33:43+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "76'", "status": "STATUS_SECOND_HALF", "lag_seconds": 69.0}
+{"polled_at": "2026-09-19T15:33:43+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "72'", "status": "STATUS_SECOND_HALF", "lag_seconds": 120.0}
+{"polled_at": "2026-09-19T15:34:43+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "76'", "status": "STATUS_SECOND_HALF", "lag_seconds": 70.2}
+{"polled_at": "2026-09-19T15:34:43+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "77'", "status": "STATUS_SECOND_HALF", "lag_seconds": 129.2}
+{"polled_at": "2026-09-19T15:34:43+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "73'", "status": "STATUS_SECOND_HALF", "lag_seconds": 181.2}
+{"polled_at": "2026-09-19T15:35:43+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "77'", "status": "STATUS_SECOND_HALF", "lag_seconds": 87.4}
+{"polled_at": "2026-09-19T15:35:43+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "78'", "status": "STATUS_SECOND_HALF", "lag_seconds": 109.4}
+{"polled_at": "2026-09-19T15:35:43+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "74'", "status": "STATUS_SECOND_HALF", "lag_seconds": 115.4}
+{"polled_at": "2026-09-19T15:36:43+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "79'", "status": "STATUS_SECOND_HALF", "lag_seconds": 151.6}
+{"polled_at": "2026-09-19T15:36:43+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "79'", "status": "STATUS_SECOND_HALF", "lag_seconds": 169.6}
+{"polled_at": "2026-09-19T15:36:43+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "75'", "status": "STATUS_SECOND_HALF", "lag_seconds": 175.6}
+{"polled_at": "2026-09-19T15:37:43+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "79'", "status": "STATUS_SECOND_HALF", "lag_seconds": 210.8}
+{"polled_at": "2026-09-19T15:37:43+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "80'", "status": "STATUS_SECOND_HALF", "lag_seconds": 101.8}
+{"polled_at": "2026-09-19T15:37:43+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "76'", "status": "STATUS_SECOND_HALF", "lag_seconds": 152.8}
+{"polled_at": "2026-09-19T15:38:44+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "80'", "status": "STATUS_SECOND_HALF", "lag_seconds": 42.0}
+{"polled_at": "2026-09-19T15:38:44+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "81'", "status": "STATUS_SECOND_HALF", "lag_seconds": 70.0}
+{"polled_at": "2026-09-19T15:38:44+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "77'", "status": "STATUS_SECOND_HALF", "lag_seconds": 213.0}
+{"polled_at": "2026-09-19T15:39:44+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "81'", "status": "STATUS_SECOND_HALF", "lag_seconds": 103.4}
+{"polled_at": "2026-09-19T15:39:44+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "82'", "status": "STATUS_SECOND_HALF", "lag_seconds": 131.4}
+{"polled_at": "2026-09-19T15:39:44+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "78'", "status": "STATUS_SECOND_HALF", "lag_seconds": 67.4}
+{"polled_at": "2026-09-19T15:40:44+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "83'", "status": "STATUS_SECOND_HALF", "lag_seconds": 161.7}
+{"polled_at": "2026-09-19T15:40:44+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "83'", "status": "STATUS_SECOND_HALF", "lag_seconds": 57.7}
+{"polled_at": "2026-09-19T15:40:44+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "79'", "status": "STATUS_SECOND_HALF", "lag_seconds": 71.7}
+{"polled_at": "2026-09-19T15:41:44+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "83'", "status": "STATUS_SECOND_HALF", "lag_seconds": 190.9}
+{"polled_at": "2026-09-19T15:41:44+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "84'", "status": "STATUS_SECOND_HALF", "lag_seconds": 117.9}
+{"polled_at": "2026-09-19T15:41:44+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "80'", "status": "STATUS_SECOND_HALF", "lag_seconds": 55.9}
+{"polled_at": "2026-09-19T15:42:45+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "84'", "status": "STATUS_SECOND_HALF", "lag_seconds": 251.1}
+{"polled_at": "2026-09-19T15:42:45+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "85'", "status": "STATUS_SECOND_HALF", "lag_seconds": 108.1}
+{"polled_at": "2026-09-19T15:42:45+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "81'", "status": "STATUS_SECOND_HALF", "lag_seconds": 116.1}
+{"polled_at": "2026-09-19T15:43:45+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "85'", "status": "STATUS_SECOND_HALF", "lag_seconds": 312.4}
+{"polled_at": "2026-09-19T15:43:45+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "82'", "status": "STATUS_SECOND_HALF", "lag_seconds": 127.4}
+{"polled_at": "2026-09-19T15:43:45+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "86'", "status": "STATUS_SECOND_HALF", "lag_seconds": 168.4}
+{"polled_at": "2026-09-19T15:44:45+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "86'", "status": "STATUS_SECOND_HALF", "lag_seconds": 372.6}
+{"polled_at": "2026-09-19T15:44:45+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "83'", "status": "STATUS_SECOND_HALF", "lag_seconds": 145.6}
+{"polled_at": "2026-09-19T15:44:45+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "87'", "status": "STATUS_SECOND_HALF", "lag_seconds": 99.6}
+{"polled_at": "2026-09-19T15:45:45+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "87'", "status": "STATUS_SECOND_HALF", "lag_seconds": 95.9}
+{"polled_at": "2026-09-19T15:45:45+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "84'", "status": "STATUS_SECOND_HALF", "lag_seconds": 144.9}
+{"polled_at": "2026-09-19T15:45:45+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "88'", "status": "STATUS_SECOND_HALF", "lag_seconds": 159.9}
+{"polled_at": "2026-09-19T15:46:46+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "88'", "status": "STATUS_SECOND_HALF", "lag_seconds": 156.2}
+{"polled_at": "2026-09-19T15:46:46+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "85'", "status": "STATUS_SECOND_HALF", "lag_seconds": 55.2}
+{"polled_at": "2026-09-19T15:46:46+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "89'", "status": "STATUS_SECOND_HALF", "lag_seconds": 201.2}
+{"polled_at": "2026-09-19T15:47:46+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "89'", "status": "STATUS_SECOND_HALF", "lag_seconds": 93.5}
+{"polled_at": "2026-09-19T15:47:46+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "86'", "status": "STATUS_SECOND_HALF", "lag_seconds": 115.5}
+{"polled_at": "2026-09-19T15:47:46+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'", "status": "STATUS_SECOND_HALF", "lag_seconds": 133.5}
+{"polled_at": "2026-09-19T15:48:46+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "90'", "status": "STATUS_SECOND_HALF", "lag_seconds": 74.7}
+{"polled_at": "2026-09-19T15:48:46+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "87'", "status": "STATUS_SECOND_HALF", "lag_seconds": 72.7}
+{"polled_at": "2026-09-19T15:48:46+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+1'", "status": "STATUS_SECOND_HALF", "lag_seconds": 94.7}
+{"polled_at": "2026-09-19T15:49:46+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "90'+1'", "status": "STATUS_SECOND_HALF", "lag_seconds": 135.9}
+{"polled_at": "2026-09-19T15:49:46+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "88'", "status": "STATUS_SECOND_HALF", "lag_seconds": 133.9}
+{"polled_at": "2026-09-19T15:49:46+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+2'", "status": "STATUS_SECOND_HALF", "lag_seconds": 154.9}
+{"polled_at": "2026-09-19T15:50:47+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "90'+2'", "status": "STATUS_SECOND_HALF", "lag_seconds": 116.2}
+{"polled_at": "2026-09-19T15:50:47+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "89'", "status": "STATUS_SECOND_HALF", "lag_seconds": 94.2}
+{"polled_at": "2026-09-19T15:50:47+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+3'", "status": "STATUS_SECOND_HALF", "lag_seconds": 130.2}
+{"polled_at": "2026-09-19T15:51:47+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "90'+3'", "status": "STATUS_SECOND_HALF", "lag_seconds": 104.4}
+{"polled_at": "2026-09-19T15:51:47+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "90'", "status": "STATUS_SECOND_HALF", "lag_seconds": 154.4}
+{"polled_at": "2026-09-19T15:51:47+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+4'", "status": "STATUS_SECOND_HALF", "lag_seconds": 190.4}
+{"polled_at": "2026-09-19T15:52:47+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "90'+4'", "status": "STATUS_SECOND_HALF", "lag_seconds": 165.6}
+{"polled_at": "2026-09-19T15:52:47+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+5'", "status": "STATUS_SECOND_HALF", "lag_seconds": 102.6}
+{"polled_at": "2026-09-19T15:52:47+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "90'+1'", "status": "STATUS_SECOND_HALF", "lag_seconds": 215.6}
+{"polled_at": "2026-09-19T15:53:47+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "90'+5'", "status": "STATUS_SECOND_HALF", "lag_seconds": 82.8}
+{"polled_at": "2026-09-19T15:53:47+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "90'+2'", "status": "STATUS_SECOND_HALF", "lag_seconds": 113.8}
+{"polled_at": "2026-09-19T15:53:47+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+6'", "status": "STATUS_SECOND_HALF", "lag_seconds": 162.8}
+{"polled_at": "2026-09-19T15:54:48+00:00", "event_id": "401879274", "name": "Brighton & Hove Albion v Arsenal", "clock": "90'+6'", "status": "STATUS_SECOND_HALF", "lag_seconds": 143.1}
+{"polled_at": "2026-09-19T15:54:48+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "90'+3'", "status": "STATUS_SECOND_HALF", "lag_seconds": 174.1}
+{"polled_at": "2026-09-19T15:54:48+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+7'", "status": "STATUS_SECOND_HALF", "lag_seconds": 223.1}
+{"polled_at": "2026-09-19T15:55:48+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "90'+4'", "status": "STATUS_SECOND_HALF", "lag_seconds": 234.3}
+{"polled_at": "2026-09-19T15:55:48+00:00", "event_id": "401878778", "name": "Everton v Ipswich Town", "clock": "90'+8'", "status": "STATUS_SECOND_HALF", "lag_seconds": 94.3}
+{"polled_at": "2026-09-19T15:56:48+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "90'+6'", "status": "STATUS_SECOND_HALF", "lag_seconds": 294.5}
+{"polled_at": "2026-09-19T15:57:48+00:00", "event_id": "401879271", "name": "Newcastle United v Hull City", "clock": "90'+7'", "status": "STATUS_SECOND_HALF", "lag_seconds": 144.6}
