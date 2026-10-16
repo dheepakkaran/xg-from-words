@@ -24,11 +24,30 @@ jobs:
       - run: python src/fixtures.py
       # A fixture the calendar has just marked complete can be scored now.
       - run: python src/scorecard.py --since 2026-08-01
+      # No autostash. `git pull --rebase --autostash ... || true` swallows a
+      # failed rebase, and a rebase that fails leaves its autostash to be
+      # restored over a tree that has moved -- which git resolves by writing
+      # conflict markers into docs/fixtures.json and docs/scorecard.json, and
+      # the next line commits them. That happened on 12 October and broke
+      # every run after it. Copy the files aside, reset hard to origin, copy
+      # them back: there is nothing left to reconcile.
       - name: commit if the calendar moved
         run: |
+          for f in docs/fixtures.json docs/scorecard.json; do
+            python -c "import json,sys; json.load(open(sys.argv[1]))" "$f" || {
+              echo "::error::$f is not valid JSON"; exit 1; }
+          done
           git config user.name  "Dheepak Karan"
           git config user.email "elusanthi16@gmail.com"
-          git pull --rebase --autostash origin main || true
+          mkdir -p /tmp/keep
+          cp docs/fixtures.json docs/scorecard.json /tmp/keep/
+          git fetch origin main
+          git checkout -f -B main origin/main
+          cp /tmp/keep/fixtures.json /tmp/keep/scorecard.json docs/
           git add docs/fixtures.json docs/scorecard.json
-          git diff --cached --quiet || git commit -m "refresh fixtures and scorecard"
-          git push origin HEAD:main
+          if git diff --cached --quiet; then
+            echo "calendar unchanged"
+          else
+            git commit -m "refresh fixtures and scorecard"
+            git push origin HEAD:main
+          fi
