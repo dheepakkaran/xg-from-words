@@ -4,6 +4,11 @@
 the findings, told to someone who does not read AUC, with whichever Premier
 League match is under way read live at the bottom.
 
+![Twenty seconds of the site: the headline figure of 90.6%, the conversion
+rate of each kind of chance read out of commentary, the table behind that
+chart opening on a click, the same model pointed at six competitions, and its
+per-match xG set against StatsBomb's and the actual score.](docs/overview.webp)
+
 **Two questions about football commentary, asked in order. The first one
 failed, and the failure is what pointed at the second.**
 
